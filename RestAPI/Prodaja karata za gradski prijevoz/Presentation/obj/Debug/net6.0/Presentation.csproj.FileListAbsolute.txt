@@ -1,0 +1,5 @@
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Presentation\obj\Debug\net6.0\Presentation.csproj.AssemblyReference.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Presentation\obj\Debug\net6.0\Presentation.GeneratedMSBuildEditorConfig.editorconfig
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Presentation\obj\Debug\net6.0\Presentation.AssemblyInfoInputs.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Presentation\obj\Debug\net6.0\Presentation.AssemblyInfo.cs
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Presentation\obj\Debug\net6.0\Presentation.csproj.CoreCompileInputs.cache

@@ -1,0 +1,12 @@
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\bin\Debug\net6.0\Domain.deps.json
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\bin\Debug\net6.0\Domain.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\bin\Debug\net6.0\Domain.pdb
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\refint\Domain.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\Domain.pdb
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Domain\obj\Debug\net6.0\ref\Domain.dll

@@ -1,0 +1,201 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Infrastructure\\Infrastructure.csproj": {}
+  },
+  "projects": {
+    "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\Application.csproj",
+        "projectName": "Application",
+        "projectPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\Amor\\.nuget\\packages\\",
+        "outputPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Amor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Domain\\Domain.csproj": {
+                "projectPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Domain\\Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Cryptography.KeyDerivation": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Domain\\Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Domain\\Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\Amor\\.nuget\\packages\\",
+        "outputPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Amor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Infrastructure\\Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Infrastructure\\Infrastructure.csproj",
+        "projectName": "Infrastructure",
+        "projectPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Amor\\.nuget\\packages\\",
+        "outputPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Amor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\Application.csproj": {
+                "projectPath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.4.3, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[3.4.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

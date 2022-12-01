@@ -1,0 +1,17 @@
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.AssemblyReference.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.AssemblyInfoInputs.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.AssemblyInfo.cs
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.CoreCompileInputs.cache
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Infrastructure.deps.json
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Infrastructure.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Infrastructure.pdb
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Application.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Domain.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Application.pdb
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\bin\Debug\net6.0\Domain.pdb
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.CopyComplete
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\refint\Infrastructure.dll
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\Infrastructure.pdb
+E:\Programiranje\RSI_Seminarski\RestAPI\Prodaja karata za gradski prijevoz\Infrastructure\obj\Debug\net6.0\ref\Infrastructure.dll

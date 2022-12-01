@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "jxno94GWDw3cYGazDGRCVSOXcOhTeoHmqJGl15B4/EFS4CdoMrUYGFgVMFxc5qfANcdNw1LjAI98uMZT6FNjSQ==",
+  "success": true,
+  "projectFilePath": "E:\\Programiranje\\RSI_Seminarski\\RestAPI\\Prodaja karata za gradski prijevoz\\Application\\Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Amor\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\7.0.0\\microsoft.aspnetcore.cryptography.internal.7.0.0.nupkg.sha512",
+    "C:\\Users\\Amor\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\7.0.0\\microsoft.aspnetcore.cryptography.keyderivation.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
