@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+html,body{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: url("./assets/Pozadina.jfif")top right no-repeat;
+  background-attachment: fixed;
+  background-color: grey;
+  background-size: cover;
+}
+
