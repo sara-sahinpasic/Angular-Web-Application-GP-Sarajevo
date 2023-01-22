@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Services.Email;
+﻿namespace Application.Config.Email;
 
 public sealed class EmailConfiguration
 {

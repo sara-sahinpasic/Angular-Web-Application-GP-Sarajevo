@@ -1,5 +1,5 @@
-﻿using Application.Helpers;
-using Domain.Abstractions.Interfaces.Korisnici;
+﻿using Application.Services.Abstractions.Interfaces.Hashing;
+using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
 using Domain.Entities.Korisnici;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +9,12 @@ namespace Infrastructure.Repositories.Korisnici;
 public sealed class RegistracijskiTokenRepository : IRegistracijskiTokenRepository
 {
     private readonly DataContext _dataContext;
+    private readonly IHashingService _hashingService;
 
-    public RegistracijskiTokenRepository(DataContext dataContext)
+    public RegistracijskiTokenRepository(DataContext dataContext, IHashingService encryptionDecryptionService)
     {
         _dataContext = dataContext;
+        _hashingService = encryptionDecryptionService;
     }
 
     public async Task<RegistracijskiToken?> Create(Korisnik user)
@@ -23,7 +25,7 @@ public sealed class RegistracijskiTokenRepository : IRegistracijskiTokenReposito
         RegistracijskiToken token = new RegistracijskiToken
         {
             Korisnik = user,
-            Token = EncryptionDecryptionHelper.GenerateRegistrationToken(),
+            Token = "fsdfsd",
             Kreiran = DateTime.Now
         };
 

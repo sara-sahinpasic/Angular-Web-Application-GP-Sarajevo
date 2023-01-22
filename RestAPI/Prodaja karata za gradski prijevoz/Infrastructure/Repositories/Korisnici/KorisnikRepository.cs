@@ -1,4 +1,4 @@
-﻿using Domain.Abstractions.Interfaces.Korisnici;
+﻿using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
 using Domain.Entities.Korisnici;
 using Infrastructure.Data;
 

@@ -1,13 +1,10 @@
-﻿namespace Application.Helpers;
+﻿using Application.Services.Abstractions.Interfaces.Mapper;
 
-public static class ObjectMapper
+namespace Application.Services.Implementations.Mapper;
+
+public sealed class ObjectMapperService : IObjectMapperService
 {
-    //
-    // Summary:
-    //     Map<From, To>(From fromObject, To toObject);
-    //     Maps the properties in the fromObject into the toObject.
-    //
-    public static void Map<From, To>(From fromObject, To toObject)
+    public void Map<From, To>(From fromObject, To toObject)
     {
         if (fromObject == null || toObject == null)
             throw new System.Exception("Object cannot be null.");
@@ -26,6 +23,4 @@ public static class ObjectMapper
             toType.GetProperty(prop.Name)!.SetValue(toObject, fromObjectPropValue);
         }
     }
-
-    // maybe add to not include some props
 }
