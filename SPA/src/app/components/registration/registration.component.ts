@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { UserRegisterRequest } from 'src/app/models/UserRegisterRequest';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -8,11 +11,26 @@ import { Router } from '@angular/router';
 })
 export class RegistrationComponent implements OnInit {
 
-  constructor(private _router:Router) { }
+  public userRequest: UserRegisterRequest = {
+    ime: "",
+    prezime: "",
+    password: "",
+    datumRodjenja: new Date(),
+    email: "",
+    brojTelefona: ""
+  };
+
+  registrationSent:  boolean = false;
+
+  constructor(private _router: Router, private userService: UserService) { }
 
   ngOnInit() {
   }
-  registracija(){
-    this._router.navigateByUrl("");
+
+  registracija() {
+    const observer: Observable<string> = this.userService.register(this.userRequest);
+    observer.subscribe(() => {
+      this.registrationSent = true;
+    });
   }
 }

@@ -1,31 +1,35 @@
 <div class="container">
-  <div class="form-container">
-    <h1>Registracija </h1>
-    <div class="input-container">
-      <label for="ime">Ime: *</label>
-      <input id="ime" type="text" placeholder="">
-    </div>
-    <div class="input-container">
-      <label for="prezime">Prezime: *</label>
-      <input id="prezime" type="text" placeholder="">
-    </div>
-    <div class="input-container">
-      <label for="datumRodjenja">Datum rođenja: *</label>
-      <input id="datumRodjenja" type="date" placeholder="">
-    </div>
-    <div class="input-container">
-      <label for="brojTelefona">Datum rođenja: *</label>
-      <input id="brojTelefona" type="number" placeholder="">
-    </div>
-    <div class="input-container">
-      <label for="email">E-Mail: *</label>
-      <input id="email" type="email" placeholder="">
-    </div>
-    <div class="input-container">
-      <label for="lozinka">Lozinka: *</label>
-      <input id="lozinka" type="password" placeholder="">
+  <div class="form-container" >
+    <div *ngIf="!registrationSent">
+      <h1>Registracija </h1>
+      <div class="input-container">
+        <label for="ime">Ime: *</label>
+        <input id="ime" type="text" placeholder="" required name="ime" [(ngModel)]="userRequest.ime">
+      </div>
+      <div class="input-container">
+        <label for="prezime">Prezime: *</label>
+        <input id="prezime" type="text" placeholder="" required name="prezime" [(ngModel)]="userRequest.prezime">
+      </div>
+      <div class="input-container">
+        <label for="datumRodjenja">Datum rođenja: *</label>
+        <input id="datumRodjenja" type="date" placeholder="" required name="datumRodjenja" [(ngModel)]="userRequest.datumRodjenja">
+      </div>
+      <div class="input-container">
+        <label for="brojTelefona">Broj telefona: *</label>
+        <input id="brojTelefona" type="string" placeholder="" required name="brojTelefona" [(ngModel)]="userRequest.brojTelefona">
+      </div>
+      <div class="input-container">
+        <label for="email">E-Mail: *</label>
+        <input id="email" type="email" placeholder="" required name="email" [(ngModel)]="userRequest.email">
+      </div>
+      <div class="input-container">
+        <label for="lozinka">Lozinka: *</label>
+        <input id="lozinka" type="password" placeholder="" required name="lozinka" [(ngModel)]="userRequest.password">
+      </div>
+
+      <button class="registracija" (click)="registracija()">Registruj se</button>
     </div>
 
-    <button class="registracija" (click)="registracija()">Registruj se</button>
+    <h1 *ngIf="registrationSent">Kod za aktivaciju računa vam je poslan na email.</h1>
   </div>
 </div>
