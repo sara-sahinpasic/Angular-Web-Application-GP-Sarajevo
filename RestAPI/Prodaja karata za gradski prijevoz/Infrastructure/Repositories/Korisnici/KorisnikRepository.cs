@@ -1,6 +1,7 @@
 ﻿using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
 using Domain.Entities.Korisnici;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Korisnici;
 
@@ -13,7 +14,7 @@ public sealed class KorisnikRepository : IKorisnikRepozitorij
         _dataContext = dataContext;
     }
 
-    public async Task<Guid?> Create(Korisnik user) //todo: handle exceptions
+    public async Task<Guid?> Create(Korisnik user) //todo: exception handler bug fix it
     {
         if (user is null)
             return null;
@@ -29,9 +30,9 @@ public sealed class KorisnikRepository : IKorisnikRepozitorij
         throw new NotImplementedException();
     }
 
-    public Task<Korisnik> GetByEmail(string email)
+    public Task<Korisnik?> GetByEmail(string email)
     {
-        throw new NotImplementedException();
+        return _dataContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
     }
 
     public Task<Korisnik> GetById(Guid id)

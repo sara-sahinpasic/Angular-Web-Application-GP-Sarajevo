@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
-    public partial class AddedUser : Migration
+    public partial class newMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +21,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     DatumRodjenja = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BrojTelefona = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BrojTelefona = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Adresa = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DatumRegistracije = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DatumIzmjena = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -30,6 +30,20 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VerificationCodes",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateExpiring = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VerificationCodes", x => new { x.UserId, x.Code });
                 });
 
             migrationBuilder.CreateTable(
@@ -64,6 +78,9 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
         {
             migrationBuilder.DropTable(
                 name: "RegistrationTokens");
+
+            migrationBuilder.DropTable(
+                name: "VerificationCodes");
 
             migrationBuilder.DropTable(
                 name: "Users");

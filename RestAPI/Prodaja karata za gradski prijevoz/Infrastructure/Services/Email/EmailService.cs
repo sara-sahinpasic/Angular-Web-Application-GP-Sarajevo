@@ -2,16 +2,19 @@
 using Application.Services.Abstractions.Interfaces.Email;
 using Domain.Entities.Korisnici;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 
 namespace Infrastructure.Services.Email;
 
 public sealed class EmailService : IEmailService
 {
-    private readonly EmailConfiguration _configuration;
+    private readonly EmailConfiguration _emailConfiguration;
+    private readonly IConfiguration _configuration;
 
-    public EmailService(EmailConfiguration configuration)
+    public EmailService(EmailConfiguration emailConfiguration, IConfiguration configuration)
     {
+        _emailConfiguration = emailConfiguration;
         _configuration = configuration;
     }
 
@@ -29,17 +32,13 @@ public sealed class EmailService : IEmailService
 
         using (SmtpClient client = new())
         {
-            await client.ConnectAsync(_configuration.SMTP, _configuration.Port, _configuration.UseTLS, cancellationToken);
-            await client.AuthenticateAsync(_configuration.Username, _configuration.Password, cancellationToken);
+            await client.ConnectAsync(_emailConfiguration.SMTP, _emailConfiguration.Port, _emailConfiguration.UseTLS, cancellationToken);
+            await client.AuthenticateAsync(_emailConfiguration.Username, _emailConfiguration.Password, cancellationToken);
             await client.SendAsync(message, cancellationToken);
             await client.DisconnectAsync(true, cancellationToken);
         }
     }
 
-    public async Task SendNoReplyMail(string to, string subject, string content, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
     public async Task SendNoReplyMail(Korisnik to, string subject, string content, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -47,11 +46,23 @@ public sealed class EmailService : IEmailService
 
     public async Task SendRegistrationMail(Korisnik user, string token, CancellationToken cancellationToken)
     {
-        MailboxAddress from = new("No-reply", _configuration.From);
+        string spaUrl = _configuration["SPA:Url"];
+
+        MailboxAddress from = new("No-reply", _emailConfiguration.From);
         MailboxAddress to = new($"{user.Ime} {user.Prezime}", user.Email);
-        string content = $"<a href='http://localhost:5192/account/activate/{token}'>Activate account</a>";
+        string content = $"<a href='{spaUrl}/activate/{token}'>Activate account</a>";
         string subject = "Regstration confirmation";
 
         await SendEmail(from, to, subject, content, cancellationToken);
+    }
+
+    public async Task SendLoginVerificationMail(Korisnik user, int verificationCode, CancellationToken cancellationToken)
+    {
+        MailboxAddress from = new("No-reply", _emailConfiguration.From);
+        MailboxAddress to = new($"{user.Ime} {user.Prezime}", user.Email);
+        string content = $"Vaš verifikacijski kod je {verificationCode}";
+        string subject = "Verifikacijski kod";
+
+        await SendEmail(from, to , subject, content, cancellationToken);
     }
 }

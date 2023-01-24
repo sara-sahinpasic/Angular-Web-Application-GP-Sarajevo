@@ -6,7 +6,7 @@ namespace Presentation.Controllers.Error;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [ApiController]
-//[Route("")]
+[Route("/error")]
 public sealed class ErrorHandlingController : ControllerBase
 {
     public ILogger<ErrorHandlingController> _logger { get; }
@@ -17,18 +17,19 @@ public sealed class ErrorHandlingController : ControllerBase
     }
 
     //todo: make error handling better
-    [HttpGet("/error")]
+    // todo: create response object to store data and such (maybe generic request as well?)
     public IActionResult ErrorHandler() 
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
         var exceptionMessage = exceptionFeature.Error.InnerException?.Message ?? exceptionFeature.Error.Message;
 
-        _logger.LogError(exceptionMessage);
+        // todo: see how to do with logger while creating better exception handling
+        System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
 
         ProblemDetails problem = new()
         {
             Title = "Error",
-            Detail = "Something went wrong! Contact site administrator!",
+            Detail = "Something went wrong. Contact site administrator.",
             Status = 500
         };
 

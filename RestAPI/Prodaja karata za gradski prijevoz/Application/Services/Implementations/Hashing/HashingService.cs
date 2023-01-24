@@ -6,7 +6,6 @@ namespace Application.Services.Implementations.Hashing;
 
 public sealed class HashingService : IHashingService
 {
-    // todo: create seperate service for hashing as it is not the same as encryption
     public Tuple<byte[], string> GeneratePasswordHashAndSalt(string password)
     {
         byte[] salt = new byte[256 / 8];
@@ -19,12 +18,6 @@ public sealed class HashingService : IHashingService
         }
 
         return new Tuple<byte[], string>(salt, Encoding.UTF8.GetString(hashedPassword));
-    }
-
-    // todo: should be a token service?
-    public string GenerateRegistrationToken()
-    {
-        return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("/", "_");
     }
 
     public bool VerifyPasswordHash(string password, string passwordHash, byte[] passwordSalt)

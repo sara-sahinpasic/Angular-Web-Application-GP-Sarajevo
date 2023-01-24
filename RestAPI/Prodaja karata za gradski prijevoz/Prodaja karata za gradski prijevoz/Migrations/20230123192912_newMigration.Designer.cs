@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230123192912_newMigration")]
+    partial class newMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +50,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ime")
                         .HasColumnType("nvarchar(max)");
@@ -66,10 +68,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -110,9 +108,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.Property<int>("Code")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Activated")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -133,17 +128,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("Korisnik");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Korisnici.VerificationCode", b =>
-                {
-                    b.HasOne("Domain.Entities.Korisnici.Korisnik", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

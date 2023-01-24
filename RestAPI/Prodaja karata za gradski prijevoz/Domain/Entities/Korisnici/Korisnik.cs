@@ -1,7 +1,8 @@
 ﻿using Domain.Abstractions.Classes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.Korisnici;
-
+// todo: make mandatory fields required
 public sealed class Korisnik : Entity
 {
     public Guid UlogaId { get; set; }
@@ -11,7 +12,7 @@ public sealed class Korisnik : Entity
     public string? PasswordHash { get; set; }
     public byte[]? PasswordSalt { get; set; }
     public DateTime DatumRodjenja { get; set; }
-    public string? BrojTelefona { get; set; }
+    public string BrojTelefona { get; set; }
     public string? Adresa { get; set; }
     public DateTime DatumRegistracije { get; set; }
     public DateTime DatumIzmjena { get; set; }

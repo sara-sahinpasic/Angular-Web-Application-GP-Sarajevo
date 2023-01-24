@@ -17,27 +17,12 @@ public sealed class RegistracijskiTokenRepository : IRegistracijskiTokenReposito
         _hashingService = encryptionDecryptionService;
     }
 
-    public async Task<RegistracijskiToken?> Create(Korisnik user)
+    public async Task<Guid?> Create(RegistracijskiToken token)
     {
-        if (user is null)
-            return null;
-
-        RegistracijskiToken token = new RegistracijskiToken
-        {
-            Korisnik = user,
-            Token = "fsdfsd",
-            Kreiran = DateTime.Now
-        };
-
         await _dataContext.RegistrationTokens.AddAsync(token);
         await _dataContext.SaveChangesAsync();
 
-        return token;
-    }
-
-    public Task<RegistracijskiToken?> Create(Guid userId)
-    {
-        throw new NotImplementedException();
+        return token.Id;
     }
 
     public bool Delete(string tokenString)

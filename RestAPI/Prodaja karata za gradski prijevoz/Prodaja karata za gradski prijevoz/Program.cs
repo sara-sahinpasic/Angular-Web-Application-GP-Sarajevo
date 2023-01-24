@@ -27,6 +27,20 @@ builder.Services.AddDbContext<DataContext>(options =>
         b => b.MigrationsAssembly("Prodaja karata za gradski prijevoz"));
 });
 
+string spaUrl = builder.Configuration["SPA:Url"];
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "SPA", builder =>
+    {
+        // todo: add to config
+        builder.WithOrigins(spaUrl)
+            .SetIsOriginAllowed(isOriginAllowed: _ => true)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -55,6 +69,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("SPA");
 app.UseExceptionHandler("/error");
 app.UseHttpsRedirection();
 //app.UseAuthorization();

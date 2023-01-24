@@ -4,9 +4,11 @@ using Domain.Entities.Korisnici;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Application.Services.Abstractions.Interfaces.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers.Account;
 
+// todo: return message for account already existing on register
 [ApiController]
 [Route("[controller]")]
 public sealed class AuthenticationController : ControllerBase
@@ -20,6 +22,7 @@ public sealed class AuthenticationController : ControllerBase
         _authService = authService;
     }
 
+    // todo: change bools to custom exceptions that are handled on the error controller handler
     [HttpPost("/register")]
     public async Task<IActionResult> RegisterAction
     (
@@ -36,17 +39,21 @@ public sealed class AuthenticationController : ControllerBase
 
         Guid? userId = await _authService.Register(user, userRequest.Password!, cancellationToken);
 
+        if (userId is null)
+            return BadRequest("User already exists!");
+
         return CreatedAtAction(nameof(RegisterAction), userId);
     }
 
-    [HttpGet("/account/activate/{tokenString}")]
-    public async Task<IActionResult> ActivateAction(string tokenString)
+    // todo: create login code page. Some verification code cleanup. Create resend activation mail route.
+    [HttpPut("/account/activate/{tokenString}")]
+    public async Task<IActionResult> ActivateAction(string tokenString, CancellationToken cancellationToken)
     {
-        bool success = await _authService.ActivateUserAccount(tokenString);
+        bool success = await _authService.ActivateUserAccount(tokenString, cancellationToken);
 
         if (!success)
-            return BadRequest("Token is either already activated or it is expired.");
+            return BadRequest("Token is either already activated or it is expired. Check your email for a new token.");
 
-        return Ok("Account activated!");
+        return Ok();
     }
 }

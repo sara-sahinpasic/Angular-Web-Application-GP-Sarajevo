@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230113201628_AddedUser")]
-    partial class AddedUser
+    [Migration("20230124111340_addedActivatedFieldToTheVerificationModel")]
+    partial class addedActivatedFieldToTheVerificationModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("BrojTelefona")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DatumIzmjena")
@@ -49,7 +50,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Ime")
                         .HasColumnType("nvarchar(max)");
@@ -67,6 +68,10 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -99,6 +104,28 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.ToTable("RegistrationTokens");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Korisnici.VerificationCode", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Activated")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateExpiring")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "Code");
+
+                    b.ToTable("VerificationCodes");
+                });
+
             modelBuilder.Entity("Domain.Entities.Korisnici.RegistracijskiToken", b =>
                 {
                     b.HasOne("Domain.Entities.Korisnici.Korisnik", "Korisnik")
@@ -108,6 +135,17 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("Korisnik");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Korisnici.VerificationCode", b =>
+                {
+                    b.HasOne("Domain.Entities.Korisnici.Korisnik", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
