@@ -1,0 +1,69 @@
+.container {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 0px 180px 0px 120px;
+  width: 700px;
+  padding: 45px 60px 30px 60px;
+  background-color: rgb(255 255 255 / 65%)
+}
+
+h1 {
+  margin-top: -5%;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bolder;
+}
+
+button {
+  background-color: rgba(0, 0, 0, 0.916);
+  color: white;
+  font-weight: bolder;
+  font-size:large;
+  width: 100%;
+  height: 40px;
+  border: 2px solid black;
+  border-radius: 10px;
+  margin-top: 5px;
+  box-shadow: 2px 4px #434343;
+  padding: 4px;
+}
+input {
+  padding: 7px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.354);
+}
+input#datum {
+  display: inline-block;
+  float: left;
+  width: 46%;
+}
+input#sat {
+  display: inline-block;
+  float: right;
+  width: 46%;
+}
+
+input#polaznaStanica {
+  display: inline-block;
+  float: left;
+  width: 46%;
+}
+input#cilj {
+  display: inline-block;
+  float: right;
+  width: 46%;
+}
+
