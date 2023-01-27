@@ -7,12 +7,18 @@ import { AppComponent } from './app.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { FormsModule } from '@angular/forms';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegistrationComponent,
-    ActivateAccountComponent
+    ActivateAccountComponent,
+    FooterComponent,
+    NavigationComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
