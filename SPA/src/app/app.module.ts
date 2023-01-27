@@ -10,6 +10,7 @@ import { ActivateAccountComponent } from './components/activate-account/activate
 import { FooterComponent } from './components/footer/footer.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { HomeComponent } from './components/home/home.component';
+import { LogInComponent } from './components/logIn/logIn.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HomeComponent } from './components/home/home.component';
     ActivateAccountComponent,
     FooterComponent,
     NavigationComponent,
-    HomeComponent
+    HomeComponent,
+    LogInComponent
   ],
   imports: [
     BrowserModule,

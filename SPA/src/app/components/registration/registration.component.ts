@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserRegisterRequest } from 'src/app/models/UserRegisterRequest';
+import { UserRegisterRequest } from 'src/app/models/User/UserRegisterRequest';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({

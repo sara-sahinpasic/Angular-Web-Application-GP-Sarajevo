@@ -1,20 +1,25 @@
 <div class="container">
   <div class="form-container">
-    <h1>Prijava </h1>
-    <p id="uvod">
-      Postanite član i iz udobnosti svoga doma kupite kartu, i ne propustite ponude i akcije.
-    </p>
-    <label for="email">E-Mail: *</label>
-    <input id="email" type="email" placeholder=""> <br />
-    <label for="lozinka">Lozinka: *</label>
-    <input id="lozinka" type="password" placeholder=""><br />
-    <form>
-      <input id="check" type="checkbox">
+    <div class="login-form" *ngIf="!hasLoggedIn">
+      <h1>Prijava </h1>
+      <p id="uvod">
+        Postanite član i iz udobnosti svoga doma kupite kartu, i ne propustite ponude i akcije.
+      </p>
+      <label for="email">E-Mail: *</label>
+      <input id="email" type="email" placeholder="" [(ngModel)]="userLoginRequest.email" required=""> <br />
+      <label for="lozinka">Lozinka: *</label>
+      <input id="lozinka" type="password" placeholder="" [(ngModel)]="userLoginRequest.password" required=""><br />
+      <!-- <input id="check" type="checkbox">
       <label for="check"> Zapamti podatke</label>
-      <a href="url">Zaboravljena lozinka?</a>
-    </form>
+      <a href="url">Zaboravljena lozinka?</a> -->
 
-    <button class="prijava" (click)="prijava()">Prijava</button>
-    <button class="registracija "(click)="registracija()">Registruj se</button>
+      <button class="primary" (click)="login()">Prijava</button>
+      <button class="secondary" (click)="navigateToRegistration()">Registruj se</button>
+    </div>
+    <div class="verify-login-container" *ngIf="hasLoggedIn">
+      <h3>Molimo vas unesite kod koji je poslan na Vaš mail</h3>
+      <input #codeInput type="text" (keyup)="validateCodeLength(codeInput.value)">
+      <button class="primary" (click)="verifyLogin(codeInput.value)" [disabled]="!enableVerifyButton">Potvrdi kod</button>
+    </div>
   </div>
 </div>
