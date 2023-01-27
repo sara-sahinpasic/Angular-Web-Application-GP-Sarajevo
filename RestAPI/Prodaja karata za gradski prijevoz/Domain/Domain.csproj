@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Abstractions\Interfaces\" />
     <Folder Include="Entities\Zahtjevi\" />
     <Folder Include="Entities\Vozila\" />
     <Folder Include="Exceptions\" />

@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Abstractions.Classes;
 
 namespace Domain.Entities.Korisnici;
 
-public sealed class VerificationCode
+public sealed class VerificationCode : Entity
 {
     public Guid UserId { get; set; }
     public Korisnik? User { get; set; }

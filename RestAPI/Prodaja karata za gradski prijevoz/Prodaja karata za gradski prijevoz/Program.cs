@@ -1,17 +1,6 @@
-using Application.Services.Abstractions.Interfaces.Email;
-using Application.Services.Abstractions.Interfaces.Hashing;
-using Application.Services.Abstractions.Interfaces.Mapper;
-using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
-using Application.Services.Implementations.Hashing;
-using Application.Services.Implementations.Mapper;
 using Infrastructure.Data;
-using Infrastructure.Repositories.Korisnici;
-using Infrastructure.Services.Email;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Application.Config.Email;
-using Application.Services.Abstractions.Interfaces.Authentication;
-using Application.Services.Implementations.Auth;
+using Prodaja_karata_za_gradski_prijevoz.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +11,6 @@ builder.Services.AddControllers()
 // Setup database provider
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    //todo: using Sqlite for testing. Change to sql server later
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), 
         b => b.MigrationsAssembly("Prodaja karata za gradski prijevoz"));
 });
@@ -45,20 +33,14 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var emailConfig = builder.Configuration.GetSection("Email:Server").Get<EmailConfiguration>();
+builder.AddAuthenticationAndAuthorization();
 
-// singleton services
-builder.Services.TryAddSingleton(emailConfig);
-builder.Services.TryAddSingleton<IObjectMapperService, ObjectMapperService>();
-builder.Services.TryAddSingleton<IHashingService, HashingService>();
+builder.AddConfig();
 
-// transient services
-builder.Services.TryAddTransient<IEmailService, EmailService>();
-builder.Services.TryAddTransient<IAuthService, AuthService>();
-
-// Repositories registration
-builder.Services.TryAddScoped<IKorisnikRepozitorij, KorisnikRepository>();
-builder.Services.TryAddScoped<IRegistracijskiTokenRepository, RegistracijskiTokenRepository>();
+builder.AddSingletonServices();
+builder.AddRepositories();
+builder.AddScopedServices();
+builder.AddTransientServices();
 
 var app = builder.Build();
 
@@ -72,6 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("SPA");
 app.UseExceptionHandler("/error");
 app.UseHttpsRedirection();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

@@ -7,6 +7,7 @@ public sealed class DataContext : DbContext
 {
     public DbSet<Korisnik> Users { get; set; }
     public DbSet<RegistracijskiToken> RegistrationTokens { get; set; }
+    public DbSet<VerificationCode> VerificationCodes { get; set; }
 
 
     public DataContext(DbContextOptions options) : base(options) { }

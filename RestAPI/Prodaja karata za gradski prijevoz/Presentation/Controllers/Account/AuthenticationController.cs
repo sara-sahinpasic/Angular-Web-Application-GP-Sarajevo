@@ -56,4 +56,39 @@ public sealed class AuthenticationController : ControllerBase
 
         return Ok();
     }
+
+    // todo: check if user is active
+    [HttpPost("/login")]
+    public async Task<IActionResult> LoginAction(
+        UserLoginRequestDto loginData,
+        CancellationToken cancellationToken)
+    {
+        if (!await _authService.IsUserActivated(loginData.Email))
+            return BadRequest("Account not activated. Check your email for the activation code.");
+
+        Guid? userId = await _authService.Login(loginData.Email, loginData.Password, cancellationToken);
+
+        if (userId is null)
+            return BadRequest("Password or email do not match");
+
+        return Ok(new
+        {
+            Message = "Verification code sent to email",
+            UserId = userId
+        });
+    }
+
+    [HttpPost("/verifyLogin")]
+    public async Task<IActionResult> AuthenticateLoginAction(AuthLoginDataDto authLoginData, CancellationToken cancellationToken)
+    {
+        string token = await _authService.AuthenticateLogin(authLoginData.UserId, authLoginData.Code, cancellationToken);
+
+        if (token is null)
+            return BadRequest("Verification code not correct or is expired. Try again with a different code or login again to resend the verification code..");
+
+        return Ok(new
+        {
+            Token = token
+        });
+    }
 }

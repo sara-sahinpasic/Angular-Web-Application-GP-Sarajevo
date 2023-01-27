@@ -15,6 +15,4 @@ public sealed class KorisnikRequest
     public DateTime DatumRodjenja { get; set; }
     public string? BrojTelefona { get; set; }
     public string? Adresa { get; set; }
-    public DateTime DatumRegistracije { get; set; }
-    public DateTime DatumIzmjena { get; set; }
 }

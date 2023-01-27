@@ -22,12 +22,23 @@ public sealed class VerificationCodeRepository : IVerificationCodeRepository
         return true;
     }
 
+    public async Task DeleteAsync(VerificationCode verificationCode)
+    {
+        _dataContext.VerificationCodes.Remove(verificationCode);
+        await _dataContext.SaveChangesAsync();
+    }
+
     public async Task<VerificationCode?> GetByUserIdAndCode(Guid userId, int verificationCode)
     {
         return await _dataContext.VerificationCodes
             .Include(c => c.User)
             .Where(c => c.UserId == userId && c.Code == verificationCode)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<VerificationCode?> GetByUserIdAsync(Guid userId)
+    {
+        return await _dataContext.VerificationCodes.FirstOrDefaultAsync(vc => vc.UserId== userId);
     }
 
     public async Task<Korisnik?> GetUserByVerificationCode(int verificationCode)
