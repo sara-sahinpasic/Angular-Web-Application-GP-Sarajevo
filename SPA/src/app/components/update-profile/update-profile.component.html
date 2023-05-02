@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="form-container">
+    <h1>Izmjena podataka </h1>
+    <div class="box">
+      <div class="left">
+        <img src="./assets/X.png">
+        <button class="fotografija" (click)="ucitajFotografiju()">Učitaj fotografiju</button>
+      </div>
+      <div class="input-container">
+        <label for="ime">Ime: </label>
+        <input id="ime" type="text" placeholder=""> <br />
+      </div>
+      <div class="input-container">
+        <label for="prezime">Prezime: </label>
+        <input id="prezime" type="text" placeholder=""><br />
+      </div>
+      <div class="input-container">
+        <label for="brojTelefona">Broj telefona: </label>
+        <input id="brojTelefona" type="text" placeholder=""><br />
+      </div>
+      <div class="input-container">
+        <label for="adresa">Adresa: </label>
+        <input id="adresa" type="text" placeholder=""><br />
+      </div>
+    </div>
+    <button class="izmjena" (click)="sacuvaj()">Sačuvaj</button>
+  </div>
