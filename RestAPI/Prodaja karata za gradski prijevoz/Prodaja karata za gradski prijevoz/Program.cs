@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "SPA", builder =>
     {
-        // todo: add to config
+        // todo: add to config: sprint 2
         builder.WithOrigins(spaUrl)
             .SetIsOriginAllowed(isOriginAllowed: _ => true)
             .AllowAnyHeader()

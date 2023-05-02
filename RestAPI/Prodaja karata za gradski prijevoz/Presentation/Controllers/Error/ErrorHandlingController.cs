@@ -16,23 +16,33 @@ public sealed class ErrorHandlingController : ControllerBase
         _logger = logger;
     }
 
-    //todo: make error handling better
-    // todo: create response object to store data and such (maybe generic request as well?)
     public IActionResult ErrorHandler() 
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-        var exceptionMessage = exceptionFeature.Error.InnerException?.Message ?? exceptionFeature.Error.Message;
 
-        // todo: see how to do with logger while creating better exception handling
-        System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
+        return HandleException(exceptionFeature.Error);
+    }
 
+    private IActionResult HandleException(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception, nameof(exception));
+
+        return Problem(exception);
+    }
+
+    private IActionResult Problem(Exception exception)
+    {
         ProblemDetails problem = new()
         {
             Title = "Error",
             Detail = "Something went wrong. Contact site administrator.",
             Status = 500
         };
+        var exceptionMessage = exception.InnerException?.Message ?? exception.Message;
+        // todo: see how to do with logger: sprint 2
+        System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
+        _logger.LogError(exceptionMessage);
 
-        return StatusCode(500, problem);
+        return StatusCode((int)problem.Status, problem);
     }
 }

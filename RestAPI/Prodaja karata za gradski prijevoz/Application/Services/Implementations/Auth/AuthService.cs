@@ -1,181 +1,181 @@
 ﻿using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.Hashing;
-using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
-using Domain.Entities.Korisnici;
+using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Users;
+using Domain.Entities.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 
 namespace Application.Services.Implementations.Auth;
 
 public sealed class AuthService : IAuthService
 {
-    private readonly IKorisnikRepozitorij _korisnikRepozitorij;
+    private readonly IUserRepository _userRepository;
     private readonly IHashingService _hashingService;
     private readonly IEmailService _emailService;
-    private readonly IRegistracijskiTokenRepository _registracijskiTokenRepository;
+    private readonly IRegistrationTokenRepository _registrationTokenRepository;
     private readonly IVerificationCodeRepository _verificationCodeRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _config;
 
-    // todo: create a generic repository
-    // todo: custom exceptions so that they can be thrown and caught on the error controller
-    // todo: generic response and request class
+    // todo: generic response and request class: try and to in sprint 2
     public AuthService(
-        IKorisnikRepozitorij korisnikRepozitorij,
+        IUserRepository userRepository,
         IEmailService emailService,
         IHashingService hashingService,
-        IRegistracijskiTokenRepository registracijskiTokenRepository,
+        IRegistrationTokenRepository registrationTokenRepository,
         IVerificationCodeRepository verificationCodeRepository,
+        IUnitOfWork unitOfWork,
         IConfiguration config)
     {
-        _korisnikRepozitorij = korisnikRepozitorij;
+        _userRepository = userRepository;
         _hashingService = hashingService;
         _emailService = emailService;
-        _registracijskiTokenRepository = registracijskiTokenRepository;
+        _registrationTokenRepository = registrationTokenRepository;
         _verificationCodeRepository = verificationCodeRepository;
         _config = config;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<string> AuthenticateLogin(Guid userId, int loginCode, CancellationToken cancellationToken)
+    public async Task<bool> HasAuthCodeExpiredAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
     {
-        VerificationCode? code = await _verificationCodeRepository.GetByUserIdAndCode(userId, loginCode);
+        ArgumentNullException.ThrowIfNull(verificationCode, nameof(verificationCode));
 
-        if (code is null)
-            return null;
+        return DateTime.Now.Millisecond - verificationCode?.DateExpiring.Millisecond > 1000 * 60 * 5 || verificationCode.Activated;
+    }
 
-        Korisnik? user = code?.User;
+    public async Task<string> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
+    {
+        verificationCode.Activated = true;
+        _verificationCodeRepository.Update(verificationCode);
 
-        if (DateTime.Now.Millisecond - code?.DateExpiring.Millisecond > 1000 * 60 * 5 || code.Activated)
-        {
-            VerificationCode verificationCode = new()
-            {
-                UserId = user!.Id,
-                Code = GenerateVerificationCode(),
-                DateCreated = DateTime.UtcNow,
-                DateExpiring = DateTime.UtcNow.AddMinutes(5)
-            };
+        await _unitOfWork.CommitAsync(cancellationToken);
 
-            await _verificationCodeRepository.CreateAsync(verificationCode);
-            await ResendVerificationCode(user!, verificationCode.Code, cancellationToken);
-            
-            return null;
-        }
-
-        code.Activated = true;
-        await _verificationCodeRepository.UpdateAsync(code);
-
-        string jwtToken = GenerateJwtToken(user!);
+        string jwtToken = GenerateJwtToken(verificationCode.User);
 
         return jwtToken;
     }
-    //todo: create factory
-    public async Task<Guid?> Login(string email, string password, CancellationToken cancellationToken)
+
+    //todo: create factory: try to do in sprint 2
+    public async Task<Guid?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
-        var user = await _korisnikRepozitorij.GetByEmail(email);
+        var user = await _userRepository.GetByEmailAsync(email);
         
-        if (user is not null && _hashingService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
+        if (user is null || !_hashingService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
         {
-            VerificationCode? oldCode = await _verificationCodeRepository.GetByUserIdAsync(user.Id);
-
-            if (oldCode is not null) 
-            {
-                await _verificationCodeRepository.DeleteAsync(oldCode);
-            }
-
-            VerificationCode verificationCode = new()
-            {
-                UserId = user.Id,
-                Code = GenerateVerificationCode(),
-                DateCreated = DateTime.UtcNow,
-                DateExpiring = DateTime.UtcNow.AddMinutes(5)
-            };
-
-            await _emailService.SendLoginVerificationMail(user, verificationCode.Code, cancellationToken);
-            await _verificationCodeRepository.CreateAsync(verificationCode);
-
-            return user.Id;
+            return null;
         }
 
-        return null;
+        VerificationCode? oldCode = await _verificationCodeRepository.GetByUserIdAsync(user.Id, cancellationToken);
+
+        if (oldCode is not null) 
+        {
+            _verificationCodeRepository.Delete(oldCode);
+        }
+
+        VerificationCode verificationCode = new()
+        {
+            UserId = user.Id,
+            Code = GenerateVerificationCode(),
+            DateCreated = DateTime.UtcNow,
+            DateExpiring = DateTime.UtcNow.AddMinutes(5)
+        };
+
+        _verificationCodeRepository.Create(verificationCode);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        await _emailService.SendLoginVerificationMailAsync(user, verificationCode.Code, cancellationToken);
+
+        return user.Id;
     }
 
-    public async Task<Guid?> Register(Korisnik user, string password, CancellationToken cancellationToken)
+    public async Task<Guid> RegisterAsync(User user, string password, CancellationToken cancellationToken)
     {
-        Tuple<byte[], string> passwordHashAndSalt = _hashingService
-            .GeneratePasswordHashAndSalt(password);
+        Tuple<byte[], string> passwordHashAndSalt = _hashingService.GeneratePasswordHashAndSalt(password);
 
         user.PasswordHash = passwordHashAndSalt.Item2;
         user.PasswordSalt = passwordHashAndSalt.Item1;
 
-        user.Email = user.Email!.ToLower();
+        user.Id = Guid.NewGuid();
+        _userRepository.Create(user);
 
-        Guid? userId = await _korisnikRepozitorij.Create(user);
-
-        RegistracijskiToken token = new()
+        RegistrationToken token = new()
         {
-            Korisnik = user,
-            Token = GenerateRegistrationToken(), // todo: new algorithm
+            User = user,
+            Token = GenerateRegistrationToken(), // todo: new algorithm: sprint 2
         };
 
-        await _registracijskiTokenRepository.Create(token);
-        await _emailService.SendRegistrationMail(user, token!.Token!, cancellationToken);
+        _registrationTokenRepository.Create(token);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
-        return userId;
+        await _emailService.SendRegistrationMailAsync(user, token!.Token!, cancellationToken);
+
+        return user.Id;
     }
 
-    public async Task<bool> ActivateUserAccount(string tokenString, CancellationToken cancellationToken)
+    public async Task<bool> HasRegistrationTokenExpiredAsync(RegistrationToken registrationToken, CancellationToken cancellationToken)
     {
-        var token = await _registracijskiTokenRepository.GetInactiveByTokenString(tokenString);
-
-        if (token is null)
-            return false;
-
-        Korisnik? user = token.Korisnik;
-
-        if (user is null)
-            return false;
-
-        if (token.Aktiviran)
-            return false;
-
-        if (DateTime.Now.Millisecond - token.Kreiran.Millisecond > 1000 * 60 * 30)
+        if (DateTime.Now.Millisecond - registrationToken.CreatedDate.Millisecond < 1000 * 60 * 30)
         {
-            token.Istekao = true;
-            await _registracijskiTokenRepository.Update(token);
-
-            await ResendActivationCode(user.Email, cancellationToken);
             return false;
         }
 
-        user!.Aktivan = true;
-        token.Aktiviran = true;
+        registrationToken.IsExpired = true;
 
-        await _korisnikRepozitorij.Update(user);
-        await _registracijskiTokenRepository.Update(token);
+        _registrationTokenRepository.Update(registrationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return true;
     }
 
-    public Task Logout(Korisnik user)
+    public async Task ActivateUserAccountAsync(User user, RegistrationToken registrationToken, CancellationToken cancellationToken)
+    {
+        user!.Active = true;
+        registrationToken.IsActivated = true;
+
+        _userRepository.Update(user);
+        _registrationTokenRepository.Update(registrationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+    }
+
+    public Task LogoutAsync(User user, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<bool> IsUserActivated(string email)
+    public async Task<bool> IsUserActivatedAsync(string email, CancellationToken cancellationToken)
     {
-        var user = await _korisnikRepozitorij.GetByEmail(email);
+        var user = await _userRepository.GetByEmailAsync(email);
 
-        return user.Aktivan;
+        return user is not null && user.Active;
     }
-    
-    public async Task ResendActivationCode(string email, CancellationToken cancellationToken)
-    {
-        var user = await _korisnikRepozitorij.GetByEmail(email);
 
-        await _emailService.SendRegistrationMail(user, GenerateRegistrationToken(), cancellationToken);
+    public async Task ResendVerificationCodeAsync(User user, CancellationToken cancellationToken)
+    {
+        VerificationCode newVerificationCode = new()
+        {
+            UserId = user!.Id,
+            Code = GenerateVerificationCode(),
+            DateCreated = DateTime.UtcNow,
+            DateExpiring = DateTime.UtcNow.AddMinutes(5)
+        };
+
+        _verificationCodeRepository.Create(newVerificationCode);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        await _emailService.SendLoginVerificationMailAsync(user, newVerificationCode.Code, cancellationToken);
+    }
+
+    public async Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+
+        await _emailService.SendRegistrationMailAsync(user, GenerateRegistrationToken(), cancellationToken);
     }
 
     private int GenerateVerificationCode()
@@ -183,7 +183,7 @@ public sealed class AuthService : IAuthService
         return Random.Shared.Next(1000, 9999);
     }
 
-    private string GenerateJwtToken(Korisnik user)
+    private string GenerateJwtToken(User user)
     {
         var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
@@ -192,7 +192,7 @@ public sealed class AuthService : IAuthService
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim("Id", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, $"{user.Ime} {user.Prezime}"),
+                new Claim(JwtRegisteredClaimNames.Sub, $"{user.FirstName} {user.LastName}"),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.Iss, _config["Jwt:Issuer"]),
                 new Claim(JwtRegisteredClaimNames.Aud, _config["Jwt:Audience"]),
@@ -217,10 +217,5 @@ public sealed class AuthService : IAuthService
         return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("/", "_").Replace("%", ".").Replace("<", ".")
             .Replace(">", ".").Replace("{", "-").Replace("}", "_").Replace("?", ".").Replace("#", ".")
             .Replace("=", ".");
-    }
-
-    private async Task ResendVerificationCode(Korisnik user, int code, CancellationToken cancellationToken)
-    {
-        await _emailService.SendLoginVerificationMail(user, code, cancellationToken);
     }
 }

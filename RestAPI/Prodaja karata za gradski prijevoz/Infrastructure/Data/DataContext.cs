@@ -1,14 +1,13 @@
-﻿using Domain.Entities.Korisnici;
+﻿using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
 public sealed class DataContext : DbContext
 {
-    public DbSet<Korisnik> Users { get; set; }
-    public DbSet<RegistracijskiToken> RegistrationTokens { get; set; }
-    public DbSet<VerificationCode> VerificationCodes { get; set; }
-
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<RegistrationToken> RegistrationTokens { get; set; } = null!;
+    public DbSet<VerificationCode> VerificationCodes { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 
@@ -16,7 +15,7 @@ public sealed class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Korisnik>()
+        modelBuilder.Entity<User>()
            .HasIndex(u => u.Email)
            .IsUnique();
     }

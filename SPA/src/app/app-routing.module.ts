@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'update', component: UpdateProfileComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'registracija', component: RegistrationComponent },
-  { path: 'activate/:token', component: ActivateAccountComponent },
+  { path: 'activate/:userId/:token', component: ActivateAccountComponent },
   { path: 'prijava', component: LogInComponent },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }

@@ -5,3 +5,4 @@ Test.db
 bin/
 obj/
 appsettings.Development.json
+log_exceptions.log

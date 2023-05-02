@@ -1,6 +1,6 @@
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Implementations.Mapper;
-using Domain.Entities.Korisnici;
+using Domain.Entities.Users;
 
 namespace UnitTests.Services;
 
@@ -16,26 +16,26 @@ public sealed class ObjectMapperServiceTests
     [Fact]
     public void Map_ShouldReturnMappedObject_WhenPassedObjectNotNull()
     {
-        Korisnik user = new()
+        User user = new()
         {
-            Ime = "amor",
-            Prezime = "osmic"
+            FirstName = "amor",
+            LastName = "osmic"
         };
 
-        Korisnik userToMapTo = new();
+        User userToMapTo = new();
 
         _objecMapperService.Map(user, userToMapTo);
 
-        Assert.Equal(user.Ime, userToMapTo.Ime);
-        Assert.Equal(user.Prezime, userToMapTo.Prezime);
+        Assert.Equal(user.FirstName, userToMapTo.FirstName);
+        Assert.Equal(user.LastName, userToMapTo.LastName);
     }
 
     [Fact]
     public void Map_ShouldThrowNullArgumentException_WhenPassedObjectIsNull()
     {
-        Korisnik? user = null;
+        User? user = null;
 
-        Korisnik userToMapTo = new();
+        User userToMapTo = new();
 
         Assert.Throws<ArgumentNullException>(() => _objecMapperService.Map(user, userToMapTo));
     }
