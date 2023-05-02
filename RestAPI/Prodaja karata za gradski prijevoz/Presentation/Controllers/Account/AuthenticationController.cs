@@ -4,7 +4,6 @@ using Domain.Entities.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Application.Services.Abstractions.Interfaces.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Presentation.DTO.User;
 

@@ -19,19 +19,17 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
             .AsQueryable();
     }
 
-    public Task<TEntity?> GetByIdAsync(Guid Id, CancellationToken cancellationToken)
+    public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(Id, nameof(Id));
+        ArgumentNullException.ThrowIfNull(id, nameof(id));
 
         return _dataContext.Set<TEntity>()
-            .FirstOrDefaultAsync(entity => entity.Id == Id, cancellationToken);
+            .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
     }
 
     public virtual Guid? Create(TEntity? entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-
-        entity.Id = Guid.NewGuid();
         
         _dataContext.Add(entity);
 

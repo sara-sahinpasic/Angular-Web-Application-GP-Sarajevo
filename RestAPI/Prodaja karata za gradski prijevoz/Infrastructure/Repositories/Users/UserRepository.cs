@@ -7,17 +7,12 @@ namespace Infrastructure.Repositories.Users;
 
 public sealed class UserRepository : GenericRepository<User>, IUserRepository
 {
-    private readonly DataContext _dataContext;
-
-    public UserRepository(DataContext dataContext) : base(dataContext) 
-    {
-        _dataContext = dataContext;
-    }
+    public UserRepository(DataContext dataContext) : base(dataContext) {}
 
     public Task<User?> GetByEmailAsync(string email)
     {
         ArgumentNullException.ThrowIfNull(email, nameof(email));
 
-        return GetAll().FirstOrDefaultAsync(u => u.Email!.ToLower() == email.ToLower());
+        return GetAll().FirstOrDefaultAsync(user => user.Email!.ToLower() == email.ToLower());
     }
 }
