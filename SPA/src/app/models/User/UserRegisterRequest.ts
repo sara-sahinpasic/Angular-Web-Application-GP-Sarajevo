@@ -1,8 +1,8 @@
 export interface UserRegisterRequest {
-  ime: string,
-  prezime: string,
-  datumRodjenja: Date,
-  brojTelefona: string,
+  firstName: string,
+  lastName: string,
+  dateOfBirth: Date,
+  phoneNumber: string,
   email: string,
   password: string
 }

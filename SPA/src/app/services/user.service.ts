@@ -21,8 +21,8 @@ export class UserService {
     return this.httpClient.post<string>(this.url + 'register', registerRequest);
   }
 
-  public activateAccount(token: string): Observable<string> {
-    return this.httpClient.put<string>(this.url + `account/activate/${token}`, null);
+  public activateAccount(token: string, userId: string): Observable<string> {
+    return this.httpClient.put<string>(this.url + `account/activate/${userId}/${token}`, null);
   }
 
   public login(loginData: UserLoginRequest): Observable<UserLoginResponse> {

@@ -1,7 +1,7 @@
 ﻿using Application.Config.SMS;
-using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
+using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Abstractions.Interfaces.SMS;
-using Domain.Entities.Korisnici;
+using Domain.Entities.Users;
 using Telesign;
 
 namespace Infrastructure.Services.SMS;
@@ -17,7 +17,7 @@ public sealed class SmsService : ISMSService
         _verificationCodeRepository = verificationCodeRepository;
     }
 
-    public async Task<bool> SendVerificationCode(Korisnik user)
+    public async Task<bool> SendVerificationCode(User user)
     {
         string phoneNumber = "38762924925";
         int verificationCode = Random.Shared.Next(1000, 9999);

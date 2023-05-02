@@ -12,12 +12,12 @@ import { UserService } from 'src/app/services/user.service';
 export class RegistrationComponent implements OnInit {
 
   public userRequest: UserRegisterRequest = {
-    ime: "",
-    prezime: "",
+    firstName: "",
+    lastName: "",
     password: "",
-    datumRodjenja: new Date(),
+    dateOfBirth: new Date(),
     email: "",
-    brojTelefona: ""
+    phoneNumber: ""
   };
 
   registrationSent:  boolean = false;

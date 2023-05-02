@@ -4,12 +4,14 @@ using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Mapper;
-using Application.Services.Abstractions.Interfaces.Repositories.Korisnici;
+using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Abstractions.Interfaces.SMS;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Hashing;
 using Application.Services.Implementations.Mapper;
-using Infrastructure.Repositories.Korisnici;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.Users;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.SMS;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -42,13 +44,13 @@ public static partial class Services
 
     public static void AddRepositories(this WebApplicationBuilder builder)
     {
-        builder.Services.TryAddScoped<IKorisnikRepozitorij, KorisnikRepository>();
-        builder.Services.TryAddScoped<IRegistracijskiTokenRepository, RegistracijskiTokenRepository>();
+        builder.Services.TryAddScoped<IUserRepository, UserRepository>();
+        builder.Services.TryAddScoped<IRegistrationTokenRepository, RegistrationTokenRepository>();
         builder.Services.TryAddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)
     {
-
+        builder.Services.TryAddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
