@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="form-container" >
+    <h1>Moji podaci </h1>
+    <div class="nav">
+      <button class="podaci" (click)="mojiPodaci()">Moji podaci</button>
+      <button class="historija" (click)="historijaKupovina()">Historija kupovina</button>
+    </div>
+    <hr>
+      <div class="box">
+        <div class="left">
+          <img src="./assets/X.png">
+        </div>
+        <div class="right">
+        <div class="input-container">
+          <label for="brojKupca">Broj kupca: [(ngModel)]="profileModel.id" </label>
+        </div>
+        <div class="input-container">
+          <label for="ime">Ime: [(ngModel)]="profileModel.ime</label>
+        </div>
+        <div class="input-container">
+          <label for="prezime">Prezime: [(ngModel)]="profileModel.prezime</label>
+        </div>
+        <div class="input-container">
+          <label for="datumRodjenja">Datum rođenja: [(ngModel)]="profileModel.datumRodjenja</label>
+        </div>
+        <div class="input-container">
+          <label for="brojTelefona">Broj telefona: [(ngModel)]="profileModel.brojTelefona</label>
+        </div>
+        <div class="input-container">
+          <label for="adresa">Adresa: [(ngModel)]="profileModel.adresa</label>
+        </div>
+        <div class="input-container">
+          <label for="email">Email: [(ngModel)]="profileModel.email</label>
+        </div>
+      </div>
+      </div>
+      <button class="izmjena" (click)="izmjenaPodataka()">Izmjena podataka</button>
+    </div>
+  </div>
+
