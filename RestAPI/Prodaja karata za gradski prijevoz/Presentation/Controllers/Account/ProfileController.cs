@@ -1,4 +1,7 @@
-﻿using Domain.ViewModels;
+﻿using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Users;
+using Application.Services.Implementations.Mapper;
+using Domain.ViewModels;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,18 +17,18 @@ namespace Presentation.Controllers.Account
     [Route("[controller]")]
     public sealed class ProfileController : ControllerBase
     {
-        private readonly DataContext _dbContext;
-        public ProfileController(DataContext dbContext)
+        private readonly IUserRepository _userRepository;
+        public ProfileController(IUserRepository userRepository)
         {
-            _dbContext = dbContext;
+            this._userRepository=userRepository;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetByPhoneNumber(Guid id)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             //ToDo: provjera da li je logiran
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _userRepository.GetByIdAsync(id, cancellationToken);
             if (user == null)
             {
                 return NotFound("Nema podataka");
@@ -33,38 +36,37 @@ namespace Presentation.Controllers.Account
             return Ok(user);
         }
         [HttpPut("{Id}")]
-        public async Task<IActionResult> UpdateProfile(KorisnikVM vM)
+        public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken, 
+            [FromServices]IUnitOfWork unitOfWork, [FromServices] ObjectMapperService objectMapperService)
         {
             //ToDo: provjera da li je logiran
 
-            var data = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == vM.Id);
+            var data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken);
+
             if (data == null)
             {
                 return NotFound("Nema podataka");
             }
 
-            data.Ime = vM.Ime;
-            data.Prezime = vM.Prezime;
-            data.BrojTelefona = vM.BrojTelefona;
-            data.Adresa = vM.Adresa;
+            objectMapperService.Map(vM, data);
 
-            _dbContext.Users.Update(data);
-            await _dbContext.SaveChangesAsync();
+            _userRepository.Update(data);
+            await unitOfWork.CommitAsync(cancellationToken);
             return Ok(data);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteProfile(Guid id)
+        public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices]IUnitOfWork unitOfWork)
         {
             //ToDo: provjera da li je logiran
 
-            var data = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var data = await _userRepository.GetByIdAsync(id, cancellationToken);
             if (data == null)
             {
                 return NotFound("Nema podataka");
             }
 
-            _dbContext.Users.Remove(data);
-            await _dbContext.SaveChangesAsync();
+            _userRepository.Delete(data);
+            await unitOfWork.CommitAsync(cancellationToken);
             return Ok(data);
         }
     }

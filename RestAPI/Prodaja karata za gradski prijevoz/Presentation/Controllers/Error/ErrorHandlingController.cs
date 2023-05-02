@@ -40,7 +40,7 @@ public sealed class ErrorHandlingController : ControllerBase
         };
         var exceptionMessage = exception.InnerException?.Message ?? exception.Message;
         // todo: see how to do with logger: sprint 2
-        System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
+      //  System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
         _logger.LogError(exceptionMessage);
 
         return StatusCode((int)problem.Status, problem);

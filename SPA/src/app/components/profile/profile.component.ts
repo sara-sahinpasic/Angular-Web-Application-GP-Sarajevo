@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Profile } from 'src/app/models/User/Profile';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -13,10 +14,11 @@ export class ProfileComponent implements OnInit {
 constructor(private _httpClient:HttpClient, private _route: ActivatedRoute, private _router: Router){
 
 }
-adresa_servera = "http://localhost:7192";
+private url: string = environment.apiUrl;
+
 ngOnInit(): void{
-  const id: number = Number(this._route.snapshot.paramMap.get("id"));
-  this._httpClient.get(`${this.adresa_servera}/Profile?id=${id}`)
+  const id: string = this._route.snapshot.paramMap.get("id") as string;
+  this._httpClient.get(`${this.url}Profile?id=${id}`)
     .subscribe((p: any) => {
       this.profileModel = p;
     });
@@ -24,11 +26,11 @@ ngOnInit(): void{
 
 profileModel: Profile = {
   id:'',
-  ime:'',
-  prezime:'',
-  datumRodjenja:'',
-  brojTelefona:'',
-  adresa:'',
+  firstName:'',
+  lastName:'',
+  dateOfBirth:new Date(),
+  phoneNumber:'',
+  address:'',
   email:'',
 }
 

@@ -1,9 +1,9 @@
 export interface Profile {
   id?:string,
-  ime?:string,
-  prezime?:string,
-  datumRodjenja?:string,
-  brojTelefona?:string,
-  adresa?:string,
+  firstName?:string,
+  lastName?:string,
+  dateOfBirth?:Date,
+  phoneNumber?:string,
+  address?:string,
   email?:string,
 }

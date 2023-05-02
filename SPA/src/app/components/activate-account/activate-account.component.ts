@@ -23,7 +23,8 @@ export class ActivateAccountComponent implements OnInit {
     const observer: Observable<string> = this.userService.activateAccount(this.token, this.userId);
     observer.subscribe(() => {
       this.message = "Račun aktiviran!";
-      setInterval(()=> window.location.replace("/**"),2500);
+      //toDo: postaviti odbrojavanje
+      setInterval(()=> this.router.navigateByUrl("/login"),2500);
     });
   }
 }

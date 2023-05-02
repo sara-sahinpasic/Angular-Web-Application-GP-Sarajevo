@@ -9,7 +9,7 @@ import { UpdateProfileComponent } from './components/update-profile/update-profi
 
 const routes: Routes = [
   { path: 'update', component: UpdateProfileComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:id', component: ProfileComponent },
   { path: 'registracija', component: RegistrationComponent },
   { path: 'activate/:userId/:token', component: ActivateAccountComponent },
   { path: 'prijava', component: LogInComponent },
