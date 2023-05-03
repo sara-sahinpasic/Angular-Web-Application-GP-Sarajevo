@@ -1,40 +1,58 @@
 <div class="container">
-  <div class="form-container" >
+  <div class="form-container">
     <h1>Moji podaci </h1>
     <div class="nav">
-      <button class="podaci" (click)="mojiPodaci()">Moji podaci</button>
-      <button class="historija" (click)="historijaKupovina()">Historija kupovina</button>
+      <button class="podaci" (click)="navigateToMojiPodaci()">Moji podaci</button>
+      <button class="historija" (click)="navigateToHistorijaKupovina()">Historija kupovina</button>
     </div>
-    <hr>
-      <div class="box">
-        <div class="left">
-          <img src="./assets/X.png">
+    <div class="box">
+
+      <div class="input-container" style="margin-top: 5px;">
+        <label style="margin-left:1%; text-align: center;" for="ime">Broj kupca: </label>
+        <input style="margin-left:1%; width: 98%; text-align: center; font-weight: bolder;" id="ime" type="text"
+          placeholder="" disabled [(ngModel)]="profileModel.id">
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="ime">Ime: </label>
+          <input id="ime" type="text" placeholder="" disabled [(ngModel)]="profileModel.firstName">
         </div>
-        <div class="right">
-        <div class="input-container">
-          <label for="brojKupca">Broj kupca: {{profileModel.id}} </label>
-        </div>
-        <div class="input-container">
-          <label for="ime">Ime: {{profileModel.firstName}}</label>
-        </div>
-        <div class="input-container">
-          <label for="prezime">Prezime: {{profileModel.lastName}}</label>
-        </div>
-        <div class="input-container">
-          <label for="datumRodjenja">Datum rođenja: {{profileModel.dateOfBirth}}</label>
-        </div>
-        <div class="input-container">
-          <label for="brojTelefona">Broj telefona: {{profileModel.phoneNumber}}</label>
-        </div>
-        <div class="input-container">
-          <label for="adresa">Adresa: {{profileModel.address}}</label>
-        </div>
-        <div class="input-container">
-          <label for="email">Email: {{profileModel.email}}</label>
+        <div class="col">
+          <label for="prezime">Prezime: </label>
+          <input id="prezime" type="text" placeholder="" disabled [(ngModel)]="profileModel.lastName">
         </div>
       </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="datumRodjenja">Datum rođenja: </label>
+          <input id="datumRodjenja" type="date" placeholder="" disabled [(ngModel)]="profileModel.dateOfBirth">
+        </div>
+        <div class="col">
+          <label for="adresa">Adresa: </label>
+          <input id="adresa" type="text" placeholder="" disabled [(ngModel)]="profileModel.address">
+        </div>
       </div>
-      <button class="izmjena" (click)="izmjenaPodataka()">Izmjena podataka</button>
+
+      <div class="row">
+        <div class="col">
+          <label for="email">Email:</label>
+          <input id="email" type="text" placeholder="" disabled [(ngModel)]="profileModel.email">
+        </div>
+        <div class="col">
+          <label for="brojTelefona">Broj telefona:</label>
+          <input id="brojTelefona" type="number" placeholder="" disabled [(ngModel)]="profileModel.phoneNumber">
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 5px;">
+        <div class="col">
+          <label for="ime" style="text-align: center; margin-left: 0%;">Fotografija: </label>
+          <img src="./assets/X.png" class="rounded mx-auto d-block">
+        </div>
     </div>
   </div>
+  <button class="izmjena" (click)="navigateToUpdate()">Izmjena podataka</button>
+  <button class="obrisi" (click)="deleteProfile()">Obriši profil</button>
 
+</div>

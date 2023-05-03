@@ -7,43 +7,47 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+  constructor(
+    private _httpClient: HttpClient,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) {}
+  private url: string = environment.apiUrl;
 
-constructor(private _httpClient:HttpClient, private _route: ActivatedRoute, private _router: Router){
-
-}
-private url: string = environment.apiUrl;
-
-ngOnInit(): void{
-  const id: string = this._route.snapshot.paramMap.get("id") as string;
-  this._httpClient.get(`${this.url}Profile?id=${id}`)
-    .subscribe((p: any) => {
+  ngOnInit(): void {
+    const id: string = this._route.snapshot.paramMap.get('id') as string;
+    this._httpClient.get(`${this.url}Profile?id=${id}`).subscribe((p: any) => {
       this.profileModel = p;
     });
-}
+  }
 
-profileModel: Profile = {
-  id:'',
-  firstName:'',
-  lastName:'',
-  dateOfBirth:new Date(),
-  phoneNumber:'',
-  address:'',
-  email:'',
-}
+  profileModel: Profile = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    dateOfBirth: new Date(),
+    phoneNumber: '',
+    address: '',
+    email: '',
+  };
+  navigateToMojiPodaci() {
+    this._router.navigateByUrl('/profile/:id');
+  }
+  navigateToUpdate() {
 
-historijaKupovina() {
-throw new Error('Method not implemented.');
+    this._router.navigateByUrl('/update:/id');
+  }
+  deleteProfile() {
+    const id: string = this._route.snapshot.paramMap.get('id') as string;
+    this._httpClient.delete(`${this.url}Profile?id=${id}`).subscribe(() => {
+      this._router.navigateByUrl('/delete/:id');
+    });
+    //setInterval(()=> this._router.navigateByUrl("/**"),2500);
+  }
+  navigateToHistorijaKupovina() {
+    throw new Error('Method not implemented.');
+  }
 }
-mojiPodaci() {
-  //this._router.navigateByUrl("/update");
-}
-izmjenaPodataka() {
-  this._router.navigateByUrl("/update");
-}
-
-}
-
-

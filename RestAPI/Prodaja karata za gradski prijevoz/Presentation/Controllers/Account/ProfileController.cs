@@ -1,10 +1,12 @@
-﻿using Application.Services.Abstractions.Interfaces.Repositories;
+﻿using Application.Services.Abstractions.Interfaces.Mapper;
+using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Implementations.Mapper;
 using Domain.ViewModels;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Presentation.DTO.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,20 +26,23 @@ namespace Presentation.Controllers.Account
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken, [FromServices]IObjectMapperService objectMapperService)
         {
             //ToDo: provjera da li je logiran
 
             var user = await _userRepository.GetByIdAsync(id, cancellationToken);
+
             if (user == null)
             {
                 return NotFound("Nema podataka");
             }
-            return Ok(user);
+            var userDto=new UpdateProfileDataDto();
+            objectMapperService.Map(user, userDto);
+            return Ok(userDto);
         }
-        [HttpPut("{Id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken, 
-            [FromServices]IUnitOfWork unitOfWork, [FromServices] ObjectMapperService objectMapperService)
+            [FromServices]IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService)
         {
             //ToDo: provjera da li je logiran
 

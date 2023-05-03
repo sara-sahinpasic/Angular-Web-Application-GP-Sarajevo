@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="form-container">
+    <h1>Izmjena podataka </h1>
+    <div class="box">
+
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="ime">Fotografija: </label>
+        <img src="./assets/X.png" class="img-thumbnail">
+        <button class="fotografija" (click)="ucitajFotografiju()">Učitaj fotografiju</button>
+      </div>
+      <div class="col">
+        <form>
+          <label for="ime">Ime: </label>
+          <input id="ime" type="text" placeholder="" [(ngModel)]="profileModel.firstName" [ngModelOptions]="{standalone: true}">
+
+          <label for="prezime">Prezime: </label>
+          <input id="prezime" type="text" placeholder="" [(ngModel)]="profileModel.lastName" [ngModelOptions]="{standalone: true}">
+
+          <label for="brojTelefona">Broj telefona: </label>
+          <input id="brojTelefona" type="text" placeholder="" [(ngModel)]="profileModel.phoneNumber" [ngModelOptions]="{standalone: true}">
+
+          <label for="adresa">Adresa: </label>
+          <input id="adresa" type="text" placeholder="" [(ngModel)]="profileModel.address" [ngModelOptions]="{standalone: true}">
+        </form>
+      </div>
+    </div>
+    <button class="izmjena" (click)="save()">Spremi</button>
+  </div>
