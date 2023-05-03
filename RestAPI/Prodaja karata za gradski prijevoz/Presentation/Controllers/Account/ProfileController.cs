@@ -1,17 +1,9 @@
 ﻿using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
-using Application.Services.Implementations.Mapper;
 using Domain.ViewModels;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Presentation.DTO.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers.Account
 {
@@ -22,11 +14,11 @@ namespace Presentation.Controllers.Account
         private readonly IUserRepository _userRepository;
         public ProfileController(IUserRepository userRepository)
         {
-            this._userRepository=userRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken, [FromServices]IObjectMapperService objectMapperService)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken, [FromServices] IObjectMapperService objectMapperService)
         {
             //ToDo: provjera da li je logiran
 
@@ -36,13 +28,13 @@ namespace Presentation.Controllers.Account
             {
                 return NotFound("Nema podataka");
             }
-            var userDto=new UpdateProfileDataDto();
+            var userDto = new UpdateProfileDataDto();
             objectMapperService.Map(user, userDto);
             return Ok(userDto);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken, 
-            [FromServices]IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService)
+        public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
+            [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService)
         {
             //ToDo: provjera da li je logiran
 
@@ -60,7 +52,7 @@ namespace Presentation.Controllers.Account
             return Ok(data);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices]IUnitOfWork unitOfWork)
+        public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
         {
             //ToDo: provjera da li je logiran
 

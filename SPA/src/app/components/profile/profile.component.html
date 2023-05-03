@@ -2,8 +2,8 @@
   <div class="form-container">
     <h1>Moji podaci </h1>
     <div class="nav">
-      <button class="podaci" (click)="navigateToMojiPodaci()">Moji podaci</button>
-      <button class="historija" (click)="navigateToHistorijaKupovina()">Historija kupovina</button>
+      <button class="data" (click)="navigateToProfile()">Moji podaci</button>
+      <button class="history" (click)="navigateToPurchaseHistory()">Historija kupovina</button>
     </div>
     <div class="box">
 
@@ -50,9 +50,9 @@
           <label for="ime" style="text-align: center; margin-left: 0%;">Fotografija: </label>
           <img src="./assets/X.png" class="rounded mx-auto d-block">
         </div>
+      </div>
     </div>
-  </div>
-  <button class="izmjena" (click)="navigateToUpdate()">Izmjena podataka</button>
-  <button class="obrisi" (click)="deleteProfile()">Obriši profil</button>
+    <button class="izmjena" (click)="navigateToUpdate()">Izmjena podataka</button>
+    <button class="obrisi" (click)="deleteProfile()">Obriši profil</button>
 
-</div>
+  </div>

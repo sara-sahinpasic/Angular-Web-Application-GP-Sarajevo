@@ -33,11 +33,10 @@ export class ProfileComponent implements OnInit {
     address: '',
     email: '',
   };
-  navigateToMojiPodaci() {
+  navigateToProfile() {
     this._router.navigateByUrl('/profile/:id');
   }
   navigateToUpdate() {
-
     this._router.navigateByUrl('/update:/id');
   }
   deleteProfile() {
@@ -47,7 +46,7 @@ export class ProfileComponent implements OnInit {
     });
     //setInterval(()=> this._router.navigateByUrl("/**"),2500);
   }
-  navigateToHistorijaKupovina() {
+  navigateToPurchaseHistory() {
     throw new Error('Method not implemented.');
   }
 }
