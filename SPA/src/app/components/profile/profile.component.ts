@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit {
     this._router.navigateByUrl('/profile/:id');
   }
   navigateToUpdate() {
-    this._router.navigateByUrl('/update:/id');
+    this._router.navigateByUrl('/update/:id');
   }
   deleteProfile() {
     const id: string = this._route.snapshot.paramMap.get('id') as string;

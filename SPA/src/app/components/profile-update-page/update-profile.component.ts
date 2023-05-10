@@ -38,7 +38,7 @@ export class UpdateProfileComponent implements OnInit {
     const id: string = this._route.snapshot.paramMap.get('id') as string;
     this._httpClient
       .put(`${this.url}Profile`, this.profileModel)
-      .subscribe((p: any) => {});
+      .subscribe();
   }
   ucitajFotografiju() {
     throw new Error('Method not implemented.');
