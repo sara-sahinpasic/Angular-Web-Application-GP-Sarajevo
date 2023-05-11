@@ -5,10 +5,12 @@ import { HomeComponent } from './components/home/home.component';
 import { LogInComponent } from './components/logIn/logIn.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { UpdateProfileComponent } from './components/update-profile/update-profile.component';
+import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
+import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
 
 const routes: Routes = [
-  { path: 'update', component: UpdateProfileComponent },
+  { path: 'delete/:id', component: ProfileDeletedPageComponent },
+  { path: 'update/:id', component: UpdateProfileComponent },
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'registracija', component: RegistrationComponent },
   { path: 'activate/:userId/:token', component: ActivateAccountComponent },

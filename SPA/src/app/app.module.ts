@@ -12,7 +12,8 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { HomeComponent } from './components/home/home.component';
 import { LogInComponent } from './components/logIn/logIn.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { UpdateProfileComponent } from './components/update-profile/update-profile.component';
+import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
+import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { UpdateProfileComponent } from './components/update-profile/update-profi
     HomeComponent,
     LogInComponent,
     ProfileComponent,
-    UpdateProfileComponent
+    UpdateProfileComponent,
+    ProfileDeletedPageComponent
   ],
   imports: [
     BrowserModule,

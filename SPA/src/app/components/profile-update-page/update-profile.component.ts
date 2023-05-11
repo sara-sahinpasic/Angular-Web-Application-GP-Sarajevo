@@ -5,11 +5,11 @@ import { Profile } from 'src/app/models/User/Profile';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+  selector: 'app-update-profile',
+  templateUrl: './update-profile.component.html',
+  styleUrls: ['./update-profile.component.scss'],
 })
-export class ProfileComponent implements OnInit {
+export class UpdateProfileComponent implements OnInit {
   constructor(
     private _httpClient: HttpClient,
     private _route: ActivatedRoute,
@@ -33,20 +33,14 @@ export class ProfileComponent implements OnInit {
     address: '',
     email: '',
   };
-  navigateToProfile() {
-    this._router.navigateByUrl('/profile/:id');
-  }
-  navigateToUpdate() {
-    this._router.navigateByUrl('/update/:id');
-  }
-  deleteProfile() {
+
+  save() {
     const id: string = this._route.snapshot.paramMap.get('id') as string;
-    this._httpClient.delete(`${this.url}Profile?id=${id}`).subscribe(() => {
-      this._router.navigateByUrl('/delete/:id');
-    });
-    //setInterval(()=> this._router.navigateByUrl("/**"),2500);
+    this._httpClient
+      .put(`${this.url}Profile`, this.profileModel)
+      .subscribe();
   }
-  navigateToPurchaseHistory() {
+  ucitajFotografiju() {
     throw new Error('Method not implemented.');
   }
 }
