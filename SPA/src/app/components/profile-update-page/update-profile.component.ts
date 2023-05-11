@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Profile } from 'src/app/models/User/Profile';
+import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -24,7 +24,7 @@ export class UpdateProfileComponent implements OnInit {
     });
   }
 
-  profileModel: Profile = {
+  profileModel: UserProfileModel = {
     id: '',
     firstName: '',
     lastName: '',

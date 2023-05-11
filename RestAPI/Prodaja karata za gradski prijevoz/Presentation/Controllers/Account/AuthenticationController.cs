@@ -1,11 +1,11 @@
 using Application.Services.Abstractions.Interfaces.Mapper;
-using Presentation.DTO.Korisnik;
+using Presentation.DTO.User;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
-using Presentation.DTO.User;
+using Presentation.DTO;
 
 namespace Presentation.Controllers.Account;
 
@@ -29,7 +29,7 @@ public sealed class AuthenticationController : ControllerBase
     [HttpPost("/register")]
     public async Task<IActionResult> RegisterAction
     (
-        [FromServices] IObjectMapperService objectMapperService, KorisnikRequest userRequest,
+        [FromServices] IObjectMapperService objectMapperService, UserRegistrationRequestDto userRequest,
         CancellationToken cancellationToken
     )
     {
@@ -68,15 +68,22 @@ public sealed class AuthenticationController : ControllerBase
         CancellationToken cancellationToken)
     {
         if (!await _authService.IsUserActivatedAsync(loginData.Email, cancellationToken))
-            return BadRequest("Account not activated. Check your email for the activation code.");
+            return BadRequest("Account not activated. Check your email for the activation code."); // todo: create also if user exists in service
 
         Guid? userId = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
 
-        return Ok(new
+        if (userId is null)
+        {
+            return BadRequest("User not found or credentials are wrong.");
+        }
+
+        Response response = new()
         {
             Message = "Verification code sent to email",
-            UserId = userId
-        });
+            Data = userId
+        };
+
+        return Ok(response);
     }
 
     [HttpPost("/verifyLogin")]
@@ -98,9 +105,12 @@ public sealed class AuthenticationController : ControllerBase
 
         string token = await _authService.AuthenticateLoginAsync(verificationCode, cancellationToken);
 
-        return Ok(new
+        Response response = new()
         {
-            Token = token
-        });
+            Message = "Success",
+            Data = token
+        };
+
+        return Ok(response);
     }
 }

@@ -4,6 +4,7 @@ using Domain.Entities.Users;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using Newtonsoft.Json.Linq;
 
 namespace Infrastructure.Services.Email;
 
@@ -30,13 +31,12 @@ public sealed class EmailService : IEmailService
             Text = content
         };
 
-        using (SmtpClient client = new())
-        {
-            await client.ConnectAsync(_emailConfiguration.SMTP, _emailConfiguration.Port, _emailConfiguration.UseTLS, cancellationToken);
-            await client.AuthenticateAsync(_emailConfiguration.Username, _emailConfiguration.Password, cancellationToken);
-            await client.SendAsync(message, cancellationToken);
-            await client.DisconnectAsync(true, cancellationToken);
-        }
+        using SmtpClient client = new();
+
+        await client.ConnectAsync(_emailConfiguration.SMTP, _emailConfiguration.Port, _emailConfiguration.UseTLS, cancellationToken);
+        await client.AuthenticateAsync(_emailConfiguration.Username, _emailConfiguration.Password, cancellationToken);
+        await client.SendAsync(message, cancellationToken);
+        await client.DisconnectAsync(true, cancellationToken);
     }
 
     public async Task SendNoReplyMailAsync(User to, string subject, string content, CancellationToken cancellationToken)
@@ -46,6 +46,9 @@ public sealed class EmailService : IEmailService
 
     public async Task SendRegistrationMailAsync(User user, string token, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user, nameof(user));
+        ArgumentNullException.ThrowIfNull(token, nameof(token));
+
         string spaUrl = _configuration["SPA:Url"];
 
         MailboxAddress from = new("No-reply", _emailConfiguration.From);
@@ -58,6 +61,8 @@ public sealed class EmailService : IEmailService
 
     public async Task SendLoginVerificationMailAsync(User user, int verificationCode, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user, nameof(user));
+
         MailboxAddress from = new("No-reply", _emailConfiguration.From);
         MailboxAddress to = new($"{user.FirstName} {user.LastName}", user.Email);
         string content = $"Vaš verifikacijski kod je {verificationCode}";

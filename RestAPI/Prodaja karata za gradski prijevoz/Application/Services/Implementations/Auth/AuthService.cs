@@ -1,6 +1,7 @@
 ﻿using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.Hashing;
+using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Users;
@@ -9,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 namespace Application.Services.Implementations.Auth;
@@ -187,13 +190,23 @@ public sealed class AuthService : IAuthService
     {
         var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
+        object userProfile = new
+        {
+            id = user.Id,
+            firstName = user.FirstName,
+            lastName = user.LastName,
+            address = user.Address,
+            email = user.Email,
+            dateOfBirth = user.DateOfBirth,
+            phoneNumber = user.PhoneNumber
+        };
+
         SecurityTokenDescriptor tokenDescriptor = new()
         {
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim("Id", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, $"{user.FirstName} {user.LastName}"),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+                new Claim(JwtRegisteredClaimNames.Sub, JsonSerializer.Serialize(userProfile)),
                 new Claim(JwtRegisteredClaimNames.Iss, _config["Jwt:Issuer"]),
                 new Claim(JwtRegisteredClaimNames.Aud, _config["Jwt:Audience"]),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, of, Subscription, tap } from 'rxjs';
+import { DataResponse } from 'src/app/models/DataResponse';
 import { UserLoginRequest } from 'src/app/models/User/UserLoginRequest';
 import { UserLoginResponse } from 'src/app/models/User/UserLoginResponse';
 import { UserVerifyLoginRequest } from 'src/app/models/User/UserVerifyLoginRequest';
@@ -16,42 +17,36 @@ export class LogInComponent implements OnInit {
   hasLoggedIn: boolean = false;
   enableVerifyButton: boolean = false;
   userLoginRequest: UserLoginRequest = {};
-  userLoginResponse?: UserLoginResponse;
   userVerifyLoginRequest!: UserVerifyLoginRequest;
+  userId?: string;
 
   constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit() {}
 
-  // todo: check if login successfull then change to the hasLoggedIn value
-  login() {
-    this.userService.login(this.userLoginRequest).pipe(
-      map(r => this.userLoginResponse = r),
-      tap(r => {
-        this.hasLoggedIn = true;
-        this.userVerifyLoginRequest = {
-          userId: r.userId,
-          code: 0
-        }
-      }),
-      catchError(e => {
-        console.error(e); // todo: take error message
-        return of([]);
-      })
-    )
-    .subscribe();
+  async login() {
+    this.userId = await this.userService.login(this.userLoginRequest);
+
+    if (this.userId != undefined) {
+      this.hasLoggedIn = true;
+    }
   }
 
-  verifyLogin(code: string) {
-    this.userVerifyLoginRequest.code = Number(code);
-    this.userService.verifyLogin(this.userVerifyLoginRequest!)
-      .pipe(
-        tap(t => {
-          console.log(t);
-          localStorage.setItem("userKey", t.token);
-        })
-      )
-      .subscribe();
+  async verifyLogin(code: string) {
+    if (this.userId == undefined) {
+      return; // todo: error handling
+    }
+
+    this.userVerifyLoginRequest = {
+      code: Number(code),
+      userId: this.userId
+    }
+    const isSuccesfull: boolean = await this.userService.verifyLogin(this.userVerifyLoginRequest!);
+
+    if (isSuccesfull) {
+      this.router.navigateByUrl("");
+      // todo: toast notification of succesfull login
+    }
   }
 
   validateCodeLength(code: string) {

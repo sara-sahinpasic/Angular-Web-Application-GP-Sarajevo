@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Presentation.DTO.Korisnik;
+namespace Presentation.DTO.User;
 
 public sealed class UserLoginRequestDto
 {

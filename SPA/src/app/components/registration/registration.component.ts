@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { DataResponse } from 'src/app/models/DataResponse';
 import { UserRegisterRequest } from 'src/app/models/User/UserRegisterRequest';
 import { UserService } from 'src/app/services/user.service';
 
@@ -28,7 +29,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   registracija() {
-    const observer: Observable<string> = this.userService.register(this.userRequest);
+    const observer: Observable<DataResponse> = this.userService.register(this.userRequest);
     observer.subscribe(() => {
       this.registrationSent = true;
     });
