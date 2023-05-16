@@ -12,6 +12,7 @@ export class SpinnerService {
   setLoading(loading: boolean) {
     this.loading = loading;
   }
+
   getLoading(): boolean {
     return this.loading;
   }

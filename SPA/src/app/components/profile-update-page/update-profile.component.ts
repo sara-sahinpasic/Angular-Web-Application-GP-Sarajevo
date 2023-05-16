@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserService } from 'src/app/services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SpinnerService } from 'src/app/services/spinner/spinner.service';
-import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-update-profile',
@@ -12,14 +8,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./update-profile.component.scss'],
 })
 export class UpdateProfileComponent implements OnInit {
-  constructor(
-    private _httpClient: HttpClient,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _spinner: SpinnerService,
-    private _userService: UserService
-  ) {}
-  private url: string = environment.apiUrl;
+  constructor(private _userService: UserService) {}
 
   profileModel: UserProfileModel = {
     id: '',
