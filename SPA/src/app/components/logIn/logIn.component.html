@@ -10,8 +10,8 @@
       <label for="lozinka">Lozinka: *</label>
       <input id="lozinka" type="password" placeholder="" [(ngModel)]="userLoginRequest.password" required=""><br />
       <!-- <input id="check" type="checkbox">
-      <label for="check"> Zapamti podatke</label>
-      <a href="url">Zaboravljena lozinka?</a> -->
+      <label for="check"> Zapamti podatke</label> -->
+      <a routerLink="/resetPassword">Zaboravljena lozinka?</a>
 
       <button class="primary" (click)="login()">Prijava</button>
       <button class="secondary" (click)="navigateToRegistration()">Registruj se</button>

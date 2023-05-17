@@ -103,4 +103,12 @@ public sealed class AuthenticationController : ControllerBase
             Token = token
         });
     }
+
+    [HttpPost("/resetPassword")]
+    public async Task<IActionResult> ResetPasswordAction([FromBody] string email, CancellationToken cancellationToken)
+    {
+        await _authService.ResetPasswordAsync(email, cancellationToken);
+
+        return Ok("You can check your email now for a new password"); // todo: change to fit the new functionality
+    }
 }

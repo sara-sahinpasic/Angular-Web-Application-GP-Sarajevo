@@ -5,11 +5,11 @@ namespace UnitTests.Services;
 
 public sealed class HashServiceTests
 {
-    private readonly IHashingService _hashingService;
+    private readonly IPasswordService _hashingService;
 
     public HashServiceTests()
     {
-        _hashingService = new HashingService();
+        _hashingService = new PasswordService();
     }
 
     [Theory]

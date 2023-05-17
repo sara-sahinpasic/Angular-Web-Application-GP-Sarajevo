@@ -4,6 +4,7 @@ using Domain.Entities.Users;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using Newtonsoft.Json.Linq;
 
 namespace Infrastructure.Services.Email;
 
@@ -39,9 +40,12 @@ public sealed class EmailService : IEmailService
         }
     }
 
-    public async Task SendNoReplyMailAsync(User to, string subject, string content, CancellationToken cancellationToken)
+    public async Task SendNoReplyMailAsync(User user, string subject, string content, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        MailboxAddress from = new("No-reply", _emailConfiguration.From);
+        MailboxAddress to = new($"{user.FirstName} {user.LastName}", user.Email);
+
+        await SendEmailAsync(from, to, subject, content, cancellationToken);
     }
 
     public async Task SendRegistrationMailAsync(User user, string token, CancellationToken cancellationToken)

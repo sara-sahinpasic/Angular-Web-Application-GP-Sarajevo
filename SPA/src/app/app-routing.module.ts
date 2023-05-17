@@ -7,6 +7,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { ProfileComponent } from './components/profile/profile.component';
 import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
 import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: 'delete/:id', component: ProfileDeletedPageComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'registracija', component: RegistrationComponent },
   { path: 'activate/:userId/:token', component: ActivateAccountComponent },
   { path: 'prijava', component: LogInComponent },
+  { path: 'resetPassword', component: ResetPasswordComponent },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }
 ];

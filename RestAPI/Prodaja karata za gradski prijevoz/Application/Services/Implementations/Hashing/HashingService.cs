@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Application.Services.Implementations.Hashing;
 
-public sealed class HashingService : IHashingService
+public sealed class PasswordService : IPasswordService
 {
     public Tuple<byte[], string> GeneratePasswordHashAndSalt(string password)
     {
@@ -18,6 +18,19 @@ public sealed class HashingService : IHashingService
         }
 
         return new Tuple<byte[], string>(salt, Encoding.UTF8.GetString(hashedPassword));
+    }
+
+    public string GenerateRandomPassword()
+    {
+        int length = 10;
+        StringBuilder stringBuilder = new();
+
+        for (int i = 0; i < length; i++)
+        {
+            stringBuilder.Append((char)RandomNumberGenerator.GetInt32(33, 126));
+        }
+
+        return stringBuilder.ToString();
     }
 
     public bool VerifyPasswordHash(string password, string passwordHash, byte[] passwordSalt)

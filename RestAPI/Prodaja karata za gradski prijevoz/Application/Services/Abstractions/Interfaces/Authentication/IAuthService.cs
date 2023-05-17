@@ -33,5 +33,5 @@ public interface IAuthService
     Task<bool> IsUserActivatedAsync(string emai, CancellationToken cancellationToken);
     Task ResendVerificationCodeAsync(User user, CancellationToken cancellationToken);
     Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken);
-
+    Task ResetPasswordAsync(string email, CancellationToken cancellationToken);
 }

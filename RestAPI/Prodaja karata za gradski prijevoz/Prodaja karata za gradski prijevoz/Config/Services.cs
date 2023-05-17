@@ -32,7 +32,7 @@ public static partial class Services
     public static void AddSingletonServices(this WebApplicationBuilder builder)
     {
         builder.Services.TryAddSingleton<IObjectMapperService, ObjectMapperService>();
-        builder.Services.TryAddSingleton<IHashingService, HashingService>();
+        builder.Services.TryAddSingleton<IPasswordService, PasswordService>();
     }
 
     public static void AddTransientServices(this WebApplicationBuilder builder)

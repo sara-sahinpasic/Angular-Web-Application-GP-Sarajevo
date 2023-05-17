@@ -16,7 +16,7 @@ namespace Application.Services.Implementations.Auth;
 public sealed class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IHashingService _hashingService;
+    private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
     private readonly IRegistrationTokenRepository _registrationTokenRepository;
     private readonly IVerificationCodeRepository _verificationCodeRepository;
@@ -27,14 +27,14 @@ public sealed class AuthService : IAuthService
     public AuthService(
         IUserRepository userRepository,
         IEmailService emailService,
-        IHashingService hashingService,
+        IPasswordService hashingService,
         IRegistrationTokenRepository registrationTokenRepository,
         IVerificationCodeRepository verificationCodeRepository,
         IUnitOfWork unitOfWork,
         IConfiguration config)
     {
         _userRepository = userRepository;
-        _hashingService = hashingService;
+        _passwordService = hashingService;
         _emailService = emailService;
         _registrationTokenRepository = registrationTokenRepository;
         _verificationCodeRepository = verificationCodeRepository;
@@ -66,7 +66,7 @@ public sealed class AuthService : IAuthService
     {
         var user = await _userRepository.GetByEmailAsync(email);
         
-        if (user is null || !_hashingService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
+        if (user is null || !_passwordService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
         {
             return null;
         }
@@ -96,7 +96,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<Guid> RegisterAsync(User user, string password, CancellationToken cancellationToken)
     {
-        Tuple<byte[], string> passwordHashAndSalt = _hashingService.GeneratePasswordHashAndSalt(password);
+        Tuple<byte[], string> passwordHashAndSalt = _passwordService.GeneratePasswordHashAndSalt(password);
 
         user.PasswordHash = passwordHashAndSalt.Item2;
         user.PasswordSalt = passwordHashAndSalt.Item1;
@@ -217,5 +217,32 @@ public sealed class AuthService : IAuthService
         return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("/", "_").Replace("%", ".").Replace("<", ".")
             .Replace(">", ".").Replace("{", "-").Replace("}", "_").Replace("?", ".").Replace("#", ".")
             .Replace("=", ".");
+    }
+
+    public async Task ResetPasswordAsync(string email, CancellationToken cancellationToken)
+    {
+        User? user = await _userRepository.GetByEmailAsync(email);
+
+        if (user is null)
+        {
+            return;
+        }
+
+        string newPassword = _passwordService.GenerateRandomPassword();
+
+        Tuple<byte[], string> passwordParts = _passwordService.GeneratePasswordHashAndSalt(newPassword);
+
+        string passwordHash = passwordParts.Item2;
+        byte[] salt = passwordParts.Item1;
+
+        user.PasswordHash = passwordHash;
+        user.PasswordSalt = salt;
+
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        string subject = "Reset password";
+        string content = $"Your new password is {newPassword}. Please, change your password the next time you log in.";
+
+        await _emailService.SendNoReplyMailAsync(user, subject, content, cancellationToken);
     }
 }
