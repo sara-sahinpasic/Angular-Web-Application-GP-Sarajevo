@@ -1,4 +1,4 @@
-export interface DataResponse {
+export interface DataResponse<TDataType> {
   message: string,
-  data: any
+  data: TDataType
 }

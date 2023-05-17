@@ -23,21 +23,17 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // const id: string = this._route.snapshot.paramMap.get('id') as string;
-    // this._httpClient.get(`${this.url}Profile?id=${id}`).subscribe((p: any) => {
-    //   this.profileModel = p;
-    // });
     this.profileModel = this.userService.getUser() as UserProfileModel;
-    console.log(this.profileModel);
   }
-
 
   navigateToProfile() {
     this._router.navigateByUrl('/profile/:id');
   }
+
   navigateToUpdate() {
-    this._router.navigateByUrl('/update/:id');
+    this._router.navigateByUrl('/update');
   }
+
   deleteProfile() {
     const id: string = this.profileModel?.id as string;
 
@@ -46,6 +42,7 @@ export class ProfileComponent implements OnInit {
     });
     //setInterval(()=> this._router.navigateByUrl("/**"),2500);
   }
+
   navigateToPurchaseHistory() {
     throw new Error('Method not implemented.');
   }

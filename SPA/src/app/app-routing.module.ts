@@ -10,10 +10,10 @@ import { ProfileDeletedPageComponent } from './components/profile-deleted-page/p
 
 const routes: Routes = [
   { path: 'delete/:id', component: ProfileDeletedPageComponent },
-  { path: 'update/:id', component: UpdateProfileComponent },
+  { path: 'update/', component: UpdateProfileComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'registracija', component: RegistrationComponent },
-  { path: 'activate/:userId/:token', component: ActivateAccountComponent },
+  { path: 'activate/:token', component: ActivateAccountComponent },
   { path: 'prijava', component: LogInComponent },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }

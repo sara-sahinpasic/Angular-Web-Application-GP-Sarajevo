@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, firstValueFrom, of, tap } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserLoginRequest } from '../models/User/UserLoginRequest';
 import { UserVerifyLoginRequest } from '../models/User/UserVerifyLoginRequest';
 import { UserRegisterRequest } from '../models/User/UserRegisterRequest';
-import { UserLoginResponse } from '../models/User/UserLoginResponse';
-import { UserToken } from '../models/User/UserToken';
 import { DataResponse } from '../models/DataResponse';
 import { UserProfileModel } from '../models/User/UserProfileModel';
 import { JwtService } from './jwt/jwt.service';
+import { Router } from '@angular/router';
+import { UserLoginResponse } from '../models/User/UserLoginResponse';
+import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -17,49 +18,88 @@ import { JwtService } from './jwt/jwt.service';
 export class UserService {
 
   private url: string = environment.apiUrl;
-  private user?: UserProfileModel;
+  private userId?: string;
+  hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(private httpClient: HttpClient, private jwtService: JwtService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private jwtService: JwtService,
+    private router: Router) {}
 
-  public register(registerRequest: UserRegisterRequest): Observable<DataResponse> {
-    return this.httpClient.post<DataResponse>(this.url + 'register', registerRequest);
-  }
-
-  public activateAccount(token: string, userId: string): Observable<DataResponse> {
-    return this.httpClient.put<DataResponse>(this.url + `account/activate/${userId}/${token}`, null);
-  }
-
-  public async login(loginData: UserLoginRequest): Promise<string | undefined> {
-    let userId: string | undefined;
-    const observable: Observable<DataResponse | never[]> = this.httpClient.post<DataResponse>(this.url + 'login', loginData)
+  public register(registerRequest: UserRegisterRequest, redirectionRoute: string = "/login") {
+    this.httpClient.post<DataResponse<UserRegisterResponse>>(this.url + 'register', registerRequest)
       .pipe(
-        tap((response: DataResponse) => {
-          userId = response.data as string
+        tap((resp: DataResponse<UserRegisterResponse>) => {
+          if (resp.data.isAccountActivationRequired) {
+            this.isRegistrationSent.next(true);
+          }
+        })
+      )
+      .subscribe((resp: DataResponse<UserRegisterResponse | never[]>) => {
+        const response: DataResponse<UserRegisterResponse> = resp as DataResponse<UserRegisterResponse>;
+
+        if (!response.data.isAccountActivationRequired) {
+          this.router.navigateByUrl(redirectionRoute);
+        }
+      });
+  }
+
+  public activateAccount(token: string) {
+    this.httpClient.put(this.url + `account/activate/${token}`, null)
+      .pipe(
+        tap(() => {
+          this.isUserActivated.next(true);
+        })
+      )
+      .subscribe();
+  }
+
+  public login(loginData: UserLoginRequest, redirectionRoute: string = "") {
+    this.httpClient.post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
+      .pipe(
+        tap((response: DataResponse<UserLoginResponse>) => {
+          if (response.data.isTwoWayAuth) {
+            this.userId = response.data.loginData;
+            this.hasUserSentVerifyRequest.next(true);
+            return;
+          }
         }),
         catchError(e => {
           console.error(e); // todo: take error message
           return of([]);
         })
-      );
-
-    await firstValueFrom(observable);
-    return userId;
+      )
+      .subscribe((response: DataResponse<UserLoginResponse> | never[]) => {
+        const resp = response as DataResponse<UserLoginResponse>;
+        this.router.navigateByUrl(redirectionRoute);
+      });
   }
 
-  public async verifyLogin(userVerifyLoginRequest: UserVerifyLoginRequest): Promise<boolean> {
-    let isSuccesfull: boolean = false;
+  public verifyLogin(code: number, redirectionRoute: string | null = null) {
+    const userVerifyLoginRequest: UserVerifyLoginRequest = {
+      userId: this.userId as string,
+      code: code
+    };
 
-    const observable: Observable<DataResponse> = this.httpClient.post<DataResponse>(this.url + 'verifyLogin', userVerifyLoginRequest)
+    if (this.userId == undefined) {
+      throw new Error("User Id not present");
+    }
+
+    this.httpClient.post<DataResponse<string>>(this.url + 'verifyLogin', userVerifyLoginRequest)
       .pipe(
-        tap((response: DataResponse) => {
-          localStorage.setItem("token", response.data as string);
-          isSuccesfull = true;
+        tap((response: DataResponse<string>) => {
+          localStorage.setItem("token", response.data);
         })
-      );
+      )
+      .subscribe(() => {
+        if (!redirectionRoute) {
+          return;
+        }
 
-      await firstValueFrom(observable);
-
-      return isSuccesfull;
+        this.router.navigateByUrl(redirectionRoute);
+      });
   }
 
   public getUser(): UserProfileModel | undefined {
@@ -72,5 +112,17 @@ export class UserService {
     const payload: any = JSON.parse(decodedToken);
 
     return JSON.parse(payload.sub) as UserProfileModel;
+  }
+
+  public updateUser(userToUpdate: UserProfileModel, redirectionRoute: string | null = null) {
+    this.httpClient
+      .put(`${this.url}Profile`, userToUpdate)
+      .subscribe(() => {
+        if (!redirectionRoute) {
+          return;
+        }
+
+        this.router.navigateByUrl(redirectionRoute);
+      });
   }
 }

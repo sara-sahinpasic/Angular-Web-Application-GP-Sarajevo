@@ -1,7 +1,7 @@
 ﻿namespace Presentation.DTO;
 
-internal class Response
+internal class Response<TDataType>
 {
     public string Message { get; set; } = string.Empty;
-    public object? Data { get; set; } = null;
+    public TDataType? Data { get; set; }
 }

@@ -53,7 +53,7 @@ public sealed class EmailService : IEmailService
 
         MailboxAddress from = new("No-reply", _emailConfiguration.From);
         MailboxAddress to = new($"{user.FirstName} {user.LastName}", user.Email);
-        string content = $"<a href='{spaUrl}/activate/{user.Id}/{token}'>Activate account</a>";
+        string content = $"<a href='{spaUrl}/activate/{token}'>Activate account</a>";
         string subject = "Regstration confirmation";
 
         await SendEmailAsync(from, to, subject, content, cancellationToken);

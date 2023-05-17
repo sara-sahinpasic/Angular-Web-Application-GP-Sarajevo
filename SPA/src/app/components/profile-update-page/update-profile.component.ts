@@ -1,8 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
-import { environment } from 'src/environments/environment';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-update-profile',
@@ -10,19 +8,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./update-profile.component.scss'],
 })
 export class UpdateProfileComponent implements OnInit {
-  constructor(
-    private _httpClient: HttpClient,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {}
-  private url: string = environment.apiUrl;
 
-  ngOnInit(): void {
-    const id: string = this._route.snapshot.paramMap.get('id') as string;
-    this._httpClient.get(`${this.url}Profile?id=${id}`).subscribe((p: any) => {
-      this.profileModel = p;
-    });
-  }
+  constructor(private _userService: UserService) {}
 
   profileModel: UserProfileModel = {
     id: '',
@@ -34,12 +21,15 @@ export class UpdateProfileComponent implements OnInit {
     email: '',
   };
 
-  save() {
-    const id: string = this._route.snapshot.paramMap.get('id') as string;
-    this._httpClient
-      .put(`${this.url}Profile`, this.profileModel)
-      .subscribe();
+  ngOnInit(): void {
+    this.profileModel = this._userService.getUser() as UserProfileModel;
   }
+
+  save() {
+    this._userService.updateUser(this.profileModel, '/profile');
+  }
+
+  // todo
   ucitajFotografiju() {
     throw new Error('Method not implemented.');
   }

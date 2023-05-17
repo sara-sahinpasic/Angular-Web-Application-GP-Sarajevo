@@ -1,18 +1,17 @@
-﻿using Application.Services.Abstractions.Interfaces.Authentication;
+﻿using Application.DataClasses.User;
+using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.Hashing;
-using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Prodaja_karata_za_gradski_prijevoz.Config;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
 
 namespace Application.Services.Implementations.Auth;
 
@@ -25,6 +24,7 @@ public sealed class AuthService : IAuthService
     private readonly IVerificationCodeRepository _verificationCodeRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _config;
+    private readonly AuthConfirmationConfig _authConfirmationConfig;
 
     // todo: generic response and request class: try and to in sprint 2
     public AuthService(
@@ -34,7 +34,8 @@ public sealed class AuthService : IAuthService
         IRegistrationTokenRepository registrationTokenRepository,
         IVerificationCodeRepository verificationCodeRepository,
         IUnitOfWork unitOfWork,
-        IConfiguration config)
+        IConfiguration config,
+        AuthConfirmationConfig authConfirmationConfig)
     {
         _userRepository = userRepository;
         _hashingService = hashingService;
@@ -43,9 +44,10 @@ public sealed class AuthService : IAuthService
         _verificationCodeRepository = verificationCodeRepository;
         _config = config;
         _unitOfWork = unitOfWork;
+        _authConfirmationConfig = authConfirmationConfig;
     }
 
-    public async Task<bool> HasAuthCodeExpiredAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
+    public bool HasAuthCodeExpired(VerificationCode verificationCode, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(verificationCode, nameof(verificationCode));
 
@@ -65,13 +67,23 @@ public sealed class AuthService : IAuthService
     }
 
     //todo: create factory: try to do in sprint 2
-    public async Task<Guid?> LoginAsync(string email, string password, CancellationToken cancellationToken)
+    public async Task<LoginResult?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email);
         
         if (user is null || !_hashingService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
         {
             return null;
+        }
+
+        if (!_authConfirmationConfig.ShouldUseTwoWayAuth)
+        {
+            string jwtToken = GenerateJwtToken(user);
+            return new LoginResult
+            {
+                LoginData = jwtToken,
+                IsTwoWayAuth = _authConfirmationConfig.ShouldUseTwoWayAuth
+            };
         }
 
         VerificationCode? oldCode = await _verificationCodeRepository.GetByUserIdAsync(user.Id, cancellationToken);
@@ -94,10 +106,14 @@ public sealed class AuthService : IAuthService
 
         await _emailService.SendLoginVerificationMailAsync(user, verificationCode.Code, cancellationToken);
 
-        return user.Id;
+        return new LoginResult
+        {
+            LoginData = user.Id.ToString(),
+            IsTwoWayAuth = _authConfirmationConfig.ShouldUseTwoWayAuth
+        };
     }
 
-    public async Task<Guid> RegisterAsync(User user, string password, CancellationToken cancellationToken)
+    public async Task<RegisterResult> RegisterAsync(User user, string password, CancellationToken cancellationToken)
     {
         Tuple<byte[], string> passwordHashAndSalt = _hashingService.GeneratePasswordHashAndSalt(password);
 
@@ -107,18 +123,36 @@ public sealed class AuthService : IAuthService
         user.Id = Guid.NewGuid();
         _userRepository.Create(user);
 
-        RegistrationToken token = new()
-        {
-            User = user,
-            Token = GenerateRegistrationToken(), // todo: new algorithm: sprint 2
-        };
+        RegistrationToken? token = null;
+        bool shouldActivateUserOnCreation = true;
 
-        _registrationTokenRepository.Create(token);
+        if (_authConfirmationConfig.ShoudUseRegisteredAccountConfirmation)
+        {
+            shouldActivateUserOnCreation = false;
+            token = new()
+            {
+                User = user,
+                Token = GenerateRegistrationToken(), // todo: new algorithm: sprint 2
+            };
+
+            _registrationTokenRepository.Create(token);
+        }
+
+        user.Active = shouldActivateUserOnCreation;
+
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        await _emailService.SendRegistrationMailAsync(user, token!.Token!, cancellationToken);
+        // done this way because we want to send the email after succesfully commiting all changes to the database
+        if (_authConfirmationConfig.ShoudUseRegisteredAccountConfirmation)
+        {
+            await _emailService.SendRegistrationMailAsync(user, token!.Token!, cancellationToken);
+        }
 
-        return user.Id;
+        return new RegisterResult()
+        {
+            IsAccountActivationRequired = _authConfirmationConfig.ShoudUseRegisteredAccountConfirmation,
+            UserId = user.Id,
+        };
     }
 
     public async Task<bool> HasRegistrationTokenExpiredAsync(RegistrationToken registrationToken, CancellationToken cancellationToken)
@@ -136,14 +170,15 @@ public sealed class AuthService : IAuthService
         return true;
     }
 
-    public async Task ActivateUserAccountAsync(User user, RegistrationToken registrationToken, CancellationToken cancellationToken)
+    public Task ActivateUserAccountAsync(User user, RegistrationToken registrationToken, CancellationToken cancellationToken)
     {
         user!.Active = true;
         registrationToken.IsActivated = true;
 
         _userRepository.Update(user);
         _registrationTokenRepository.Update(registrationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return _unitOfWork.CommitAsync(cancellationToken);
     }
 
     public Task LogoutAsync(User user, CancellationToken cancellationToken)
@@ -153,7 +188,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<bool> IsUserActivatedAsync(string email, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email);
 
         return user is not null && user.Active;
     }
@@ -176,7 +211,7 @@ public sealed class AuthService : IAuthService
 
     public async Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email);
 
         await _emailService.SendRegistrationMailAsync(user, GenerateRegistrationToken(), cancellationToken);
     }
