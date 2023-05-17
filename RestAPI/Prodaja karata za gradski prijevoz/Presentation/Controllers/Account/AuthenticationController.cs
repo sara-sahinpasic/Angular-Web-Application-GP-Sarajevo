@@ -134,6 +134,12 @@ public sealed class AuthenticationController : ControllerBase
     {
         await _authService.ResetPasswordAsync(email, cancellationToken);
 
-        return Ok("You can check your email now for a new password"); // todo: change to fit the new functionality
+        Response<string> response = new()
+        {
+            Message = "Success",
+            Data = "You can check your email now for a new password"
+        };
+
+        return Ok(response);
     }
 }

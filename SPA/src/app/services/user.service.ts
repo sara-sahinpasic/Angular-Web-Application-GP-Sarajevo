@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -125,5 +125,14 @@ export class UserService {
 
         this.router.navigateByUrl(redirectionRoute);
       });
+  }
+
+  public resetPassword(email: string) {
+    this.httpClient.post(this.url + `resetPassword`, `\"${email}\"`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    })
+      .subscribe();
   }
 }
