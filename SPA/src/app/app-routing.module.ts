@@ -11,7 +11,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 
 const routes: Routes = [
   { path: 'delete/:id', component: ProfileDeletedPageComponent },
-  { path: 'update/', component: UpdateProfileComponent },
+  { path: 'update', component: UpdateProfileComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'registracija', component: RegistrationComponent },
   { path: 'activate/:token', component: ActivateAccountComponent },

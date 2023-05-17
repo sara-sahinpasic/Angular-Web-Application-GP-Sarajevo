@@ -65,6 +65,7 @@ export class UserService {
             this.hasUserSentVerifyRequest.next(true);
             return;
           }
+          localStorage.setItem("token", response.data.loginData);
         }),
         catchError(e => {
           console.error(e); // todo: take error message
