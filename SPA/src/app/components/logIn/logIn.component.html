@@ -1,6 +1,6 @@
 <div class="container">
   <div class="form-container">
-    <div class="login-form" *ngIf="!hasLoggedIn">
+    <div class="login-form" *ngIf="!isVerifyLoginRequestSent">
       <h1>Prijava </h1>
       <p id="uvod">
         Postanite član i iz udobnosti svoga doma kupite kartu, i ne propustite ponude i akcije.
@@ -16,7 +16,7 @@
       <button class="primary" (click)="login()">Prijava</button>
       <button class="secondary" (click)="navigateToRegistration()">Registruj se</button>
     </div>
-    <div class="verify-login-container" *ngIf="hasLoggedIn">
+    <div class="verify-login-container" *ngIf="isVerifyLoginRequestSent">
       <h3>Molimo vas unesite kod koji je poslan na Vaš mail</h3>
       <input #codeInput type="text" (keyup)="validateCodeLength(codeInput.value)">
       <button class="primary" (click)="verifyLogin(codeInput.value)" [disabled]="!enableVerifyButton">Potvrdi kod</button>

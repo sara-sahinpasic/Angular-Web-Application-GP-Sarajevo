@@ -28,10 +28,11 @@ namespace Presentation.Controllers.Account
             {
                 return NotFound("Nema podataka");
             }
-            var userDto = new UpdateProfileDataDto();
+            var userDto = new UserProfileDto();
             objectMapperService.Map(user, userDto);
             return Ok(userDto);
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
             [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService)
@@ -51,6 +52,7 @@ namespace Presentation.Controllers.Account
             await unitOfWork.CommitAsync(cancellationToken);
             return Ok(data);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
         {

@@ -11,10 +11,10 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 
 const routes: Routes = [
   { path: 'delete/:id', component: ProfileDeletedPageComponent },
-  { path: 'update/:id', component: UpdateProfileComponent },
-  { path: 'profile/:id', component: ProfileComponent },
+  { path: 'update/', component: UpdateProfileComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'registracija', component: RegistrationComponent },
-  { path: 'activate/:userId/:token', component: ActivateAccountComponent },
+  { path: 'activate/:token', component: ActivateAccountComponent },
   { path: 'prijava', component: LogInComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
   { path: '', component: HomeComponent },

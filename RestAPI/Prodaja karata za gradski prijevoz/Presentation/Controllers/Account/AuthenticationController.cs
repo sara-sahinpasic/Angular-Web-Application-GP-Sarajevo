@@ -1,11 +1,12 @@
 using Application.Services.Abstractions.Interfaces.Mapper;
-using Presentation.DTO.Korisnik;
+using Presentation.DTO.User;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
-using Presentation.DTO.User;
+using Presentation.DTO;
+using Application.DataClasses.User;
 
 namespace Presentation.Controllers.Account;
 
@@ -29,7 +30,7 @@ public sealed class AuthenticationController : ControllerBase
     [HttpPost("/register")]
     public async Task<IActionResult> RegisterAction
     (
-        [FromServices] IObjectMapperService objectMapperService, KorisnikRequest userRequest,
+        [FromServices] IObjectMapperService objectMapperService, UserRegistrationRequestDto userRequest,
         CancellationToken cancellationToken
     )
     {
@@ -39,25 +40,37 @@ public sealed class AuthenticationController : ControllerBase
         User user = new();
         objectMapperService.Map(userRequest, user);
 
-        Guid userId = await _authService.RegisterAsync(user, userRequest.Password!, cancellationToken);
+        RegisterResult registerResult = await _authService.RegisterAsync(user, userRequest.Password!, cancellationToken);
 
-        return CreatedAtAction(nameof(RegisterAction), userId);
+        Response<RegisterResult> response = new()
+        {
+            Message = "User succesfully created",
+            Data = registerResult
+        };
+
+        return CreatedAtAction(nameof(RegisterAction), response);
     }
 
-    [HttpPut("/account/activate/{userId}/{tokenString}")]
-    public async Task<IActionResult> ActivateAction(Guid userId, string tokenString, CancellationToken cancellationToken)
+    [HttpPut("/account/activate/{tokenString}")]
+    public async Task<IActionResult> ActivateAction(string tokenString, CancellationToken cancellationToken)
     {
         RegistrationToken? registrationToken = await _registrationTokenRepository.GetByTokenStringAsync(tokenString, cancellationToken);
-        User? user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        
+        if (registrationToken is null)
+        {
+            return BadRequest("Token not valid");
+        }
+
+        User? user = await _userRepository.GetByIdAsync(registrationToken.UserId, cancellationToken);
 
         if (await _authService.HasRegistrationTokenExpiredAsync(registrationToken, cancellationToken))
         {
-            await _authService.ResendActivationCodeAsync(user.Email, cancellationToken);
+            await _authService.ResendActivationCodeAsync(user!.Email!, cancellationToken);
 
             return BadRequest("Token has expired. A new one has been sent.");
         }
 
-        await _authService.ActivateUserAccountAsync(user, registrationToken, cancellationToken);
+        await _authService.ActivateUserAccountAsync(user!, registrationToken, cancellationToken);
 
         return Ok();
     }
@@ -67,16 +80,25 @@ public sealed class AuthenticationController : ControllerBase
         UserLoginRequestDto loginData,
         CancellationToken cancellationToken)
     {
+        LoginResult? loginResult = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
+
+        if (loginResult is null)
+        {
+            return BadRequest("User with those credentials not found.");
+        }
+
         if (!await _authService.IsUserActivatedAsync(loginData.Email, cancellationToken))
-            return BadRequest("Account not activated. Check your email for the activation code.");
+        {
+            return BadRequest("Account not activated. Check your email for the activation code."); // todo: create also if user exists in service
+        }
 
-        Guid? userId = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
-
-        return Ok(new
+        Response<LoginResult> response = new()
         {
             Message = "Verification code sent to email",
-            UserId = userId
-        });
+            Data = loginResult
+        };
+
+        return Ok(response);
     }
 
     [HttpPost("/verifyLogin")]
@@ -91,17 +113,20 @@ public sealed class AuthenticationController : ControllerBase
             return BadRequest("Login code not correct. Try again.");
         }
 
-        if (await _authService.HasAuthCodeExpiredAsync(verificationCode, cancellationToken))
+        if (_authService.HasAuthCodeExpired(verificationCode, cancellationToken))
         {
             return BadRequest("Login code expired.");
         }
 
         string token = await _authService.AuthenticateLoginAsync(verificationCode, cancellationToken);
 
-        return Ok(new
+        Response<string> response = new()
         {
-            Token = token
-        });
+            Message = "Success",
+            Data = token
+        };
+
+        return Ok(response);
     }
 
     [HttpPost("/resetPassword")]
