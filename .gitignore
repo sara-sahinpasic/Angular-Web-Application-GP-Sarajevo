@@ -4,5 +4,5 @@ SPA/.vscode
 Test.db
 bin/
 obj/
-appsettings.Development.json
+RestAPI/Prodaja karata za gradski prijevoz/Prodaja karata za gradski prijevoz/appsettings.Development.json
 log_exceptions.log
