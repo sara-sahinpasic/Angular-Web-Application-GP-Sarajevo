@@ -27,7 +27,8 @@
         <input id="lozinka" type="password" placeholder="" required name="lozinka" [(ngModel)]="userRequest.password">
       </div>
 
-      <button class="registracija" (click)="registracija()">Registruj se</button>
+      <button class="first" (click)="registracija()">Registruj se</button>
+      <button class="second" (click)="login()">Prijavi se</button>
     </div>
 
     <h1 *ngIf="registrationSent">Kod za aktivaciju računa vam je poslan na email.</h1>

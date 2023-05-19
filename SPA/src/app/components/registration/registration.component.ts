@@ -8,31 +8,32 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss']
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
-
   public userRequest: UserRegisterRequest = {
-    firstName: "",
-    lastName: "",
-    password: "",
+    firstName: '',
+    lastName: '',
+    password: '',
     dateOfBirth: new Date(),
-    email: "",
-    phoneNumber: ""
+    email: '',
+    phoneNumber: '',
   };
 
-  registrationSent:  boolean = false;
+  registrationSent: boolean = false;
 
-  constructor(private _router: Router, private userService: UserService) { }
+  constructor(private _router: Router, private userService: UserService) {}
 
   ngOnInit() {
-    this.userService.isRegistrationSent.pipe(
-      tap((val: boolean) => this.registrationSent = val)
-    )
-    .subscribe();
+    this.userService.isRegistrationSent
+      .pipe(tap((val: boolean) => (this.registrationSent = val)))
+      .subscribe();
   }
 
   registracija() {
     this.userService.register(this.userRequest);
+  }
+  login() {
+    this._router.navigateByUrl('prijava');
   }
 }

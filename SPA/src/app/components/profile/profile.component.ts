@@ -11,7 +11,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-
   private url: string = environment.apiUrl;
   public profileModel!: UserProfileModel;
 
@@ -27,20 +26,27 @@ export class ProfileComponent implements OnInit {
   }
 
   navigateToProfile() {
-    this._router.navigateByUrl('/profile/:id');
+    this._router.navigateByUrl('/profile');
   }
 
   navigateToUpdate() {
-    this._router.navigateByUrl('/update');
+    const id: string = this.profileModel?.id as string;
+
+    this._router.navigateByUrl(`/update`);
   }
 
   deleteProfile() {
     const id: string = this.profileModel?.id as string;
 
-    this._httpClient.delete(`${this.url}Profile?id=${id}`).subscribe(() => {
-      this._router.navigateByUrl('/delete/:id');
-    });
-    //setInterval(()=> this._router.navigateByUrl("/**"),2500);
+    const answer: boolean = confirm('Da li želite obrisati račun?');
+    if (answer == true) {
+      this._httpClient.delete(`${this.url}Profile?id=${id}`).subscribe(() => {
+        this.userService.logout();
+      });
+      this._router.navigateByUrl('/delete');
+    } else {
+      this._router.navigateByUrl('/profile');
+    }
   }
 
   navigateToPurchaseHistory() {

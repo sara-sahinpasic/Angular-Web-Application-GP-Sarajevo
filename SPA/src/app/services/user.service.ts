@@ -13,23 +13,32 @@ import { UserLoginResponse } from '../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   private url: string = environment.apiUrl;
   private userId?: string;
-  hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
   isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
   isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private httpClient: HttpClient,
     private jwtService: JwtService,
-    private router: Router) {}
+    private router: Router
+  ) {}
 
-  public register(registerRequest: UserRegisterRequest, redirectionRoute: string = "/login") {
-    this.httpClient.post<DataResponse<UserRegisterResponse>>(this.url + 'register', registerRequest)
+  public register(
+    registerRequest: UserRegisterRequest,
+    redirectionRoute: string = '/login'
+  ) {
+    this.httpClient
+      .post<DataResponse<UserRegisterResponse>>(
+        this.url + 'register',
+        registerRequest
+      )
       .pipe(
         tap((resp: DataResponse<UserRegisterResponse>) => {
           if (resp.data.isAccountActivationRequired) {
@@ -38,7 +47,8 @@ export class UserService {
         })
       )
       .subscribe((resp: DataResponse<UserRegisterResponse | never[]>) => {
-        const response: DataResponse<UserRegisterResponse> = resp as DataResponse<UserRegisterResponse>;
+        const response: DataResponse<UserRegisterResponse> =
+          resp as DataResponse<UserRegisterResponse>;
 
         if (!response.data.isAccountActivationRequired) {
           this.router.navigateByUrl(redirectionRoute);
@@ -47,7 +57,8 @@ export class UserService {
   }
 
   public activateAccount(token: string) {
-    this.httpClient.put(this.url + `account/activate/${token}`, null)
+    this.httpClient
+      .put(this.url + `account/activate/${token}`, null)
       .pipe(
         tap(() => {
           this.isUserActivated.next(true);
@@ -56,8 +67,9 @@ export class UserService {
       .subscribe();
   }
 
-  public login(loginData: UserLoginRequest, redirectionRoute: string = "") {
-    this.httpClient.post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
+  public login(loginData: UserLoginRequest, redirectionRoute: string = '') {
+    this.httpClient
+      .post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
       .pipe(
         tap((response: DataResponse<UserLoginResponse>) => {
           if (response.data.isTwoWayAuth) {
@@ -65,9 +77,9 @@ export class UserService {
             this.hasUserSentVerifyRequest.next(true);
             return;
           }
-          localStorage.setItem("token", response.data.loginData);
+          localStorage.setItem('token', response.data.loginData);
         }),
-        catchError(e => {
+        catchError((e) => {
           console.error(e); // todo: take error message
           return of([]);
         })
@@ -81,17 +93,21 @@ export class UserService {
   public verifyLogin(code: number, redirectionRoute: string | null = null) {
     const userVerifyLoginRequest: UserVerifyLoginRequest = {
       userId: this.userId as string,
-      code: code
+      code: code,
     };
 
     if (this.userId == undefined) {
-      throw new Error("User Id not present");
+      throw new Error('User Id not present');
     }
 
-    this.httpClient.post<DataResponse<string>>(this.url + 'verifyLogin', userVerifyLoginRequest)
+    this.httpClient
+      .post<DataResponse<string>>(
+        this.url + 'verifyLogin',
+        userVerifyLoginRequest
+      )
       .pipe(
         tap((response: DataResponse<string>) => {
-          localStorage.setItem("token", response.data);
+          localStorage.setItem('token', response.data);
         })
       )
       .subscribe(() => {
@@ -108,7 +124,7 @@ export class UserService {
   }
 
   private getUserDataFromToken(): UserProfileModel | undefined {
-    const token: string = localStorage.getItem("token") as string;
+    const token: string = localStorage.getItem('token') as string;
 
     if (!token) {
       return undefined;
@@ -120,24 +136,30 @@ export class UserService {
     return JSON.parse(payload.sub) as UserProfileModel;
   }
 
-  public updateUser(userToUpdate: UserProfileModel, redirectionRoute: string | null = null) {
-    this.httpClient
-      .put(`${this.url}Profile`, userToUpdate)
-      .subscribe(() => {
-        if (!redirectionRoute) {
-          return;
-        }
+  public updateUser(
+    userToUpdate: UserProfileModel,
+    redirectionRoute: string | null = null
+  ) {
+    this.httpClient.put(`${this.url}Profile`, userToUpdate).subscribe(() => {
+      if (!redirectionRoute) {
+        return;
+      }
 
-        this.router.navigateByUrl(redirectionRoute);
-      });
+      this.router.navigateByUrl(redirectionRoute);
+    });
   }
 
   public resetPassword(email: string) {
-    this.httpClient.post(this.url + `resetPassword`, `\"${email}\"`, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
+    this.httpClient
+      .post(this.url + `resetPassword`, `\"${email}\"`, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
       })
-    })
       .subscribe();
+  }
+
+  public logout() {
+    localStorage.removeItem('token');
   }
 }
