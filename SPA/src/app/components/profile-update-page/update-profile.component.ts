@@ -8,7 +8,6 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./update-profile.component.scss'],
 })
 export class UpdateProfileComponent implements OnInit {
-
   constructor(private _userService: UserService) {}
 
   profileModel: UserProfileModel = {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,7 +14,9 @@ import { LogInComponent } from './components/logIn/logIn.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
 import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
-
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { UserService } from './services/user.service';
+import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,15 +28,17 @@ import { ProfileDeletedPageComponent } from './components/profile-deleted-page/p
     LogInComponent,
     ProfileComponent,
     UpdateProfileComponent,
-    ProfileDeletedPageComponent
+    ProfileDeletedPageComponent,
+    SpinnerComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true,
+    },
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

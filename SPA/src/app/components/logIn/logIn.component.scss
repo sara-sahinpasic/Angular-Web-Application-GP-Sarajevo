@@ -23,7 +23,8 @@ h1 {
   margin-bottom: 5px;
   font-weight: bolder;
 }
-p#uvod{
+
+p#uvod {
   text-align: center;
   margin-bottom: 15px;
 }
@@ -32,16 +33,18 @@ button {
   margin-top: 15px;
 }
 
-input{
+input {
+  border: 1px solid rgba(0, 0, 0, 0.354);
+  width: 100%;
   padding: 7px;
   border: 1px solid rgba(0, 0, 0, 0.354);
 }
-label{
-  font-weight:bold;
+
+label {
+  font-weight: bold;
 }
-a{
+
+a {
   float: right;
-  font-weight:bold;
+  font-weight: bold;
 }
-
-

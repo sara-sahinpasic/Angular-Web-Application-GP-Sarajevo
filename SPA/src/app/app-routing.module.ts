@@ -7,16 +7,17 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { ProfileComponent } from './components/profile/profile.component';
 import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
 import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { LoggedInGuard } from './guards/logged-in.guard';
+import { NotLoggedInGuard } from './guards/not-logged-in.guard';
+
 
 const routes: Routes = [
-  { path: 'delete/:id', component: ProfileDeletedPageComponent },
-  { path: 'update', component: UpdateProfileComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'registracija', component: RegistrationComponent },
-  { path: 'activate/:token', component: ActivateAccountComponent },
-  { path: 'prijava', component: LogInComponent },
-  { path: 'resetPassword', component: ResetPasswordComponent },
+  { path: 'delete', component: ProfileDeletedPageComponent, canActivate:[LoggedInGuard] },
+  { path: 'update', component: UpdateProfileComponent, canActivate:[LoggedInGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate:[LoggedInGuard] },
+  { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard]},
+  { path: 'activate/:token', component: ActivateAccountComponent,canActivate:[NotLoggedInGuard] },
+  { path: 'prijava', component: LogInComponent, canActivate:[NotLoggedInGuard] },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }
 ];
