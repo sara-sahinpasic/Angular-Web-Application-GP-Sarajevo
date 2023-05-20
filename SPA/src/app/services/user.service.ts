@@ -107,8 +107,13 @@ export class UserService {
     return this.getUserDataFromToken();
   }
 
-  private getUserDataFromToken(): UserProfileModel {
+  private getUserDataFromToken(): UserProfileModel | undefined {
     const token: string = localStorage.getItem("token") as string;
+
+    if (!token) {
+      return undefined;
+    }
+
     const decodedToken: string = this.jwtService.decode(token);
     const payload: any = JSON.parse(decodedToken);
 

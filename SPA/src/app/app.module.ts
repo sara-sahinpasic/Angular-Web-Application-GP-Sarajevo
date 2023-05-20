@@ -17,6 +17,7 @@ import { ProfileDeletedPageComponent } from './components/profile-deleted-page/p
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { UserService } from './services/user.service';
 import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +31,7 @@ import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
     UpdateProfileComponent,
     ProfileDeletedPageComponent,
     SpinnerComponent,
+    ResetPasswordComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
   providers: [

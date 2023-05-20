@@ -8,6 +8,8 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
+  isEmailValid: boolean | undefined = undefined;
+
   constructor(private userSerice: UserService) { }
 
   ngOnInit() {
@@ -15,5 +17,9 @@ export class ResetPasswordComponent implements OnInit {
 
   sendResetPasswordRequest(email: string) {
     this.userSerice.resetPassword(email);
+  }
+
+  validateEmail(email: string) {
+    this.isEmailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
   }
 }

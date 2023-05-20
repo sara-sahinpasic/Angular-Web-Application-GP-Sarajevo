@@ -9,6 +9,7 @@ import { UpdateProfileComponent } from './components/profile-update-page/update-
 import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
 import { LoggedInGuard } from './guards/logged-in.guard';
 import { NotLoggedInGuard } from './guards/not-logged-in.guard';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 
 const routes: Routes = [
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard]},
   { path: 'activate/:token', component: ActivateAccountComponent,canActivate:[NotLoggedInGuard] },
   { path: 'prijava', component: LogInComponent, canActivate:[NotLoggedInGuard] },
+  { path: 'resetPassword', component: ResetPasswordComponent },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }
 ];
