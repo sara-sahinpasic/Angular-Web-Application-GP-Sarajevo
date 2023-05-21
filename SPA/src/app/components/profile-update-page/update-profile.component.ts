@@ -25,7 +25,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   save() {
-    this._userService.updateUser(this.profileModel, '/profile');
+    this._userService.updateUser(this.profileModel, '/profile').subscribe();
   }
 
   // todo

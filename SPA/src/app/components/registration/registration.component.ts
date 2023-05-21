@@ -23,16 +23,16 @@ export class RegistrationComponent implements OnInit {
 
   registrationSent:  boolean = false;
 
-  constructor(private _router: Router, private userService: UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.userService.isRegistrationSent.pipe(
+    this.userService.isRegistrationSent$.pipe(
       tap((val: boolean) => this.registrationSent = val)
     )
     .subscribe();
   }
 
   registracija() {
-    this.userService.register(this.userRequest);
+    this.userService.register(this.userRequest).subscribe();
   }
 }

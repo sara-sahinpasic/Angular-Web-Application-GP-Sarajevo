@@ -1,8 +1,10 @@
-﻿using Application.Services.Abstractions.Interfaces.Mapper;
+﻿using Application.Services.Abstractions.Interfaces.Authentication;
+using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.DTO;
 using Presentation.DTO.User;
 
 namespace Presentation.Controllers.Account
@@ -35,7 +37,8 @@ namespace Presentation.Controllers.Account
 
         [HttpPut]
         public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
-            [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService)
+            [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
+            [FromServices] IAuthService authService)
         {
             //ToDo: provjera da li je logiran
 
@@ -43,14 +46,29 @@ namespace Presentation.Controllers.Account
 
             if (data == null)
             {
-                return NotFound("Nema podataka");
+                Response<object?> response = new()
+                {
+                    Message = "No user found",
+                    Data = null
+                };
+
+                return NotFound(response);
             }
 
             objectMapperService.Map(vM, data);
 
             _userRepository.Update(data);
             await unitOfWork.CommitAsync(cancellationToken);
-            return Ok(data);
+
+            string jwtToken = authService.GenerateJwtToken(data);
+
+            Response<string> resonse = new()
+            {
+                Message = "User successfuly updated!",
+                Data = jwtToken
+            };
+
+            return Ok(resonse);
         }
 
         [HttpDelete]

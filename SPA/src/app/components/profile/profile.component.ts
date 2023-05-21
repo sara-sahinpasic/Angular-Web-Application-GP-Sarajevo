@@ -12,12 +12,9 @@ import { environment } from 'src/environments/environment';
 })
 export class ProfileComponent implements OnInit {
 
-  private url: string = environment.apiUrl;
   public profileModel!: UserProfileModel;
 
   constructor(
-    private _httpClient: HttpClient,
-    private _route: ActivatedRoute,
     private _router: Router,
     private userService: UserService
   ) {}
@@ -37,10 +34,7 @@ export class ProfileComponent implements OnInit {
   deleteProfile() {
     const id: string = this.profileModel?.id as string;
 
-    this._httpClient.delete(`${this.url}Profile?id=${id}`).subscribe(() => {
-      this._router.navigateByUrl('/delete/:id');
-    });
-    //setInterval(()=> this._router.navigateByUrl("/**"),2500);
+    this.userService.deleteUser(id).subscribe();
   }
 
   navigateToPurchaseHistory() {

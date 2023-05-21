@@ -19,18 +19,18 @@ export class LogInComponent implements OnInit {
   constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit() {
-    this.userService.hasUserSentVerifyRequest.pipe(
+    this.userService.hasUserSentVerifyRequest$.pipe(
       tap((val: boolean) => this.isVerifyLoginRequestSent = val)
     )
     .subscribe();
   }
 
   login() {
-    this.userService.login(this.userLoginRequest);
+    this.userService.login(this.userLoginRequest).subscribe();
   }
 
   verifyLogin(code: string) {
-    this.userService.verifyLogin(Number(code), '');
+    this.userService.verifyLogin(Number(code), '').subscribe();
   }
 
   validateCodeLength(code: string) {

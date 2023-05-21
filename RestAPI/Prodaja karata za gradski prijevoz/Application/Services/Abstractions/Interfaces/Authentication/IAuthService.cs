@@ -35,4 +35,5 @@ public interface IAuthService
     Task ResendVerificationCodeAsync(User user, CancellationToken cancellationToken);
     Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken);
     Task ResetPasswordAsync(string email, CancellationToken cancellationToken);
+    string GenerateJwtToken(User user);
 }

@@ -16,15 +16,14 @@ export class ActivateAccountComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
-    this.userService.isUserActivated.pipe(
+    this.userService.isActivated$.pipe(
       tap((val: boolean) => this.isActivated = val)
     )
     .subscribe();
 
     this.token = this.activatedRoute.snapshot.paramMap.get("token") as string;
 
-    this.userService.activateAccount(this.token);
-
+    this.userService.activateAccount(this.token).subscribe();
   }
 }
 
