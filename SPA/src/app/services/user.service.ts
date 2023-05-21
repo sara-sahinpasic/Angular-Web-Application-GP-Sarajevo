@@ -13,22 +13,23 @@ import { UserLoginResponse } from '../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   private url: string = environment.apiUrl;
   private userId?: string;
   private hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isResetPasswordRequestSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isDeleteRequestSent: Subject<any> = new Subject();
   private user: BehaviorSubject<UserProfileModel | undefined>;
   public user$: Observable<UserProfileModel | undefined>;
   public isActivated$: Observable<boolean>;
   public isRegistrationSent$: Observable<boolean>;
   public isResetPasswordRequestSent$: Observable<boolean>;
   public hasUserSentVerifyRequest$: Observable<boolean>;
+  public isDeleteRequestSent$: Observable<any>;
 
   constructor(
     private httpClient: HttpClient,
@@ -40,6 +41,7 @@ export class UserService {
       this.isRegistrationSent$ = this.isRegistrationSent.asObservable();
       this.isResetPasswordRequestSent$ = this.isResetPasswordRequestSent.asObservable();
       this.hasUserSentVerifyRequest$ = this.hasUserSentVerifyRequest.asObservable();
+      this.isDeleteRequestSent$ = this.isDeleteRequestSent.asObservable();
     }
 
   public register(registerRequest: UserRegisterRequest, redirectionRoute: string = "/login"): Observable<DataResponse<UserRegisterResponse>> {
@@ -79,7 +81,7 @@ export class UserService {
           localStorage.setItem("token", response.data.loginData);
           this.router.navigateByUrl(redirectionRoute);
         }),
-        catchError(e => {
+        catchError((e) => {
           console.error(e); // todo: take error message
           return of();
         })
@@ -89,11 +91,11 @@ export class UserService {
   public verifyLogin(code: number, redirectionRoute: string | null = null): Observable<DataResponse<string>> {
     const userVerifyLoginRequest: UserVerifyLoginRequest = {
       userId: this.userId as string,
-      code: code
+      code: code,
     };
 
     if (this.userId == undefined) {
-      throw new Error("User Id not present");
+      throw new Error('User Id not present');
     }
 
     return this.httpClient.post<DataResponse<string>>(this.url + 'verifyLogin', userVerifyLoginRequest)
@@ -115,7 +117,7 @@ export class UserService {
 
   // todo: try to create an observable to return the user, maybe
   private getUserDataFromToken(): UserProfileModel | undefined {
-    const token: string = localStorage.getItem("token") as string;
+    const token: string = localStorage.getItem('token') as string;
 
     if (!token) {
       return undefined;
@@ -154,7 +156,17 @@ export class UserService {
   public deleteUser(id: string, redirectRoute: string = "/delete"): Observable<any> {
     return this.httpClient.delete(`${this.url}Profile?id=${id}`)
       .pipe(
-        tap(() => this.router.navigateByUrl(redirectRoute))
+        tap(() => {
+          this.router.navigateByUrl(redirectRoute);
+          setTimeout(() => {
+            this.logout();
+            this.router.navigateByUrl("");
+          }, 5000)
+        })
       );
+  }
+
+  public logout() {
+    localStorage.removeItem('token');
   }
 }

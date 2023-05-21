@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { delay, tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
@@ -11,7 +12,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-
   public profileModel!: UserProfileModel;
 
   constructor(
@@ -24,17 +24,23 @@ export class ProfileComponent implements OnInit {
   }
 
   navigateToProfile() {
-    this._router.navigateByUrl('/profile/:id');
+    this._router.navigateByUrl('/profile');
   }
 
   navigateToUpdate() {
-    this._router.navigateByUrl('/update');
+    const id: string = this.profileModel?.id as string;
+
+    this._router.navigateByUrl(`/update`);
   }
 
   deleteProfile() {
     const id: string = this.profileModel?.id as string;
 
-    this.userService.deleteUser(id).subscribe();
+    const answer: boolean = confirm('Da li želite obrisati račun?');
+
+    if (answer == true) {
+      this.userService.deleteUser(id).subscribe();
+    }
   }
 
   navigateToPurchaseHistory() {
