@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, catchError, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserLoginRequest } from '../models/User/UserLoginRequest';
 import { UserVerifyLoginRequest } from '../models/User/UserVerifyLoginRequest';
@@ -18,58 +18,59 @@ import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
 export class UserService {
   private url: string = environment.apiUrl;
   private userId?: string;
-  hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
-  isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isResetPasswordRequestSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isDeleteRequestSent: Subject<any> = new Subject();
+  private user: BehaviorSubject<UserProfileModel | undefined>;
+  public user$: Observable<UserProfileModel | undefined>;
+  public isActivated$: Observable<boolean>;
+  public isRegistrationSent$: Observable<boolean>;
+  public isResetPasswordRequestSent$: Observable<boolean>;
+  public hasUserSentVerifyRequest$: Observable<boolean>;
+  public isDeleteRequestSent$: Observable<any>;
 
   constructor(
     private httpClient: HttpClient,
     private jwtService: JwtService,
-    private router: Router
-  ) {}
+    private router: Router) {
+      this.user = new BehaviorSubject(localStorage.getItem("token") as UserProfileModel | undefined);
+      this.user$ = this.user.asObservable();
+      this.isActivated$ = this.isUserActivated.asObservable();
+      this.isRegistrationSent$ = this.isRegistrationSent.asObservable();
+      this.isResetPasswordRequestSent$ = this.isResetPasswordRequestSent.asObservable();
+      this.hasUserSentVerifyRequest$ = this.hasUserSentVerifyRequest.asObservable();
+      this.isDeleteRequestSent$ = this.isDeleteRequestSent.asObservable();
+    }
 
-  public register(
-    registerRequest: UserRegisterRequest,
-    redirectionRoute: string = '/login'
-  ) {
-    this.httpClient
-      .post<DataResponse<UserRegisterResponse>>(
-        this.url + 'register',
-        registerRequest
-      )
+  public register(registerRequest: UserRegisterRequest, redirectionRoute: string = "/login"): Observable<DataResponse<UserRegisterResponse>> {
+    return this.httpClient.post<DataResponse<UserRegisterResponse>>(this.url + 'register', registerRequest)
       .pipe(
         tap((resp: DataResponse<UserRegisterResponse>) => {
-          if (resp.data.isAccountActivationRequired) {
-            this.isRegistrationSent.next(true);
-          }
-        })
-      )
-      .subscribe((resp: DataResponse<UserRegisterResponse | never[]>) => {
-        const response: DataResponse<UserRegisterResponse> =
-          resp as DataResponse<UserRegisterResponse>;
+          const response: DataResponse<UserRegisterResponse> = resp as DataResponse<UserRegisterResponse>;
 
-        if (!response.data.isAccountActivationRequired) {
-          this.router.navigateByUrl(redirectionRoute);
-        }
-      });
+          if (!response.data.isAccountActivationRequired) {
+            this.router.navigateByUrl(redirectionRoute);
+            return;
+          }
+
+          this.isRegistrationSent.next(true);
+        })
+      );
   }
 
-  public activateAccount(token: string) {
-    this.httpClient
-      .put(this.url + `account/activate/${token}`, null)
+  public activateAccount(token: string): Observable<any> {
+    return this.httpClient.put(this.url + `account/activate/${token}`, null)
       .pipe(
         tap(() => {
           this.isUserActivated.next(true);
         })
-      )
-      .subscribe();
+      );
   }
 
-  public login(loginData: UserLoginRequest, redirectionRoute: string = '') {
-    this.httpClient
-      .post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
+  public login(loginData: UserLoginRequest, redirectionRoute: string = ""): Observable<DataResponse<UserLoginResponse>> {
+    return this.httpClient.post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
       .pipe(
         tap((response: DataResponse<UserLoginResponse>) => {
           if (response.data.isTwoWayAuth) {
@@ -77,20 +78,17 @@ export class UserService {
             this.hasUserSentVerifyRequest.next(true);
             return;
           }
-          localStorage.setItem('token', response.data.loginData);
+          localStorage.setItem("token", response.data.loginData);
+          this.router.navigateByUrl(redirectionRoute);
         }),
         catchError((e) => {
           console.error(e); // todo: take error message
-          return of([]);
+          return of();
         })
-      )
-      .subscribe((response: DataResponse<UserLoginResponse> | never[]) => {
-        const resp = response as DataResponse<UserLoginResponse>;
-        this.router.navigateByUrl(redirectionRoute);
-      });
+      );
   }
 
-  public verifyLogin(code: number, redirectionRoute: string | null = null) {
+  public verifyLogin(code: number, redirectionRoute: string | null = null): Observable<DataResponse<string>> {
     const userVerifyLoginRequest: UserVerifyLoginRequest = {
       userId: this.userId as string,
       code: code,
@@ -100,29 +98,24 @@ export class UserService {
       throw new Error('User Id not present');
     }
 
-    this.httpClient
-      .post<DataResponse<string>>(
-        this.url + 'verifyLogin',
-        userVerifyLoginRequest
-      )
+    return this.httpClient.post<DataResponse<string>>(this.url + 'verifyLogin', userVerifyLoginRequest)
       .pipe(
         tap((response: DataResponse<string>) => {
-          localStorage.setItem('token', response.data);
-        })
-      )
-      .subscribe(() => {
-        if (!redirectionRoute) {
-          return;
-        }
+          localStorage.setItem("token", response.data);
+          if (!redirectionRoute) {
+            return;
+          }
 
-        this.router.navigateByUrl(redirectionRoute);
-      });
+          this.router.navigateByUrl(redirectionRoute);
+        })
+      );
   }
 
   public getUser(): UserProfileModel | undefined {
     return this.getUserDataFromToken();
   }
 
+  // todo: try to create an observable to return the user, maybe
   private getUserDataFromToken(): UserProfileModel | undefined {
     const token: string = localStorage.getItem('token') as string;
 
@@ -136,27 +129,41 @@ export class UserService {
     return JSON.parse(payload.sub) as UserProfileModel;
   }
 
-  public updateUser(
-    userToUpdate: UserProfileModel,
-    redirectionRoute: string | null = null
-  ) {
-    this.httpClient.put(`${this.url}Profile`, userToUpdate).subscribe(() => {
-      if (!redirectionRoute) {
-        return;
-      }
-
-      this.router.navigateByUrl(redirectionRoute);
-    });
+  public updateUser(userToUpdate: UserProfileModel, redirectionRoute: string | null = null): Observable<DataResponse<string>> {
+    return this.httpClient.put<DataResponse<string>>(`${this.url}Profile`, userToUpdate)
+      .pipe(
+        tap((response: DataResponse<string>) => {
+          if (!redirectionRoute) {
+            return;
+          }
+          localStorage.setItem("token", response.data)
+          this.router.navigateByUrl(redirectionRoute);
+        })
+      );
   }
 
-  public resetPassword(email: string) {
-    this.httpClient
-      .post(this.url + `resetPassword`, `\"${email}\"`, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
+  public resetPassword(email: string): Observable<any> {
+    return this.httpClient.post(this.url + `resetPassword`, `\"${email}\"`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
       })
-      .subscribe();
+    })
+    .pipe(
+      tap(() => this.isResetPasswordRequestSent.next(true))
+    );
+  }
+
+  public deleteUser(id: string, redirectRoute: string = "/delete"): Observable<any> {
+    return this.httpClient.delete(`${this.url}Profile?id=${id}`)
+      .pipe(
+        tap(() => {
+          this.router.navigateByUrl(redirectRoute);
+          setTimeout(() => {
+            this.logout();
+            this.router.navigateByUrl("");
+          }, 5000)
+        })
+      );
   }
 
   public logout() {

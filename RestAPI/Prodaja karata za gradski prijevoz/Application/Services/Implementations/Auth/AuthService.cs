@@ -221,7 +221,7 @@ public sealed class AuthService : IAuthService
         return Random.Shared.Next(1000, 9999);
     }
 
-    private string GenerateJwtToken(User user)
+    public string GenerateJwtToken(User user)
     {
         var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
