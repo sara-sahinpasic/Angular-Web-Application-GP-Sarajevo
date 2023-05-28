@@ -1,36 +1,107 @@
 <div class="container">
-  <div class="form-container" >
+  <div class="form-container">
     <div *ngIf="!registrationSent">
       <h1>Registracija </h1>
-      <div class="input-container">
-        <label for="ime">Ime: *</label>
-        <input id="ime" type="text" placeholder="" required name="ime" [(ngModel)]="userRequest.firstName">
-      </div>
-      <div class="input-container">
-        <label for="prezime">Prezime: *</label>
-        <input id="prezime" type="text" placeholder="" required name="prezime" [(ngModel)]="userRequest.lastName">
-      </div>
-      <div class="input-container">
-        <label for="datumRodjenja">Datum rođenja: *</label>
-        <input id="datumRodjenja" type="date" placeholder="" required name="datumRodjenja" [(ngModel)]="userRequest.dateOfBirth">
-      </div>
-      <div class="input-container">
-        <label for="brojTelefona">Broj telefona: *</label>
-        <input id="brojTelefona" type="string" placeholder="" required name="brojTelefona" [(ngModel)]="userRequest.phoneNumber">
-      </div>
-      <div class="input-container">
-        <label for="email">E-Mail: *</label>
-        <input id="email" type="email" placeholder="" required name="email" [(ngModel)]="userRequest.email">
-      </div>
-      <div class="input-container">
-        <label for="lozinka">Lozinka: *</label>
-        <input id="lozinka" type="password" placeholder="" required name="lozinka" [(ngModel)]="userRequest.password">
-      </div>
+      <div class="row">
+        <div class="col">
+          <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="firstName">Ime: *</label>
+              <div class="input-group">
+                <input id="firstName" type="text" placeholder="" required name="firstName"
+                  [(ngModel)]="userRequest.firstName" class="form-control" formControlName="firstName" [class.is-valid]="
+                  registrationForm.get('firstName')?.valid && (registrationForm.get('firstName')?.dirty
+                  || registrationForm.get('firstName')?.touched)" [class.is-invalid]="
+                  registrationForm.get('firstName')?.invalid && (registrationForm.get('firstName')?.dirty
+                  || registrationForm.get('firstName')?.touched)" />
+                <div class="invalid-feedback">
+                  Potreban unos!
+                </div>
+              </div>
+            </div>
 
-      <button class="first" (click)="registracija()">Registruj se</button>
-      <button class="second" (click)="login()">Prijavi se</button>
+            <div class="form-group">
+              <label for="lastName">Prezime: *</label>
+              <div class="input-group">
+                <input id="lastName" type="text" placeholder="" required name="lastName"
+                  [(ngModel)]="userRequest.lastName" class="form-control" formControlName="lastName" [class.is-valid]="
+                  registrationForm.get('lastName')?.valid && (registrationForm.get('lastName')?.dirty
+                  || registrationForm.get('lastName')?.touched)" [class.is-invalid]="
+                  registrationForm.get('lastName')?.invalid && (registrationForm.get('lastName')?.dirty
+                  || registrationForm.get('lastName')?.touched)" />
+                <div class="invalid-feedback">
+                  Potreban unos!
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="dateOfBirth">Datum rođenja: *</label>
+              <div class="input-group">
+                <input id="dateOfBirth" type="date" placeholder="" required name="dateOfBirth"
+                  [(ngModel)]="userRequest.dateOfBirth" class="form-control" formControlName="dateOfBirth"
+                  [class.is-valid]="
+                  registrationForm.get('dateOfBirth')?.valid && (registrationForm.get('dateOfBirth')?.dirty
+                  || registrationForm.get('dateOfBirth')?.touched)" [class.is-invalid]="
+                  registrationForm.get('dateOfBirth')?.invalid && (registrationForm.get('dateOfBirth')?.dirty
+                  || registrationForm.get('dateOfBirth')?.touched)" />
+                <div class="invalid-feedback">
+                  Potreban unos!
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phoneNumber">Broj telefona: *</label>
+              <div class="input-group">
+                <input id="phoneNumber" type="string" placeholder="" required name="phoneNumber"
+                  [(ngModel)]="userRequest.phoneNumber" class="form-control" formControlName="phoneNumber"
+                  [class.is-valid]="
+                  registrationForm.get('phoneNumber')?.valid && (registrationForm.get('phoneNumber')?.dirty
+                  || registrationForm.get('phoneNumber')?.touched)" [class.is-invalid]="
+                  registrationForm.get('phoneNumber')?.invalid && (registrationForm.get('phoneNumber')?.dirty
+                  || registrationForm.get('phoneNumber')?.touched)" />
+                <div class="invalid-feedback">
+                  Potreban unos!
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-Mail: *</label>
+              <div class="input-group">
+                <input id="email" type="email" placeholder="" required name="email" [(ngModel)]="userRequest.email"
+                  class="form-control" formControlName="email" [class.is-valid]="
+                  registrationForm.get('email')?.valid && (registrationForm.get('email')?.dirty
+                  || registrationForm.get('email')?.touched)" [class.is-invalid]="
+                  registrationForm.get('email')?.invalid && (registrationForm.get('email')?.dirty
+                  || registrationForm.get('email')?.touched)" />
+                <div class="invalid-feedback">
+                  Potreban unos!
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Lozinka: *</label>
+              <div class="input-group">
+                <input id="password" type="password" placeholder="" required name="password"
+                  [(ngModel)]="userRequest.password" class="form-control" formControlName="password" [class.is-valid]="
+                  registrationForm.get('password')?.valid && (registrationForm.get('password')?.dirty
+                  || registrationForm.get('password')?.touched)" [class.is-invalid]="
+                  registrationForm.get('password')?.invalid && (registrationForm.get('password')?.dirty
+                  || registrationForm.get('password')?.touched)" />
+                <div class="invalid-feedback">
+                  Potreban unos!
+                </div>
+              </div>
+            </div>
+          </form>
+          <button type="submit" class="first" (click)="registracija()">Registruj se</button>
+          <button class="second" (click)="login()">Prijavi se</button>
+        </div>
+        <h1 *ngIf="registrationSent">Kod za aktivaciju računa vam je poslan na email.</h1>
+      </div>
     </div>
-
-    <h1 *ngIf="registrationSent">Kod za aktivaciju računa vam je poslan na email.</h1>
   </div>
 </div>
