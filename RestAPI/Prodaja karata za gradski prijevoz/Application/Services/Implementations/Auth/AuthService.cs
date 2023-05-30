@@ -221,7 +221,7 @@ public sealed class AuthService : IAuthService
         return Random.Shared.Next(1000, 9999);
     }
 
-    public string GenerateJwtToken(User user)
+    public string GenerateJwtToken(User user, DateTime? issuedAt = null)
     {
         var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
@@ -236,6 +236,11 @@ public sealed class AuthService : IAuthService
             phoneNumber = user.PhoneNumber
         };
 
+        if (issuedAt is null)
+        {
+            issuedAt = DateTime.UtcNow;
+        }
+
         SecurityTokenDescriptor tokenDescriptor = new()
         {
             Subject = new ClaimsIdentity(new[]
@@ -246,8 +251,8 @@ public sealed class AuthService : IAuthService
                 new Claim(JwtRegisteredClaimNames.Aud, _config["Jwt:Audience"]),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
-            IssuedAt = DateTime.UtcNow,
-            Expires = DateTime.UtcNow.AddMinutes(30),
+            IssuedAt = issuedAt.Value,
+            Expires = issuedAt.Value.AddMinutes(30),
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"],
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
@@ -292,5 +297,16 @@ public sealed class AuthService : IAuthService
         string content = $"Your new password is {newPassword}. Please, change your password the next time you log in.";
 
         await _emailService.SendNoReplyMailAsync(user, subject, content, cancellationToken);
+    }
+
+    public DateTime GetJwtIssuedDateFromToken(string token)
+    {
+        string[] tokenParts = token.Split(" ");
+        string payload = tokenParts[1];
+
+        JwtSecurityToken tokenPayload = new JwtSecurityToken(payload);
+        DateTime issuedAt = tokenPayload.IssuedAt;
+
+        return issuedAt;
     }
 }

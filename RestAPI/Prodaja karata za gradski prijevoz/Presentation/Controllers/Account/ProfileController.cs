@@ -3,88 +3,92 @@ using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
 using Presentation.DTO.User;
 
-namespace Presentation.Controllers.Account
+namespace Presentation.Controllers.Account;
+
+[Authorize]
+[ApiController]
+[Route("[controller]")]
+public sealed class ProfileController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public sealed class ProfileController : ControllerBase
+    private readonly IUserRepository _userRepository;
+    public ProfileController(IUserRepository userRepository)
     {
-        private readonly IUserRepository _userRepository;
-        public ProfileController(IUserRepository userRepository)
+        _userRepository = userRepository;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken, [FromServices] IObjectMapperService objectMapperService)
+    {
+        //ToDo: provjera da li je logiran
+
+        var user = await _userRepository.GetByIdAsync(id, cancellationToken);
+
+        if (user == null)
         {
-            _userRepository = userRepository;
+            return NotFound("Nema podataka");
         }
+        var userDto = new UserProfileDto();
+        objectMapperService.Map(user, userDto);
+        return Ok(userDto);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken, [FromServices] IObjectMapperService objectMapperService)
+    [HttpPut]
+    public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
+        [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
+        [FromServices] IAuthService authService)
+    {
+        //ToDo: provjera da li je logiran
+
+        var data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken);
+
+        if (data == null)
         {
-            //ToDo: provjera da li je logiran
-
-            var user = await _userRepository.GetByIdAsync(id, cancellationToken);
-
-            if (user == null)
+            Response<object?> response = new()
             {
-                return NotFound("Nema podataka");
-            }
-            var userDto = new UserProfileDto();
-            objectMapperService.Map(user, userDto);
-            return Ok(userDto);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
-            [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
-            [FromServices] IAuthService authService)
-        {
-            //ToDo: provjera da li je logiran
-
-            var data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken);
-
-            if (data == null)
-            {
-                Response<object?> response = new()
-                {
-                    Message = "No user found",
-                    Data = null
-                };
-
-                return NotFound(response);
-            }
-
-            objectMapperService.Map(vM, data);
-
-            _userRepository.Update(data);
-            await unitOfWork.CommitAsync(cancellationToken);
-
-            string jwtToken = authService.GenerateJwtToken(data);
-
-            Response<string> resonse = new()
-            {
-                Message = "User successfuly updated!",
-                Data = jwtToken
+                Message = "No user found",
+                Data = null
             };
 
-            return Ok(resonse);
+            return NotFound(response);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
+        objectMapperService.Map(vM, data);
+
+        _userRepository.Update(data);
+        await unitOfWork.CommitAsync(cancellationToken);
+
+        string token = HttpContext.Request.Headers["Authorization"];
+        DateTime tokenIssuedAtDate = authService.GetJwtIssuedDateFromToken(token);
+
+        string jwtToken = authService.GenerateJwtToken(data, tokenIssuedAtDate);
+
+        Response<string> resonse = new()
         {
-            //ToDo: provjera da li je logiran
+            Message = "User successfuly updated!",
+            Data = jwtToken
+        };
 
-            var data = await _userRepository.GetByIdAsync(id, cancellationToken);
-            if (data == null)
-            {
-                return NotFound("Nema podataka");
-            }
+        return Ok(resonse);
+    }
 
-            _userRepository.Delete(data);
-            await unitOfWork.CommitAsync(cancellationToken);
-            return Ok(data);
+    [HttpDelete]
+    public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
+    {
+        //ToDo: provjera da li je logiran
+
+        var data = await _userRepository.GetByIdAsync(id, cancellationToken);
+        if (data == null)
+        {
+            return NotFound("Nema podataka");
         }
+
+        _userRepository.Delete(data);
+        await unitOfWork.CommitAsync(cancellationToken);
+        return Ok(data);
     }
 }

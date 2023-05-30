@@ -17,6 +17,7 @@ import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
 })
 export class UserService {
   private url: string = environment.apiUrl;
+
   private userId?: string;
   private hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -130,13 +131,16 @@ export class UserService {
   }
 
   public updateUser(userToUpdate: UserProfileModel, redirectionRoute: string | null = null): Observable<DataResponse<string>> {
-    return this.httpClient.put<DataResponse<string>>(`${this.url}Profile`, userToUpdate)
+    const token: string | null = localStorage.getItem("token");
+    const headers: HttpHeaders = new HttpHeaders({Authorization: "Bearer " + token});
+
+    return this.httpClient.put<DataResponse<string>>(`${this.url}Profile`, userToUpdate, {headers})
       .pipe(
         tap((response: DataResponse<string>) => {
           if (!redirectionRoute) {
             return;
           }
-          localStorage.setItem("token", response.data)
+          localStorage.setItem("token", response.data);
           this.router.navigateByUrl(redirectionRoute);
         })
       );
@@ -154,14 +158,18 @@ export class UserService {
   }
 
   public deleteUser(id: string, redirectRoute: string = "/delete"): Observable<any> {
-    return this.httpClient.delete(`${this.url}Profile?id=${id}`)
+    const token: string | null = localStorage.getItem("token");
+    const headers: HttpHeaders = new HttpHeaders({Authorization: "Bearer " + token});
+
+    return this.httpClient.delete(`${this.url}Profile?id=${id}`, {headers})
       .pipe(
         tap(() => {
           this.router.navigateByUrl(redirectRoute);
+
           setTimeout(() => {
             this.logout();
             this.router.navigateByUrl("");
-          }, 5000)
+          }, 5000);
         })
       );
   }

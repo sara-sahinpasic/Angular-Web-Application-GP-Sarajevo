@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "SPA", builder =>
     {
         // todo: add to config: sprint 2
-        builder.WithOrigins(spaUrl)
+        builder.WithOrigins(spaUrl.Split(";"))
             .SetIsOriginAllowed(isOriginAllowed: _ => true)
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -50,10 +50,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("SPA");
 app.UseExceptionHandler("/error");
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
