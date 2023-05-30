@@ -64,7 +64,6 @@ public sealed class ProfileController : ControllerBase
 
         string token = HttpContext.Request.Headers["Authorization"];
         DateTime tokenIssuedAtDate = authService.GetJwtIssuedDateFromToken(token);
-
         string jwtToken = authService.GenerateJwtToken(data, tokenIssuedAtDate);
 
         Response<string> resonse = new()
