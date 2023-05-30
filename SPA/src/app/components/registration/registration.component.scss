@@ -26,31 +26,8 @@ h1 {
   font-weight: bolder;
 }
 
-button {
-  background-color: rgba(0, 0, 0, 0.916);
-  color: white;
-  font-weight: bolder;
-  font-size: large;
-  border: 2px solid black;
-  border-radius: 10px;
-  box-shadow: 2px 4px #434343;
-  margin-top: 10px;
-}
-
-.second {
-  background-color: rgba(255, 255, 255, 0.947);
-  color: black;
-  border-color: white;
-  box-shadow: 2px 4px rgba(0, 0, 0, 0);
-  transition: 0.5s;
-}
-
 label {
   font-weight: bold;
   margin-top: 5px;
   float: left;
 }
-
-/*input.ng-invalid.ng-touched{
-  border: red 1px solid;
-}*/

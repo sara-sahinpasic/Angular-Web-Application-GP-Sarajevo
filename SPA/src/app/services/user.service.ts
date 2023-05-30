@@ -17,6 +17,7 @@ import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
 })
 export class UserService {
   private url: string = environment.apiUrl;
+  private redirectionTime: number = 2 * 1000;
 
   private userId?: string;
   private hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -169,7 +170,7 @@ export class UserService {
           setTimeout(() => {
             this.logout();
             this.router.navigateByUrl("");
-          }, 5000);
+          }, this.redirectionTime);
         })
       );
   }

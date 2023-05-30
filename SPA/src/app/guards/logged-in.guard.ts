@@ -6,14 +6,18 @@ import { UserService } from '../services/user.service';
   providedIn: 'root',
 })
 export class LoggedInGuard implements CanActivate {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   isLoggedIn: any = false;
 
   canActivate() {
     this.isLoggedIn = this.userService.getUser();
 
-    if (this.isLoggedIn != undefined) return true;
-    else return false;
+    if (this.isLoggedIn != undefined) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

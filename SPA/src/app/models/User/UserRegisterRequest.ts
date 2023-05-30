@@ -1,7 +1,7 @@
 export interface UserRegisterRequest {
   firstName: string,
   lastName: string,
-  dateOfBirth: Date,
+  dateOfBirth: string,
   phoneNumber: string,
   email: string,
   password: string

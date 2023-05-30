@@ -17,6 +17,10 @@ html,body{
   background-size: cover;
 }
 
+.form-control {
+  border-radius: 10px !important;
+}
+
 button {
   cursor: pointer;
   font-weight: bolder;

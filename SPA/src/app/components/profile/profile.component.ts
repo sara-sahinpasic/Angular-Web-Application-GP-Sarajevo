@@ -1,10 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { delay, tap } from 'rxjs';
+import { Router } from '@angular/router';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserService } from 'src/app/services/user.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -12,12 +9,13 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+
   public profileModel!: UserProfileModel;
 
   constructor(
     private _router: Router,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.profileModel = this.userService.getUser() as UserProfileModel;
@@ -35,7 +33,6 @@ export class ProfileComponent implements OnInit {
 
   deleteProfile() {
     const id: string = this.profileModel?.id as string;
-
     const answer: boolean = confirm('Da li želite obrisati račun?');
 
     if (answer == true) {
