@@ -11,7 +11,7 @@ builder.Services.AddControllers()
 // Setup database provider
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"),
         b => b.MigrationsAssembly("Prodaja karata za gradski prijevoz"));
 });
 

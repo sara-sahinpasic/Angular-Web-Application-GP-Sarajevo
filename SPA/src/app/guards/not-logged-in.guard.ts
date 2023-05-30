@@ -6,7 +6,7 @@ import { UserService } from '../services/user.service';
   providedIn: 'root',
 })
 export class NotLoggedInGuard implements CanActivate {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   isLoggedIn: any = false;
   canActivate() {

@@ -4,7 +4,6 @@ using Domain.Entities.Users;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
-using Newtonsoft.Json.Linq;
 
 namespace Infrastructure.Services.Email;
 
@@ -71,6 +70,6 @@ public sealed class EmailService : IEmailService
         string content = $"Vaš verifikacijski kod je {verificationCode}";
         string subject = "Verifikacijski kod";
 
-        await SendEmailAsync(from, to , subject, content, cancellationToken);
+        await SendEmailAsync(from, to, subject, content, cancellationToken);
     }
 }

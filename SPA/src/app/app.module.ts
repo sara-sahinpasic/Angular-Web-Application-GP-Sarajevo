@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
+
+// components
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -15,9 +17,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
 import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-import { UserService } from './services/user.service';
-import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -9,7 +9,6 @@ public sealed class VerificationCodeRepository : GenericRepository<VerificationC
 {
     public VerificationCodeRepository(DataContext dataContext) : base(dataContext) { }
 
-    
     public Task<VerificationCode?> GetByUserIdAndCodeAsync(Guid userId, int verificationCode, CancellationToken cancellationToken)
     {
         return GetAll()
@@ -30,7 +29,7 @@ public sealed class VerificationCodeRepository : GenericRepository<VerificationC
             .Where(code => code.Code == verificationCode)
             .Select(code => code.User)
             .FirstAsync(cancellationToken);
-        
+
         return user;
     }
 }

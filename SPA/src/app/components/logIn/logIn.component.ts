@@ -22,7 +22,7 @@ export class LogInComponent implements OnInit {
     this.userService.hasUserSentVerifyRequest$.pipe(
       tap((val: boolean) => this.isVerifyLoginRequestSent = val)
     )
-    .subscribe();
+      .subscribe();
   }
 
   login() {

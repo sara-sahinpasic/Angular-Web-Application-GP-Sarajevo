@@ -13,13 +13,13 @@ export class ActivateAccountComponent implements OnInit {
   private token: string = "";
   isActivated: boolean = false;
   // todo: create a centralized error handler for API errors
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private router: Router) {}
+  constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.userService.isActivated$.pipe(
       tap((val: boolean) => this.isActivated = val)
     )
-    .subscribe();
+      .subscribe();
 
     this.token = this.activatedRoute.snapshot.paramMap.get("token") as string;
 

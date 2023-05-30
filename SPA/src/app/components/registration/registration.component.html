@@ -4,7 +4,7 @@
       <h1>Registracija </h1>
       <div class="row">
         <div class="col">
-          <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="registrationForm">
             <div class="form-group">
               <label for="firstName">Ime: *</label>
               <div class="input-group">
@@ -97,8 +97,8 @@
               </div>
             </div>
           </form>
-          <button type="submit" class="first" (click)="registracija()">Registruj se</button>
-          <button class="second" (click)="login()">Prijavi se</button>
+          <button class="primary mt-2" (click)="registration()">Registruj se</button>
+          <button class="secondary mt-3" (click)="login()">Prijavi se</button>
         </div>
         <h1 *ngIf="registrationSent">Kod za aktivaciju računa vam je poslan na email.</h1>
       </div>

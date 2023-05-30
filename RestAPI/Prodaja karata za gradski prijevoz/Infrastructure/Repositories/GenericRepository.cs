@@ -30,7 +30,7 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     public virtual Guid? Create(TEntity? entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-        
+
         _dataContext.Add(entity);
 
         return entity.Id;

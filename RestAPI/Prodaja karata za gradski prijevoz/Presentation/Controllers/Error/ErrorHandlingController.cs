@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Diagnostics;
 
 namespace Presentation.Controllers.Error;
 
@@ -10,13 +10,13 @@ namespace Presentation.Controllers.Error;
 public sealed class ErrorHandlingController : ControllerBase
 {
     public ILogger<ErrorHandlingController> _logger { get; }
-    
+
     public ErrorHandlingController(ILogger<ErrorHandlingController> logger)
     {
         _logger = logger;
     }
 
-    public IActionResult ErrorHandler() 
+    public IActionResult ErrorHandler()
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
@@ -39,8 +39,8 @@ public sealed class ErrorHandlingController : ControllerBase
             Status = 500
         };
         var exceptionMessage = exception.InnerException?.Message ?? exception.Message;
-        // todo: see how to do with logger: sprint 2
-      //  System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
+        // todo: see how to do with logger: sprint 3
+        //  System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
         _logger.LogError(exceptionMessage);
 
         return StatusCode((int)problem.Status, problem);

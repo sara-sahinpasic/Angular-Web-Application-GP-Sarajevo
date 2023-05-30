@@ -1,12 +1,12 @@
+using Application.DataClasses.User;
+using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Mapper;
-using Presentation.DTO.User;
+using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Application.Services.Abstractions.Interfaces.Authentication;
-using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Presentation.DTO;
-using Application.DataClasses.User;
+using Presentation.DTO.User;
 
 namespace Presentation.Controllers.Account;
 
@@ -55,7 +55,7 @@ public sealed class AuthenticationController : ControllerBase
     public async Task<IActionResult> ActivateAction(string tokenString, CancellationToken cancellationToken)
     {
         RegistrationToken? registrationToken = await _registrationTokenRepository.GetByTokenStringAsync(tokenString, cancellationToken);
-        
+
         if (registrationToken is null)
         {
             return BadRequest("Token not valid");
@@ -103,7 +103,7 @@ public sealed class AuthenticationController : ControllerBase
 
     [HttpPost("/verifyLogin")]
     public async Task<IActionResult> AuthenticateLoginAction(
-        [FromServices] IVerificationCodeRepository verificationCodeRepository, AuthLoginDataDto authLoginData, 
+        [FromServices] IVerificationCodeRepository verificationCodeRepository, AuthLoginDataDto authLoginData,
         CancellationToken cancellationToken)
     {
         VerificationCode? verificationCode = await verificationCodeRepository.GetByUserIdAndCodeAsync(authLoginData.UserId, authLoginData.Code, cancellationToken);

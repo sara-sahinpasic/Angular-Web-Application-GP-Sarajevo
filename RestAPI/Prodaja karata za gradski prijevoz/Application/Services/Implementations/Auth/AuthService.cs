@@ -26,7 +26,6 @@ public sealed class AuthService : IAuthService
     private readonly IConfiguration _config;
     private readonly AuthConfirmationConfig _authConfirmationConfig;
 
-    // todo: generic response and request class: try and to in sprint 2
     public AuthService(
         IUserRepository userRepository,
         IEmailService emailService,
@@ -66,7 +65,7 @@ public sealed class AuthService : IAuthService
         return jwtToken;
     }
 
-    //todo: create factory: try to do in sprint 2
+    //todo: create factory: try to do in sprint 3
     public async Task<LoginResult?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
         User? user = await _userRepository.GetByEmailAsync(email);
@@ -183,7 +182,7 @@ public sealed class AuthService : IAuthService
 
     public Task LogoutAsync(User user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); //todo: figure out in sprint 3
     }
 
     public async Task<bool> IsUserActivatedAsync(string email, CancellationToken cancellationToken)

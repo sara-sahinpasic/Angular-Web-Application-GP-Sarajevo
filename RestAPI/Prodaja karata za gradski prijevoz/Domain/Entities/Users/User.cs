@@ -1,8 +1,7 @@
 ﻿using Domain.Abstractions.Classes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.Users;
-// todo: make mandatory fields required: sprint 2
+// todo: make mandatory fields required: sprint 3
 public sealed class User : Entity
 {
     public Guid RoleId { get; set; }
