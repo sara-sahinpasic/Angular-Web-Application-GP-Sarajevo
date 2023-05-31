@@ -1,18 +1,28 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { tap } from 'rxjs';
+import { UserProfileModel } from '../models/User/UserProfileModel';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotLoggedInGuard implements CanActivate {
-  constructor(private userService: UserService) { }
 
-  isLoggedIn: any = false;
+  isLoggedIn: any;
+
+  constructor(private userService: UserService) {
+    this.userService.user$.pipe(
+      tap((user: UserProfileModel | undefined) => this.isLoggedIn = user))
+    .subscribe();
+  }
+
   canActivate() {
-    this.isLoggedIn = this.userService.getUser();
-
-    if (this.isLoggedIn == undefined) return true;
-    else return false;
+    if (this.isLoggedIn == undefined) {
+      return true;
+    }
+    else {
+       return false;
+    }
   }
 }

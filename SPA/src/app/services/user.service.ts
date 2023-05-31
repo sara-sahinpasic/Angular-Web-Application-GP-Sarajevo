@@ -37,7 +37,7 @@ export class UserService {
     private httpClient: HttpClient,
     private jwtService: JwtService,
     private router: Router) {
-      this.user = new BehaviorSubject(localStorage.getItem("token") as UserProfileModel | undefined);
+      this.user = new BehaviorSubject(this.getUser() as UserProfileModel | undefined);
       this.user$ = this.user.asObservable();
       this.isActivated$ = this.isUserActivated.asObservable();
       this.isRegistrationSent$ = this.isRegistrationSent.asObservable();
@@ -81,6 +81,7 @@ export class UserService {
             return;
           }
           localStorage.setItem("token", response.data.loginData);
+          this.user.next(this.getUser());
           this.router.navigateByUrl(redirectionRoute);
         }),
         catchError((e) => {
@@ -104,6 +105,7 @@ export class UserService {
       .pipe(
         tap((response: DataResponse<string>) => {
           localStorage.setItem("token", response.data);
+          this.user.next(this.getUser());
           if (!redirectionRoute) {
             return;
           }
@@ -113,7 +115,7 @@ export class UserService {
       );
   }
 
-  public getUser(): UserProfileModel | undefined {
+  private getUser(): UserProfileModel | undefined {
     return this.getUserDataFromToken();
   }
 
@@ -142,6 +144,7 @@ export class UserService {
             return;
           }
           localStorage.setItem("token", response.data);
+          this.user.next(this.getUser());
           this.router.navigateByUrl(redirectionRoute);
         })
       );
@@ -177,5 +180,6 @@ export class UserService {
 
   public logout() {
     localStorage.removeItem('token');
+    this.user.next(this.getUser());
   }
 }
