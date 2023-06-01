@@ -1,5 +1,6 @@
 ﻿namespace Domain.Enums.User;
 
+// typesafe custom enum
 public class Roles : StringEnum
 {
     public static readonly Roles Admin = new("f9fefebe-9bec-480f-bbec-431f72b14995");

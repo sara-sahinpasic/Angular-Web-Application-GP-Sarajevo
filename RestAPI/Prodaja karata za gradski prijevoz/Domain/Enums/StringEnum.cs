@@ -1,8 +1,6 @@
-﻿using Domain.Enums.Interfaces;
+﻿namespace Domain.Enums;
 
-namespace Domain.Enums;
-
-public abstract class StringEnum : ICustomEnum<StringEnum, string>
+public abstract class StringEnum
 {
     private readonly string _value;
 
