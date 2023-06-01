@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserService } from 'src/app/services/user.service';
 
@@ -21,7 +22,10 @@ export class UpdateProfileComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.profileModel = this._userService.getUser() as UserProfileModel;
+    this._userService.user$.pipe(
+      tap((user: UserProfileModel | undefined) => this.profileModel = user!)
+    )
+    .subscribe();
   }
 
   save() {
