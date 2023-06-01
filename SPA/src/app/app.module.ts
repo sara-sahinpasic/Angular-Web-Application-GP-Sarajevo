@@ -18,6 +18,7 @@ import { UpdateProfileComponent } from './components/profile-update-page/update-
 import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ToastMessageComponent } from './components/helper-components/toast-message/toast-message.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     UpdateProfileComponent,
     ProfileDeletedPageComponent,
     SpinnerComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ToastMessageComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule],
   providers: [

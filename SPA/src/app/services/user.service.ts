@@ -11,6 +11,7 @@ import { JwtService } from './jwt/jwt.service';
 import { Router } from '@angular/router';
 import { UserLoginResponse } from '../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
+import { ToastMessageService } from './toast/toast-message.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +37,8 @@ export class UserService {
   constructor(
     private httpClient: HttpClient,
     private jwtService: JwtService,
-    private router: Router) {
+    private router: Router,
+    private toastMessageService: ToastMessageService) {
       this.user = new BehaviorSubject(localStorage.getItem("token") as UserProfileModel | undefined);
       this.user$ = this.user.asObservable();
       this.isActivated$ = this.isUserActivated.asObservable();
@@ -58,6 +60,7 @@ export class UserService {
           }
 
           this.isRegistrationSent.next(true);
+          this.toastMessageService.pushSuccessMessage(response.message);
         })
       );
   }
@@ -67,6 +70,7 @@ export class UserService {
       .pipe(
         tap(() => {
           this.isUserActivated.next(true);
+          this.toastMessageService.pushSuccessMessage("Activation sent"); //todo: get response from server
         })
       );
   }
@@ -82,6 +86,7 @@ export class UserService {
           }
           localStorage.setItem("token", response.data.loginData);
           this.router.navigateByUrl(redirectionRoute);
+          this.toastMessageService.pushSuccessMessage(response.message);
         }),
         catchError((e) => {
           console.error(e); // todo: take error message
@@ -104,6 +109,8 @@ export class UserService {
       .pipe(
         tap((response: DataResponse<string>) => {
           localStorage.setItem("token", response.data);
+          this.toastMessageService.pushSuccessMessage(response.message);
+
           if (!redirectionRoute) {
             return;
           }
@@ -138,6 +145,7 @@ export class UserService {
     return this.httpClient.put<DataResponse<string>>(`${this.url}Profile`, userToUpdate, {headers})
       .pipe(
         tap((response: DataResponse<string>) => {
+          this.toastMessageService.pushSuccessMessage(response.message);
           if (!redirectionRoute) {
             return;
           }

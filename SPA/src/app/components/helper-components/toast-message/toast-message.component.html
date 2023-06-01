@@ -1,0 +1,14 @@
+<div class="toast-container">
+  <div *ngFor="let item of messages;"
+    [ngClass]="{
+      'toast align-items-center border-0 text-light': true,
+      'bg-success bg-gradient': item.type == ToastType.Success,
+      'bg-danger bg-gradient': item.type == ToastType.Error
+    }"
+    role="alert" aria-live="assertive" aria-atomic="true"
+    style="--fade-in-and-out-time: {{ toastMessageExpirationSeconds }}s">
+    <div class="toast-body">
+      {{ item.message }}
+    </div>
+  </div>
+</div>
