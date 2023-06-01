@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230601045411_100_1")]
+    partial class _100_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +69,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f3bc7265-e8dc-4a3c-b04c-f7a881bcd939"),
+                            Id = new Guid("f9fefebe-9bec-480f-bbec-431f72b14995"),
                             Name = "Admin"
                         },
                         new
@@ -77,7 +79,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f9fefebe-9bec-480f-bbec-431f72b14995"),
+                            Id = new Guid("7690f2ef-fb11-479a-84ba-e951ea07f341"),
                             Name = "Driver"
                         });
                 });
@@ -131,9 +133,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
-
                     b.ToTable("Users");
                 });
 
@@ -174,15 +173,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Users.User", b =>
-                {
-                    b.HasOne("Domain.Entities.Users.Role", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Users.User", "RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Users.VerificationCode", b =>
