@@ -24,15 +24,18 @@ li {
 }
 li a {
   display: block;
-  color: rgb(0, 0, 0);
   font-weight:900;
   font-size:25px;
   text-align: center;
   padding: 10px 16px;
   text-decoration: none;
   padding-left: 30px;
-  }
+}
+
 li a#prijava{
   margin-right: 150px;
 }
 
+.user-info-container, a {
+  color: black;
+}
