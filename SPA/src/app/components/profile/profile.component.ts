@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserService } from 'src/app/services/user.service';
 
@@ -18,7 +19,9 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.profileModel = this.userService.getUser() as UserProfileModel;
+    this.userService.user$.pipe(
+      tap((user: UserProfileModel | undefined) => this.profileModel = user!))
+      .subscribe();
   }
 
   navigateToProfile() {
