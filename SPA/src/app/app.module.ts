@@ -19,6 +19,7 @@ import { ProfileDeletedPageComponent } from './components/profile-deleted-page/p
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ToastMessageComponent } from './components/helper-components/toast-message/toast-message.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { ToastMessageComponent } from './components/helper-components/toast-mess
     ResetPasswordComponent,
     ToastMessageComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, FontAwesomeModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
