@@ -11,17 +11,16 @@ import { ToastMessageService } from 'src/app/services/toast/toast-message.servic
 export class ToastMessageComponent implements OnInit {
 
   protected readonly ToastType: typeof ToastType = ToastType;
-  protected messages: ToastMessage[] = [];
-  protected i: number = 0;
+  protected messagesQue: ToastMessage[] = [];
   protected toastMessageExpirationSeconds: number = 4;
 
   constructor(public toastMessageService: ToastMessageService) { }
 
   ngOnInit() {
     this.toastMessageService.message$.subscribe((value: ToastMessage) => {
-      this.messages.push(value);
+      this.messagesQue.push(value);
       setTimeout(() => {
-        this.messages.shift();
+        this.messagesQue.shift();
       }, this.toastMessageExpirationSeconds * 1000);
     });
   }

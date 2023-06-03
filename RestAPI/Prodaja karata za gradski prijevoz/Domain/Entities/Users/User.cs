@@ -18,7 +18,6 @@ public sealed class User : Entity
 
         set 
         {
-            Role = value;
             RoleId = Guid.Parse(value.ToString());
         }
     }

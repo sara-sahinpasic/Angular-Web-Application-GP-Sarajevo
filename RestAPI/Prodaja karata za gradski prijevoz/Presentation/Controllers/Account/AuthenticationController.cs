@@ -92,9 +92,11 @@ public sealed class AuthenticationController : ControllerBase
             return BadRequest("Account not activated. Check your email for the activation code."); // todo: create also if user exists in service
         }
 
+        string message = loginResult.IsTwoWayAuth ? "Verification code sent to email" : "Successfully logged in.";
+
         Response<LoginResult> response = new()
         {
-            Message = "Verification code sent to email",
+            Message = message,
             Data = loginResult
         };
 
