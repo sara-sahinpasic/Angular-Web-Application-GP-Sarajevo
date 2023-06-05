@@ -169,13 +169,17 @@ export class UserService {
     );
   }
 
-  public deleteUser(id: string, redirectRoute: string = "/delete"): Observable<any> {
+  public deleteUser(id: string, redirectRoute: string = "/delete"): Observable<DataResponse<string>> {
     const token: string | null = localStorage.getItem("token");
     const headers: HttpHeaders = new HttpHeaders({Authorization: "Bearer " + token});
 
-    return this.httpClient.delete(`${this.url}Profile?id=${id}`, {headers})
+    return this.httpClient.delete<DataResponse<string>>(`${this.url}Profile?id=${id}`, {headers})
       .pipe(
-        tap(() => {
+        tap((response: DataResponse<string>) => {
+          this.toastMessageService.pushSuccessMessage(response.message);
+          if (!redirectRoute) {
+            return;
+          }
           this.router.navigateByUrl(redirectRoute);
 
           setTimeout(() => {

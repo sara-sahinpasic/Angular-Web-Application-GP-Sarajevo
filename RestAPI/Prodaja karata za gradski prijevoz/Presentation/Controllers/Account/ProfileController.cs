@@ -5,6 +5,7 @@ using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Presentation.DTO;
 using Presentation.DTO.User;
 
@@ -83,11 +84,22 @@ public sealed class ProfileController : ControllerBase
         var data = await _userRepository.GetByIdAsync(id, cancellationToken);
         if (data == null)
         {
-            return NotFound("Nema podataka");
+            Response<object?> response = new()
+            {
+                Message = "No user found",
+                Data = null
+            };
+
+            return NotFound(response);
         }
 
         _userRepository.Delete(data);
         await unitOfWork.CommitAsync(cancellationToken);
-        return Ok(data);
+
+        Response<string> responseOk = new()
+        {
+            Message = "User successfuly deleted!",
+        };
+        return Ok(responseOk);
     }
 }
