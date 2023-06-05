@@ -58,7 +58,7 @@ export class RegistrationComponent implements OnInit {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         dateOfBirth: ['', Validators.required],
-        phoneNumber: ['', Validators.required],
+        phoneNumber: ['', Validators.pattern('[- +()0-9]+')],
         email: ['', Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)],
         password: ['', Validators.required],
       },
