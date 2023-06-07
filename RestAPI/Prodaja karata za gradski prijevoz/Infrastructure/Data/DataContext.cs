@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Tickets;
+using Domain.Entities.Payment;
 using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ public sealed class DataContext : DbContext
     public DbSet<VerificationCode> VerificationCodes { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<Ticket> Tickets { get; set; } = null!;
+    public DbSet<PaymentOption> PaymentOptions { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 
@@ -46,7 +48,28 @@ public sealed class DataContext : DbContext
             }
         };
 
+        BuildPaymentOptions(modelBuilder);
         modelBuilder.Entity<Role>()
             .HasData(roles);
+    }
+
+    private void BuildPaymentOptions(ModelBuilder modelBuilder)
+    {
+        List<PaymentOption> paymentOptions = new()
+        {
+            new()
+            {
+                Id = new Guid("8e5264f5-0eea-4fae-9945-80d835583ba1"),
+                Name = "Card"
+            },
+            new()
+            {
+                Id = new Guid("46536a11-f5b3-4505-a13a-e7d44dda9ae9"),
+                Name = "Mail"
+            }
+        };
+
+        modelBuilder.Entity<PaymentOption>()
+            .HasData(paymentOptions);
     }
 }
