@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Users;
+﻿using Domain.Entities.Tickets;
+using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
@@ -9,6 +10,7 @@ public sealed class DataContext : DbContext
     public DbSet<RegistrationToken> RegistrationTokens { get; set; } = null!;
     public DbSet<VerificationCode> VerificationCodes { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Ticket> Tickets { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 
