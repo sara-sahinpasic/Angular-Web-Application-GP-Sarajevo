@@ -9,10 +9,10 @@ public sealed class UserRepository : GenericRepository<User>, IUserRepository
 {
     public UserRepository(DataContext dataContext) : base(dataContext) {}
 
-    public Task<User?> GetByEmailAsync(string email)
+    public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(email, nameof(email));
 
-        return GetAll().FirstOrDefaultAsync(user => user.Email!.ToLower() == email.ToLower());
+        return GetAll().FirstOrDefaultAsync(user => user.Email!.ToLower() == email.ToLower(), cancellationToken);
     }
 }

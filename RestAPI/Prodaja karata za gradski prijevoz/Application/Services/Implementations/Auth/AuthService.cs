@@ -68,7 +68,7 @@ public sealed class AuthService : IAuthService
     //todo: create factory: try to do in sprint 3
     public async Task<LoginResult?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
         
         if (user is null || !_passwordService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
         {
@@ -187,7 +187,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<bool> IsUserActivatedAsync(string email, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
 
         return user is not null && user.Active;
     }
@@ -210,7 +210,7 @@ public sealed class AuthService : IAuthService
 
     public async Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
 
         await _emailService.SendRegistrationMailAsync(user, GenerateRegistrationToken(), cancellationToken);
     }
@@ -273,7 +273,7 @@ public sealed class AuthService : IAuthService
 
     public async Task ResetPasswordAsync(string email, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email);
+        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
 
         if (user is null)
         {

@@ -2,6 +2,7 @@
 using Domain.Entities.Payment;
 using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
+using Domain.Entities.Invoices;
 
 namespace Infrastructure.Data;
 
@@ -13,6 +14,7 @@ public sealed class DataContext : DbContext
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<Ticket> Tickets { get; set; } = null!;
     public DbSet<PaymentOption> PaymentOptions { get; set; } = null!;
+    public DbSet<Invoice> Invoices { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 
@@ -29,6 +31,32 @@ public sealed class DataContext : DbContext
             .WithOne()
             .HasForeignKey<User>(r => r.RoleId);
 
+        BuildPaymentOptions(modelBuilder);
+        BuildUserRoles(modelBuilder);
+    }
+
+    private static void BuildPaymentOptions(ModelBuilder modelBuilder)
+    {
+        List<PaymentOption> paymentOptions = new()
+        {
+            new()
+            {
+                Id = new Guid("8e5264f5-0eea-4fae-9945-80d835583ba1"),
+                Name = "Card"
+            },
+            new()
+            {
+                Id = new Guid("46536a11-f5b3-4505-a13a-e7d44dda9ae9"),
+                Name = "Mail"
+            }
+        };
+
+        modelBuilder.Entity<PaymentOption>()
+            .HasData(paymentOptions);
+    }
+
+    private static void BuildUserRoles(ModelBuilder modelBuilder)
+    {
         List<Role> roles = new()
         {
             new()
@@ -48,28 +76,7 @@ public sealed class DataContext : DbContext
             }
         };
 
-        BuildPaymentOptions(modelBuilder);
         modelBuilder.Entity<Role>()
             .HasData(roles);
-    }
-
-    private void BuildPaymentOptions(ModelBuilder modelBuilder)
-    {
-        List<PaymentOption> paymentOptions = new()
-        {
-            new()
-            {
-                Id = new Guid("8e5264f5-0eea-4fae-9945-80d835583ba1"),
-                Name = "Card"
-            },
-            new()
-            {
-                Id = new Guid("46536a11-f5b3-4505-a13a-e7d44dda9ae9"),
-                Name = "Mail"
-            }
-        };
-
-        modelBuilder.Entity<PaymentOption>()
-            .HasData(paymentOptions);
     }
 }
