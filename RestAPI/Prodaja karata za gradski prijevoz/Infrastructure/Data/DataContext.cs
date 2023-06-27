@@ -3,6 +3,7 @@ using Domain.Entities.Payment;
 using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Invoices;
+using Domain.Entities.Requests;
 
 namespace Infrastructure.Data;
 
@@ -15,6 +16,8 @@ public sealed class DataContext : DbContext
     public DbSet<Ticket> Tickets { get; set; } = null!;
     public DbSet<PaymentOption> PaymentOptions { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
+    public DbSet<Request> Requests { get; set; } = null!;
+    public DbSet<RequestType> RequestTypes { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 
@@ -31,8 +34,14 @@ public sealed class DataContext : DbContext
             .WithOne()
             .HasForeignKey<User>(r => r.RoleId);
 
+        modelBuilder.Entity<Request>()
+            .HasOne<RequestType>()
+            .WithOne()
+            .HasForeignKey<Request>(r => r.RequestTypeId);
+
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildRequestTypes(modelBuilder);
     }
 
     private static void BuildPaymentOptions(ModelBuilder modelBuilder)
@@ -79,4 +88,35 @@ public sealed class DataContext : DbContext
         modelBuilder.Entity<Role>()
             .HasData(roles);
     }
+    
+    private static void BuildRequestTypes(ModelBuilder modelBuilder)
+    {
+        List<RequestType> requestTypes = new()
+        {
+            new()
+            {
+                Id = new Guid("23a43e2c-ea65-4a33-9d5c-1195dfb72d43"),
+                Name="Student"
+            },
+            new()
+            {
+                Id=new Guid("41a37a8d-4d5f-4353-988b-89cc2f7cb3db"),
+                Name="Employed",
+            },
+            new()
+            {
+                Id=new Guid("6309f61b-4a1d-4866-befb-ffef76f8b869"),
+                Name="Pensioner"
+            },
+            new()
+            {
+                Id=new Guid("6b989bc6-7314-4a5c-adca-f7b44ab3158a"),
+                Name="Unemployed"
+            }
+        };
+
+        modelBuilder.Entity<RequestType>()
+            .HasData(requestTypes);
+    }
+
 }
