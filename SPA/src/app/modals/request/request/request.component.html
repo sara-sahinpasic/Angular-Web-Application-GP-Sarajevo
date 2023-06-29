@@ -1,0 +1,31 @@
+<div class="modal fade show" id="exampleModalLive" tabindex="-1" aria-labelledby="exampleModalLiveLabel"
+  aria-modal="true" role="dialog" [ngClass]="{'show':showModalRequest,'modal fade':true}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLiveLabel">
+          Zahtjev </h5>
+        <button type="button" class="btn-close" aria-label="Close"
+        (click)="requestCloseButton()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="input-group-prepend">
+            <select class="form-control" style="background-color: rgba(108, 117, 125, 0.916); color: white;" >
+            <option >
+              Mjesečna karta -
+            </option>
+          </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Dokument koji potvrđuje odabrani status:</label>
+          <input class="form-control" type="file" id="formFile">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="request" (click)="sendRequestButton()">Podnesi zahtjev</button>
+      </div>
+    </div>
+  </div>
+</div>

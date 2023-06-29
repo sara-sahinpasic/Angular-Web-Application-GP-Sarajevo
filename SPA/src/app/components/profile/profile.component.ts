@@ -10,17 +10,17 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-
   public profileModel!: UserProfileModel;
+  showModalRequest: boolean = false;
+  showModalPurchaseHistory: boolean = false;
 
-  constructor(
-    private _router: Router,
-    private userService: UserService
-  ) { }
+  constructor(private _router: Router, private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => this.profileModel = user!))
+    this.userService.user$
+      .pipe(
+        tap((user: UserProfileModel | undefined) => (this.profileModel = user!))
+      )
       .subscribe();
   }
 
@@ -44,6 +44,15 @@ export class ProfileComponent implements OnInit {
   }
 
   navigateToPurchaseHistory() {
-    throw new Error('Method not implemented.');
+    this.showModalPurchaseHistory = true;
+  }
+  navigateToRequest() {
+    this.showModalRequest = true;
+  }
+  requestCloseButton() {
+    this.showModalRequest = false;
+  }
+  historyCloseButton(){
+      this.showModalPurchaseHistory=false;
   }
 }

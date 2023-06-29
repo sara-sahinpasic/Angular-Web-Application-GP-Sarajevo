@@ -10,9 +10,13 @@ import { ProfileDeletedPageComponent } from './components/profile-deleted-page/p
 import { LoggedInGuard } from './guards/logged-in.guard';
 import { NotLoggedInGuard } from './guards/not-logged-in.guard';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history/purchase-history.component';
+import { RequestComponent } from './modals/request/request/request.component';
 
 
 const routes: Routes = [
+  { path: 'request', component: RequestComponent, canActivate:[LoggedInGuard] },
+  { path: 'purchaseHistory', component: PurchaseHistoryComponent, canActivate:[LoggedInGuard] },
   { path: 'delete', component: ProfileDeletedPageComponent, canActivate:[LoggedInGuard] },
   { path: 'update', component: UpdateProfileComponent, canActivate:[LoggedInGuard] },
   { path: 'profile', component: ProfileComponent, canActivate:[LoggedInGuard] },

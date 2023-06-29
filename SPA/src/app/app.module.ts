@@ -20,6 +20,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ToastMessageComponent } from './components/helper-components/toast-message/toast-message.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history/purchase-history.component';
+import { RequestComponent } from './modals/request/request/request.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ProfileDeletedPageComponent,
     SpinnerComponent,
     ResetPasswordComponent,
-    ToastMessageComponent
+    ToastMessageComponent,
+    PurchaseHistoryComponent,
+    RequestComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, FontAwesomeModule],
   providers: [
