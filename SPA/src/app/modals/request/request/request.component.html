@@ -11,9 +11,10 @@
       <div class="modal-body">
         <div class="mb-3">
           <div class="input-group-prepend">
-            <select class="form-control" style="background-color: rgba(108, 117, 125, 0.916); color: white;" >
-            <option >
-              Mjesečna karta -
+            <select class="form-control" style="background-color: rgba(108, 117, 125, 0.916); color: white;"
+            [(ngModel)]="request_id">
+            <option *ngFor="let request of requests" [value]="request.id" >
+              Mjesečna karta - {{request.name}}
             </option>
           </select>
           </div>

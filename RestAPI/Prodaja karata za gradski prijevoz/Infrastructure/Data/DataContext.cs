@@ -18,6 +18,7 @@ public sealed class DataContext : DbContext
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<Request> Requests { get; set; } = null!;
     public DbSet<RequestType> RequestTypes { get; set; } = null!;
+    public DbSet<Status> Statuses { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 
@@ -42,6 +43,7 @@ public sealed class DataContext : DbContext
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);
         BuildRequestTypes(modelBuilder);
+        BuildUserStatus(modelBuilder);
     }
 
     private static void BuildPaymentOptions(ModelBuilder modelBuilder)
@@ -88,7 +90,7 @@ public sealed class DataContext : DbContext
         modelBuilder.Entity<Role>()
             .HasData(roles);
     }
-    
+
     private static void BuildRequestTypes(ModelBuilder modelBuilder)
     {
         List<RequestType> requestTypes = new()
@@ -117,6 +119,47 @@ public sealed class DataContext : DbContext
 
         modelBuilder.Entity<RequestType>()
             .HasData(requestTypes);
+    }
+
+    private static void BuildUserStatus(ModelBuilder modelBuilder)
+    {
+        List<Status> statuses = new()
+        {
+            new()
+            {
+                Id=new Guid("eb11af9e-f0c9-49b5-b3b3-149a9b4c7ebd"),
+                Name = "Default",
+                Discount=0
+            },
+            new()
+            {
+                Id=new Guid("056b4a11-96b3-413c-a323-0cef9a5680c2"),
+                Name = "Student",
+                Discount=30
+
+            },
+            new()
+            {
+                Id=new Guid("e6957173-7aa6-4fcb-9dc0-2fc20c20ecae"),
+                Name="Pensioner",
+                Discount=50
+            },
+            new()
+            {
+                Id=new Guid("4c0170aa-cf87-46bd-88a6-bab3687f48b6"),
+                Name="Employed",
+                Discount=15
+            },
+            new()
+            {
+                Id=new Guid("9647c387-b0fb-4336-9434-079249f37e76"),
+                Name="Unemployed",
+                Discount=40
+            }
+        };
+
+        modelBuilder.Entity<Status>()
+            .HasData(statuses);
     }
 
 }
