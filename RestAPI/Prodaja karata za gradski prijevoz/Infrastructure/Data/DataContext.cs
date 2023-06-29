@@ -40,6 +40,10 @@ public sealed class DataContext : DbContext
             .WithOne()
             .HasForeignKey<Request>(r => r.RequestTypeId);
 
+        modelBuilder.Entity<Status>()
+            .Property(p => p.Discount)
+            .HasPrecision(5,2);
+
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);
         BuildRequestTypes(modelBuilder);
@@ -135,26 +139,26 @@ public sealed class DataContext : DbContext
             {
                 Id=new Guid("056b4a11-96b3-413c-a323-0cef9a5680c2"),
                 Name = "Student",
-                Discount=30
+                Discount=0.3
 
             },
             new()
             {
                 Id=new Guid("e6957173-7aa6-4fcb-9dc0-2fc20c20ecae"),
                 Name="Pensioner",
-                Discount=50
+                Discount=0.5
             },
             new()
             {
                 Id=new Guid("4c0170aa-cf87-46bd-88a6-bab3687f48b6"),
                 Name="Employed",
-                Discount=15
+                Discount=0.15
             },
             new()
             {
                 Id=new Guid("9647c387-b0fb-4336-9434-079249f37e76"),
                 Name="Unemployed",
-                Discount=40
+                Discount=0.4
             }
         };
 
