@@ -16,8 +16,6 @@ public sealed class DataContext : DbContext
     public DbSet<Ticket> Tickets { get; set; } = null!;
     public DbSet<PaymentOption> PaymentOptions { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
-    public DbSet<Request> Requests { get; set; } = null!;
-    public DbSet<RequestType> RequestTypes { get; set; } = null!;
     public DbSet<Status> Statuses { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
@@ -36,9 +34,9 @@ public sealed class DataContext : DbContext
             .HasForeignKey<User>(r => r.RoleId);
 
         modelBuilder.Entity<Request>()
-            .HasOne<RequestType>()
+            .HasOne<Status>()
             .WithOne()
-            .HasForeignKey<Request>(r => r.RequestTypeId);
+            .HasForeignKey<Request>(r => r.UserStatusId);
 
         modelBuilder.Entity<Status>()
             .Property(p => p.Discount)
@@ -46,7 +44,6 @@ public sealed class DataContext : DbContext
 
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);
-        BuildRequestTypes(modelBuilder);
         BuildUserStatus(modelBuilder);
     }
 
@@ -93,36 +90,6 @@ public sealed class DataContext : DbContext
 
         modelBuilder.Entity<Role>()
             .HasData(roles);
-    }
-
-    private static void BuildRequestTypes(ModelBuilder modelBuilder)
-    {
-        List<RequestType> requestTypes = new()
-        {
-            new()
-            {
-                Id = new Guid("23a43e2c-ea65-4a33-9d5c-1195dfb72d43"),
-                Name="Student"
-            },
-            new()
-            {
-                Id=new Guid("41a37a8d-4d5f-4353-988b-89cc2f7cb3db"),
-                Name="Employed",
-            },
-            new()
-            {
-                Id=new Guid("6309f61b-4a1d-4866-befb-ffef76f8b869"),
-                Name="Pensioner"
-            },
-            new()
-            {
-                Id=new Guid("6b989bc6-7314-4a5c-adca-f7b44ab3158a"),
-                Name="Unemployed"
-            }
-        };
-
-        modelBuilder.Entity<RequestType>()
-            .HasData(requestTypes);
     }
 
     private static void BuildUserStatus(ModelBuilder modelBuilder)

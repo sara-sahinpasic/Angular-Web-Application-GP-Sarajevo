@@ -5,69 +5,71 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
-    public partial class _108_109_1 : Migration
+    public partial class _114_1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RequestTypes",
+                name: "Statuses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discount = table.Column<double>(type: "float(5)", precision: 5, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequestTypes", x => x.Id);
+                    table.PrimaryKey("PK_Statuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Requests",
+                name: "Request",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Approved = table.Column<bool>(type: "bit", nullable: false),
                     DocumentLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RequestTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Requests", x => x.Id);
+                    table.PrimaryKey("PK_Request", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Requests_RequestTypes_RequestTypeId",
-                        column: x => x.RequestTypeId,
-                        principalTable: "RequestTypes",
+                        name: "FK_Request_Statuses_UserStatusId",
+                        column: x => x.UserStatusId,
+                        principalTable: "Statuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "RequestTypes",
-                columns: new[] { "Id", "Name" },
+                table: "Statuses",
+                columns: new[] { "Id", "Discount", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("23a43e2c-ea65-4a33-9d5c-1195dfb72d43"), "Student" },
-                    { new Guid("41a37a8d-4d5f-4353-988b-89cc2f7cb3db"), "Employed" },
-                    { new Guid("6309f61b-4a1d-4866-befb-ffef76f8b869"), "Pensioner" },
-                    { new Guid("6b989bc6-7314-4a5c-adca-f7b44ab3158a"), "Unemployed" }
+                    { new Guid("056b4a11-96b3-413c-a323-0cef9a5680c2"), 0.29999999999999999, "Student" },
+                    { new Guid("4c0170aa-cf87-46bd-88a6-bab3687f48b6"), 0.14999999999999999, "Employed" },
+                    { new Guid("9647c387-b0fb-4336-9434-079249f37e76"), 0.40000000000000002, "Unemployed" },
+                    { new Guid("e6957173-7aa6-4fcb-9dc0-2fc20c20ecae"), 0.5, "Pensioner" },
+                    { new Guid("eb11af9e-f0c9-49b5-b3b3-149a9b4c7ebd"), 0.0, "Default" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Requests_RequestTypeId",
-                table: "Requests",
-                column: "RequestTypeId",
+                name: "IX_Request_UserStatusId",
+                table: "Request",
+                column: "UserStatusId",
                 unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Requests");
+                name: "Request");
 
             migrationBuilder.DropTable(
-                name: "RequestTypes");
+                name: "Statuses");
         }
     }
 }

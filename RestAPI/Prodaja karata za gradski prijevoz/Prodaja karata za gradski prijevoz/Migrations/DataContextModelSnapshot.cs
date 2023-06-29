@@ -98,55 +98,18 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RequestTypeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestTypeId")
-                        .IsUnique();
-
-                    b.ToTable("Requests");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Requests.RequestType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserStatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("RequestTypes");
+                    b.HasIndex("UserStatusId")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("23a43e2c-ea65-4a33-9d5c-1195dfb72d43"),
-                            Name = "Student"
-                        },
-                        new
-                        {
-                            Id = new Guid("41a37a8d-4d5f-4353-988b-89cc2f7cb3db"),
-                            Name = "Employed"
-                        },
-                        new
-                        {
-                            Id = new Guid("6309f61b-4a1d-4866-befb-ffef76f8b869"),
-                            Name = "Pensioner"
-                        },
-                        new
-                        {
-                            Id = new Guid("6b989bc6-7314-4a5c-adca-f7b44ab3158a"),
-                            Name = "Unemployed"
-                        });
+                    b.ToTable("Request");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tickets.Ticket", b =>
@@ -385,9 +348,9 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requests.Request", b =>
                 {
-                    b.HasOne("Domain.Entities.Requests.RequestType", null)
+                    b.HasOne("Domain.Entities.Users.Status", null)
                         .WithOne()
-                        .HasForeignKey("Domain.Entities.Requests.Request", "RequestTypeId")
+                        .HasForeignKey("Domain.Entities.Requests.Request", "UserStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
