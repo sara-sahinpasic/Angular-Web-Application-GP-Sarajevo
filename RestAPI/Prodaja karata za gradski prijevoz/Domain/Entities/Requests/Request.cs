@@ -20,9 +20,10 @@ namespace Domain.Entities.Requests
                 UserStatusId = Guid.Parse(value.ToString());
             }
         }
+        public Guid UserId { get; set; }
         public DateTime DateCreated { get; set; }
         public bool Approved { get; set; }
         public string DocumentLink { get; set; } = null!;
-        public Guid UserId { get; set; }
+        public bool Active { get; set; }
     }
 }

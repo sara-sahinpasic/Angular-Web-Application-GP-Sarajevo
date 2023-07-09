@@ -1,5 +1,6 @@
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Prodaja_karata_za_gradski_prijevoz.Config;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +55,24 @@ else
 {
     app.UseHttpsRedirection();
 }
+
+
+void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseStaticFiles();    // for the wwwroot folder
+
+    // for the wwwroot/uploads folder
+    string uploadsDir = Path.Combine(env.WebRootPath, "uploads");
+    if (!Directory.Exists(uploadsDir))
+        Directory.CreateDirectory(uploadsDir);
+
+    app.UseStaticFiles(new StaticFileOptions()
+    {
+        RequestPath = "/images",
+        FileProvider = new PhysicalFileProvider(uploadsDir)
+    });
+}
+
 
 app.UseCors("SPA");
 app.UseExceptionHandler("/error");

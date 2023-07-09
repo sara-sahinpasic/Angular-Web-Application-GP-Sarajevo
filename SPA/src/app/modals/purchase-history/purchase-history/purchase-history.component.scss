@@ -1,4 +1,4 @@
-.show {
+/*.show {
   display: block;
 }
 
@@ -41,4 +41,59 @@ h5 {
   text-align: left;
   vertical-align: middle;
   width: 100%;
+}
+*/
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  @include flex-center;
+  height: calc(100% - 149px);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 5px 15px 5px;
+  width: 50%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 20px;
+  background-color: rgb(255 255 255 / 75%);
+}
+
+h1 {
+  text-align: left;
+  margin-bottom: 0px;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+table {
+  border: 1px solid black;
+}
+
+th,
+td {
+  padding: 10px 30px 10px 30px;
+}
+
+hr {
+  border: 2px solid black;
+}
+
+.print {
+  background-color: rgba(0, 0, 0, 0.916);
+  color: white;
+  font-weight: bolder;
+  font-size: large;
+  border: 2px solid black;
+  border-radius: 10px;
+  border-color: rgba(0, 0, 0, 0.171);
+  box-shadow: 2px 4px rgba(0, 0, 0, 0);
+  transition: 0.5s;
 }

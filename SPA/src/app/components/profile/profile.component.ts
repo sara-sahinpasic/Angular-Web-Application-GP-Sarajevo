@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
+import { ModalService } from 'src/app/services/modal/modal.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -12,9 +13,12 @@ import { UserService } from 'src/app/services/user.service';
 export class ProfileComponent implements OnInit {
   public profileModel!: UserProfileModel;
   showModalRequest: boolean = false;
-  showModalPurchaseHistory: boolean = false;
 
-  constructor(private _router: Router, private userService: UserService) {}
+  constructor(
+    private _router: Router,
+    private userService: UserService,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit(): void {
     this.userService.user$
@@ -44,15 +48,10 @@ export class ProfileComponent implements OnInit {
   }
 
   navigateToPurchaseHistory() {
-    this.showModalPurchaseHistory = true;
+    this._router.navigateByUrl(`/purchaseHistory`);
   }
-  navigateToRequest() {
-    this.showModalRequest = true;
-  }
-  requestCloseButton() {
-    this.showModalRequest = false;
-  }
-  historyCloseButton(){
-      this.showModalPurchaseHistory=false;
+
+  showModal() {
+    this.modalService.showRequestModal();
   }
 }

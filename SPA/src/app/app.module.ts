@@ -22,6 +22,7 @@ import { ToastMessageComponent } from './components/helper-components/toast-mess
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history/purchase-history.component';
 import { RequestComponent } from './modals/request/request/request.component';
+import { BaseModalComponent } from './modals/base-modal/base-modal.component';
 
 @NgModule({
   declarations: [
@@ -40,8 +41,16 @@ import { RequestComponent } from './modals/request/request/request.component';
     ToastMessageComponent,
     PurchaseHistoryComponent,
     RequestComponent,
+    BaseModalComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, FontAwesomeModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

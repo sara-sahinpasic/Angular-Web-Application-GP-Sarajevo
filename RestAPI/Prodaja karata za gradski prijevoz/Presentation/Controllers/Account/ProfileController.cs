@@ -5,7 +5,7 @@ using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.User;
 
@@ -17,6 +17,7 @@ namespace Presentation.Controllers.Account;
 public sealed class ProfileController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
+
     public ProfileController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
@@ -102,4 +103,20 @@ public sealed class ProfileController : ControllerBase
         };
         return Ok(responseOk);
     }
+    [HttpGet("Status")]
+    public async Task<IActionResult> GetAllStatuses([FromServices] IUserStatusRepository userStatusRepository)
+    {
+        var data = await userStatusRepository
+            .GetAll()
+            .Select(status => new UserStatusDto { Name = status.Name, Id=status.Id })
+            .ToArrayAsync();
+
+        Response<UserStatusDto[]> response = new()
+        {
+            Message = "",
+            Data = data
+        };
+        return Ok(response);
+    }
 }
+

@@ -4,11 +4,13 @@ using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Hashing;
 using Application.Services.Implementations.Mapper;
 using Infrastructure.Repositories;
+using Infrastructure.Repositories.Requests;
 using Infrastructure.Repositories.Users;
 using Infrastructure.Services.Email;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -43,6 +45,8 @@ public static partial class Services
         builder.Services.TryAddScoped<IUserRepository, UserRepository>();
         builder.Services.TryAddScoped<IRegistrationTokenRepository, RegistrationTokenRepository>();
         builder.Services.TryAddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
+        builder.Services.TryAddScoped<IUserStatusRepository, UserStatusRepository>();
+        builder.Services.TryAddScoped<IRequestRepository, RequestRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)

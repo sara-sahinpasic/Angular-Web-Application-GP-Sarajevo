@@ -2,9 +2,8 @@
   <div class="form-container">
     <h1>Moji podaci </h1>
     <div class="nav">
-      <button class="data" (click)="navigateToProfile()">Moji podaci</button>
       <button class="history" (click)="navigateToPurchaseHistory()">Historija kupovina</button>
-      <button class="request" (click)="navigateToRequest()">Zahtjev</button>
+      <button class="request" data-bs-toggle="modal" data-bs-target="#base-modal" (click)="showModal()">Zahtjev</button>
 
     </div>
     <div class="box">
@@ -57,8 +56,3 @@
     <button class="izmjena" (click)="navigateToUpdate()">Izmjena podataka</button>
     <button class="obrisi" (click)="deleteProfile()">Obriši profil</button>
   </div>
-
-  <app-request [showModalRequest]="showModalRequest" (close)="requestCloseButton()"></app-request>
-
-  <app-purchase-history [showModalPurchaseHistory]="showModalPurchaseHistory"
-    (close)="historyCloseButton()"></app-purchase-history>
