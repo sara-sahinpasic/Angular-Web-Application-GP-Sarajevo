@@ -35,8 +35,8 @@ public sealed class DataContext : DbContext
 
         modelBuilder.Entity<Request>()
             .HasOne<Status>()
-            .WithOne()
-            .HasForeignKey<Request>(r => r.UserStatusId);
+            .WithMany()
+            .HasForeignKey(r => r.UserStatusId);
 
         modelBuilder.Entity<Status>()
             .Property(p => p.Discount)

@@ -3,9 +3,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { finalize, tap } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { RequestDto } from 'src/app/models/Request/RequestDto';
+import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserStatusDto } from 'src/app/models/User/UserStatusDto';
 import { SpecialRequestService } from 'src/app/services/special-request/special-request.service';
 import { UserStatusService } from 'src/app/services/user/user-status.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-request',
@@ -18,7 +20,7 @@ export class RequestComponent implements OnInit {
   private allowedFileTypes: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
   protected userStatuses: Array<UserStatusDto> = [];
   protected requestData: RequestDto = {
-    userId: 'db7696ff-37b0-4db5-99c6-e44ab10b593f',
+    userId: '',
     userStatusId: '',
   };
   protected working = false;
@@ -26,7 +28,10 @@ export class RequestComponent implements OnInit {
   protected uploadFileLabel: string | undefined = 'Choose a file to upload';
   protected uploadProgress?: number;
 
-  constructor(private userStatusService: UserStatusService, private specialRequestService: SpecialRequestService) {}
+  constructor(
+    private userStatusService: UserStatusService,
+    private specialRequestService: SpecialRequestService,
+    private userService: UserService) {}
 
   ngOnInit(): void {
     this.userStatusService.getAvailableUserStatuses()
@@ -35,6 +40,11 @@ export class RequestComponent implements OnInit {
           this.userStatuses = response.data;
           this.requestData.userStatusId = response.data[0].id;
         })
+      )
+      .subscribe();
+
+      this.userService.user$.pipe(
+        tap((user: UserProfileModel | undefined) => this.requestData.userId = user?.id)
       )
       .subscribe();
   }

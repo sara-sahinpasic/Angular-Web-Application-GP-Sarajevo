@@ -36,6 +36,18 @@ namespace Presentation.Controllers.Account
         [RequestSizeLimit(RequestSizeLimit)]
         public async Task<IActionResult> UploadFileAction([FromForm] SpecialRequestRequestDto specialRequestRequestDto, CancellationToken cancellationToken)
         {
+            bool hasAnyActiveRequests = await _requestRepository.HasAnyActiveRequests(specialRequestRequestDto.UserId, cancellationToken);
+
+            if (hasAnyActiveRequests)
+            {
+                Response<string?> activeRequestErrorResponse = new()
+                {
+                    Message = "One request has been sent already. Please, wait until it's processed."
+                };
+
+                return BadRequest(activeRequestErrorResponse);
+            }
+
             string[] acceptedFileExtensions = { "jpg", "jpeg", "png", "pdf" };
             IFormFile file = specialRequestRequestDto.Document;
 
