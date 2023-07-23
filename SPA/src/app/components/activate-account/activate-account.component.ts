@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-activate-account',
@@ -13,7 +13,7 @@ export class ActivateAccountComponent implements OnInit {
   private token: string = "";
   isActivated: boolean = false;
   // todo: create a centralized error handler for API errors
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private router: Router) { }
+  constructor(private activatedRoute: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit(): void {
     this.userService.isActivated$.pipe(

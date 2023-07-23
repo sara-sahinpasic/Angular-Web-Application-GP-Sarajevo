@@ -50,13 +50,13 @@ public sealed class ProfileController : ControllerBase
 
         if (data == null)
         {
-            Response<object?> response = new()
+            Response<object?> errorResponse = new()
             {
                 Message = "No user found",
                 Data = null
             };
 
-            return NotFound(response);
+            return NotFound(errorResponse);
         }
 
         objectMapperService.Map(vM, data);
@@ -68,13 +68,13 @@ public sealed class ProfileController : ControllerBase
         DateTime tokenIssuedAtDate = authService.GetJwtIssuedDateFromToken(token);
         string jwtToken = authService.GenerateJwtToken(data, tokenIssuedAtDate);
 
-        Response<string> resonse = new()
+        Response<string> response = new()
         {
-            Message = "User successfuly updated!",
+            Message = "User successfully updated!",
             Data = jwtToken
         };
 
-        return Ok(resonse);
+        return Ok(response);
     }
 
     [HttpDelete]
@@ -99,10 +99,11 @@ public sealed class ProfileController : ControllerBase
 
         Response<string> responseOk = new()
         {
-            Message = "User successfuly deleted!",
+            Message = "User successfully deleted!",
         };
         return Ok(responseOk);
     }
+    
     [HttpGet("Status")]
     public async Task<IActionResult> GetAllStatuses([FromServices] IUserStatusRepository userStatusRepository)
     {

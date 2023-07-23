@@ -2,16 +2,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserLoginRequest } from '../models/User/UserLoginRequest';
-import { UserVerifyLoginRequest } from '../models/User/UserVerifyLoginRequest';
-import { UserRegisterRequest } from '../models/User/UserRegisterRequest';
-import { DataResponse } from '../models/DataResponse';
-import { UserProfileModel } from '../models/User/UserProfileModel';
-import { JwtService } from './jwt/jwt.service';
+import { UserLoginRequest } from '../../models/User/UserLoginRequest';
+import { UserVerifyLoginRequest } from '../../models/User/UserVerifyLoginRequest';
+import { UserRegisterRequest } from '../../models/User/UserRegisterRequest';
+import { DataResponse } from '../../models/DataResponse';
+import { UserProfileModel } from '../../models/User/UserProfileModel';
+import { JwtService } from '../jwt/jwt.service';
 import { Router } from '@angular/router';
-import { UserLoginResponse } from '../models/User/UserLoginResponse';
-import { UserRegisterResponse } from '../models/User/UserRegisterResponse';
-import { ToastMessageService } from './toast/toast-message.service';
+import { UserLoginResponse } from '../../models/User/UserLoginResponse';
+import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
+import { ToastMessageService } from '../toast/toast-message.service';
 
 @Injectable({
   providedIn: 'root',
@@ -193,5 +193,9 @@ export class UserService {
   public logout() {
     localStorage.removeItem('token');
     this.user.next(this.getUser());
+  }
+
+  public getUserJwtToken(): string | null {
+    return localStorage.getItem('token');
   }
 }

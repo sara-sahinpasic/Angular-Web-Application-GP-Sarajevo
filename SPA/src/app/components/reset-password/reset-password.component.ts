@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription, debounceTime, fromEvent, tap } from 'rxjs';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -15,7 +15,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
   protected isEmailValid: boolean | undefined = undefined;
   protected isResetPasswordRequestSent: boolean = false;
 
-  constructor(private userSerice: UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -36,14 +36,14 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit() {
-    this.userSerice.isResetPasswordRequestSent$.pipe(
+    this.userService.isResetPasswordRequestSent$.pipe(
       tap((val: boolean) => this.isResetPasswordRequestSent = val)
     )
       .subscribe();
   }
 
   sendResetPasswordRequest(email: string) {
-    this.userSerice.resetPassword(email).subscribe();
+    this.userService.resetPassword(email).subscribe();
   }
 
   private validateEmail(email: string): boolean {

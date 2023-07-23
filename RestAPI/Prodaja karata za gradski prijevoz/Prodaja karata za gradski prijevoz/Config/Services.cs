@@ -1,6 +1,7 @@
 ﻿using Application.Config.Email;
 using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Email;
+using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
@@ -13,6 +14,7 @@ using Infrastructure.Repositories;
 using Infrastructure.Repositories.Requests;
 using Infrastructure.Repositories.Users;
 using Infrastructure.Services.Email;
+using Infrastructure.Services.File;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Prodaja_karata_za_gradski_prijevoz.Config;
@@ -38,6 +40,7 @@ public static partial class Services
     {
         builder.Services.TryAddTransient<IEmailService, EmailService>();
         builder.Services.TryAddTransient<IAuthService, AuthService>();
+        builder.Services.TryAddTransient<IFileService, FileService>();
     }
 
     public static void AddRepositories(this WebApplicationBuilder builder)

@@ -1,8 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { UserService } from '../services/user.service';
 import { UserProfileModel } from '../models/User/UserProfileModel';
 import { tap } from 'rxjs';
+import { UserService } from '../services/user/user.service';
 
 @Injectable({
   providedIn: 'root',
