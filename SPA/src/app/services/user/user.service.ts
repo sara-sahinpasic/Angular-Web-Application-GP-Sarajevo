@@ -193,6 +193,7 @@ export class UserService {
   public logout() {
     localStorage.removeItem('token');
     this.user.next(this.getUser());
+    this.router.navigateByUrl("");
   }
 
   public getUserJwtToken(): string | null {
