@@ -4,6 +4,7 @@ using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Domain.Entities.Requests;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
@@ -21,12 +22,14 @@ namespace Presentation.Controllers.Account
         private readonly IFileService _fileService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestRepository _requestRepository;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public RequestController(IFileService fileService, IUnitOfWork unitOfWork, IRequestRepository requestRepository)
+        public RequestController(IFileService fileService, IUnitOfWork unitOfWork, IRequestRepository requestRepository, IWebHostEnvironment hostingEnvironment)
         {
             _fileService = fileService;
             _unitOfWork = unitOfWork;
             _requestRepository = requestRepository;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpPost("UploadFile")]
@@ -66,7 +69,19 @@ namespace Presentation.Controllers.Account
             };
             
             return Ok(response);
-            
+        }
+
+        [HttpGet("UserImage")]
+        public async Task<IActionResult> GetImage([FromRoute] string fileName)
+        {
+            string path = _hostingEnvironment.ContentRootPath + "\\ProfileImages\\";
+            var filePath = path + fileName;
+            if (System.IO.File.Exists(filePath))
+            {
+                byte[] b = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(b, "image/*");
+            }
+            return null;
         }
     }
 }

@@ -4,6 +4,7 @@ using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
@@ -14,6 +15,7 @@ namespace Presentation.Controllers.Account;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+
 public sealed class ProfileController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -41,8 +43,8 @@ public sealed class ProfileController : ControllerBase
 
     [HttpPut]
     public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
-        [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
-        [FromServices] IAuthService authService)
+    [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
+    [FromServices] IAuthService authService)
     {
         //ToDo: provjera da li je logiran
 
@@ -68,13 +70,13 @@ public sealed class ProfileController : ControllerBase
         DateTime tokenIssuedAtDate = authService.GetJwtIssuedDateFromToken(token);
         string jwtToken = authService.GenerateJwtToken(data, tokenIssuedAtDate);
 
-        Response<string> response = new()
+        Response<string> responseOk = new()
         {
             Message = "User successfully updated!",
             Data = jwtToken
         };
 
-        return Ok(response);
+        return Ok(responseOk);
     }
 
     [HttpDelete]
@@ -103,13 +105,13 @@ public sealed class ProfileController : ControllerBase
         };
         return Ok(responseOk);
     }
-    
+
     [HttpGet("Status")]
     public async Task<IActionResult> GetAllStatuses([FromServices] IUserStatusRepository userStatusRepository)
     {
         var data = await userStatusRepository
             .GetAll()
-            .Select(status => new UserStatusDto { Name = status.Name, Id=status.Id })
+            .Select(status => new UserStatusDto { Name = status.Name, Id = status.Id })
             .ToArrayAsync();
 
         Response<UserStatusDto[]> response = new()

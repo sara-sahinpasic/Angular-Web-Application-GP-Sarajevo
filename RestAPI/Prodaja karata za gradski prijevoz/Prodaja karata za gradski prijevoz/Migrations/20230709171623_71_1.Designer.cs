@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230709171623_71_1")]
+    partial class _71_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +54,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment.PaymentOption", b =>
@@ -67,7 +69,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentOptions", (string)null);
+                    b.ToTable("PaymentOptions");
 
                     b.HasData(
                         new
@@ -112,7 +114,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.HasIndex("UserStatusId")
                         .IsUnique();
 
-                    b.ToTable("Request", (string)null);
+                    b.ToTable("Request");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tickets.Ticket", b =>
@@ -133,7 +135,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tickets", (string)null);
+                    b.ToTable("Tickets");
 
                     b.HasData(
                         new
@@ -191,7 +193,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RegistrationTokens", (string)null);
+                    b.ToTable("RegistrationTokens");
                 });
 
             modelBuilder.Entity("Domain.Entities.Users.Role", b =>
@@ -206,7 +208,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -242,7 +244,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses", (string)null);
+                    b.ToTable("Statuses");
 
                     b.HasData(
                         new
@@ -329,7 +331,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.HasIndex("RoleId")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.Users.VerificationCode", b =>
@@ -357,7 +359,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("VerificationCodes", (string)null);
+                    b.ToTable("VerificationCodes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>

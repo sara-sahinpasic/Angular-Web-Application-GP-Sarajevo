@@ -24,6 +24,7 @@ builder.Services.AddCors(options =>
         // todo: add to config: sprint 2
         builder.WithOrigins(spaUrl.Split(";"))
             .SetIsOriginAllowed(isOriginAllowed: _ => true)
+            .WithExposedHeaders("Content-Disposition")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });

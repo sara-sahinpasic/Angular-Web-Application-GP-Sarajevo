@@ -40,11 +40,12 @@ public sealed class DataContext : DbContext
 
         modelBuilder.Entity<Status>()
             .Property(p => p.Discount)
-            .HasPrecision(5,2);
+            .HasPrecision(5, 2);
 
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);
         BuildUserStatus(modelBuilder);
+        BuildTicketData(modelBuilder);
     }
 
     private static void BuildPaymentOptions(ModelBuilder modelBuilder)
@@ -132,5 +133,91 @@ public sealed class DataContext : DbContext
         modelBuilder.Entity<Status>()
             .HasData(statuses);
     }
+
+    private static void BuildTicketData(ModelBuilder modelBuilder)
+    {
+        List<Ticket> tickets = new()
+        {
+            new()
+            {
+                Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                Name="Jednosmjerna",
+                Active=true,
+                Price=1.80
+            },
+            new()
+            {
+                Id=new Guid("5dd86adc-50be-4db6-98c5-46c4a582b61a"),
+                Name="Povratna",
+                Active=true,
+                Price=3.20
+            },
+            new()
+            {
+                Id=new Guid("b8eec999-55ff-47b5-9ce0-cfedcabadba6"),
+                Name="Dnevna",
+                Active=true,
+                Price=7.10
+            },
+            new()
+            {
+                Id=new Guid("fb272ac2-6c72-40fc-a425-96da10a0077c"),
+                Name="Dječija",
+                Active=true,
+                Price=0.60
+            }
+        };
+        modelBuilder.Entity<Ticket>()
+             .HasData(tickets);
+    }
+    /*private static void BuildInvoiceData(ModelBuilder modelBuilder)
+    {
+        List<Invoice> invoices = new()
+        {
+            new()
+            {
+                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                TicketId=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                //RelationId = true, ToDo: add later
+                Price = 0.60,
+                PurchaseDate=DateTime.Now,
+            },
+            new()
+            {
+                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                TicketId=new Guid("b8eec999-55ff-47b5-9ce0-cfedcabadba6"),
+                //RelationId = true, ToDo: add later
+                Price = 7.10,
+                PurchaseDate=DateTime.Now,
+            },
+            new()
+            {
+                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                TicketId=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                //RelationId = true, ToDo: add later
+                Price = 1.80,
+                PurchaseDate=DateTime.Now,
+            },
+            new()
+            {
+                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                TicketId=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                //RelationId = true, ToDo: add later
+                Price = 1.80,
+                PurchaseDate=DateTime.Now,
+            },
+            new()
+            {
+                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
+                TicketId=new Guid("5dd86adc-50be-4db6-98c5-46c4a582b61a"),
+                //RelationId = true, ToDo: add later
+                Price = 3.20,
+                PurchaseDate=DateTime.Now,
+            }
+        };
+
+        modelBuilder.Entity<Invoice>()
+            .HasData(invoices);
+    }*/
 
 }
