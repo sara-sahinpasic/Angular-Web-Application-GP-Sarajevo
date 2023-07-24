@@ -17,6 +17,7 @@ public sealed class DataContext : DbContext
     public DbSet<PaymentOption> PaymentOptions { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<Status> Statuses { get; set; } = null!;
+    public DbSet<IssuedTicket> IssuedTickets { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 

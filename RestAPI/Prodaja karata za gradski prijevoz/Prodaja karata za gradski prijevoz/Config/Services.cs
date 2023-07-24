@@ -7,6 +7,7 @@ using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
+using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Hashing;
@@ -14,6 +15,7 @@ using Application.Services.Implementations.Mapper;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Invoices;
 using Infrastructure.Repositories.Requests;
+using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.Users;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.File;
@@ -53,6 +55,7 @@ public static partial class Services
         builder.Services.TryAddScoped<IUserStatusRepository, UserStatusRepository>();
         builder.Services.TryAddScoped<IRequestRepository, RequestRepository>();
         builder.Services.TryAddScoped<IInvoiceRepository, InvoiceRepository>();
+        builder.Services.TryAddScoped<IIssuedTicketRepository, IssuedTicketRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)
