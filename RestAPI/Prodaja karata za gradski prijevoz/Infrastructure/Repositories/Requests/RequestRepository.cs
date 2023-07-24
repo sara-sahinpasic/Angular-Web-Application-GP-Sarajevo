@@ -7,7 +7,7 @@ namespace Infrastructure.Repositories.Requests
 {
     public class RequestRepository : GenericRepository<Request>, IRequestRepository
     {
-        public RequestRepository(DataContext dataContext, IRequestRepository requestRepository) : base(dataContext)
+        public RequestRepository(DataContext dataContext) : base(dataContext)
         {
         }
 

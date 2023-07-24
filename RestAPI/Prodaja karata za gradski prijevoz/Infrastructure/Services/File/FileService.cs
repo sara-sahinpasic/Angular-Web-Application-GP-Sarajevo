@@ -1,6 +1,6 @@
 ﻿using Application.Services.Abstractions.Interfaces.File;
-using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
-using Domain.Entities.Invoices;
+using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+using Domain.Entities.Tickets;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +14,13 @@ namespace Infrastructure.Services.File;
 public sealed class FileService : IFileService
 {
     private readonly IWebHostEnvironment _hostingEnvironment;
-    private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IIssuedTicketRepository _issuedTicketRepository;
     private readonly IConfiguration _configuration;
 
-    public FileService(IWebHostEnvironment hostingEnvironment, IInvoiceRepository invoiceRepository, IConfiguration configuration)
+    public FileService(IWebHostEnvironment hostingEnvironment, IIssuedTicketRepository issuedTicketRepository, IConfiguration configuration)
     {
         _hostingEnvironment = hostingEnvironment;
-        _invoiceRepository = invoiceRepository;
+        _issuedTicketRepository = issuedTicketRepository;
         _configuration = configuration;
     }
 
@@ -60,18 +60,17 @@ public sealed class FileService : IFileService
 
     public async Task<byte[]> GeneratePurchaseHistoryPDFAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        ICollection<Invoice> invoices = await _invoiceRepository.GetAll()
-            .Include(invoice => invoice.Ticket)
-            .Where(invoice => invoice.UserId == userId)
-            .Select(invoice => new Invoice
+        ICollection<IssuedTicket> issuedTickets = await _issuedTicketRepository.GetAll()
+            .Include(issuedTicket => issuedTicket.Ticket)
+            .Where(issuedTicket => issuedTicket.UserId == userId)
+            .Select(issuedTicket => new IssuedTicket
             {
-                Ticket = invoice.Ticket,
-                Price = invoice.Price,
-                PurchaseDate = invoice.PurchaseDate
+                Ticket = issuedTicket.Ticket,
+                IssuedDate = issuedTicket.IssuedDate
             })
             .ToArrayAsync();
 
-        string purchaseHistoryHtml = GetPurchaseHistoryTableHtml(invoices);
+        string purchaseHistoryHtml = GetPurchaseHistoryTableHtml(issuedTickets);
 
         PdfDocument pdfDocument = PdfGenerator.GeneratePdf(purchaseHistoryHtml, PdfSharp.PageSize.A4);
         using MemoryStream memoryStream = new();
@@ -82,7 +81,7 @@ public sealed class FileService : IFileService
         return pdfBytes;
     }
 
-    private string GetPurchaseHistoryTableHtml(ICollection<Invoice> invoices)
+    private string GetPurchaseHistoryTableHtml(ICollection<IssuedTicket> issuedTickets)
     {
         StringBuilder stringBuilder = new();
 
@@ -100,14 +99,14 @@ public sealed class FileService : IFileService
             </tr>
           </thead>");
 
-        foreach (Invoice invoice in invoices)
+        foreach (IssuedTicket issuedTicket in issuedTickets)
         {
             stringBuilder.AppendLine($@"<tbody>
             <tr>
-              <td>{invoice.Ticket.Name}</td>
+              <td>{issuedTicket.Ticket.Name}</td>
               <td>relationId</td>
-              <td>{invoice.Price}</td>
-              <td>{invoice.PurchaseDate}</td>
+              <td>{issuedTicket.Ticket.Price}</td>
+              <td>{issuedTicket.IssuedDate.ToString("d")}</td>
             </tr>
           </tbody>");
         }

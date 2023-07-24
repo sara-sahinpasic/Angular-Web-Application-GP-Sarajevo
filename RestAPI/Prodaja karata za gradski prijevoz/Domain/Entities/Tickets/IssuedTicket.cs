@@ -11,6 +11,7 @@ public sealed class IssuedTicket : Entity
     public Ticket Ticket { get; set; } = null!;
     public DateTime ValidFrom { get; set; }
     public DateTime ValidTo { get; set; }
+    public DateTime IssuedDate { get; set; }
     //public Guid RelationId { get; set; } // todo: implement later
 
 }

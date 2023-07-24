@@ -1,0 +1,12 @@
+diff a/RestAPI/Prodaja karata za gradski prijevoz/Prodaja karata za gradski prijevoz/Migrations/DataContextModelSnapshot.cs b/RestAPI/Prodaja karata za gradski prijevoz/Prodaja karata za gradski prijevoz/Migrations/DataContextModelSnapshot.cs	(rejected hunks)
+@@ -400,8 +400,8 @@
+             modelBuilder.Entity("Domain.Entities.Users.User", b =>
+                 {
+                     b.HasOne("Domain.Entities.Users.Role", null)
+-                        .WithOne()
+-                        .HasForeignKey("Domain.Entities.Users.User", "RoleId")
++                        .WithMany()
++                        .HasForeignKey("RoleId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+                 });

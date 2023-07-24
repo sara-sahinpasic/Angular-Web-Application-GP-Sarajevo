@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
 using Presentation.DTO.Invoice;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 
 namespace Presentation.Controllers.Account
 {
@@ -12,30 +13,30 @@ namespace Presentation.Controllers.Account
     [Route("[controller]/[action]")]
     public sealed class PurchaseHistoryController : ControllerBase
     {
-        private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IIssuedTicketRepository _issuedTicketRepository;
 
-        public PurchaseHistoryController(IInvoiceRepository invoiceRepository)
+        public PurchaseHistoryController(IIssuedTicketRepository issuedTicketRepository)
         {
-            this._invoiceRepository = invoiceRepository;
+            _issuedTicketRepository = issuedTicketRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUserPurchases(Guid userId, CancellationToken cancellationToken)
         {
-            var data = await _invoiceRepository
+            var data = await _issuedTicketRepository
                 .GetAll()
-                .Include(invoice => invoice.Ticket)
-                .Where(invoice => invoice.UserId == userId)
-                .Select(invoice => new InvoiceDto 
+                .Include(issuedTicket => issuedTicket.Ticket)
+                .Where(issuedTicket => issuedTicket.UserId == userId)
+                .Select(issuedTicket => new IssuedTicketHistoryDto
                 { 
-                    TicketName = invoice.Ticket.Name, 
-                    Price=invoice.Price, 
-                    PurchaseDate=invoice.PurchaseDate 
+                    TicketName = issuedTicket.Ticket.Name, 
+                    Price = issuedTicket.Ticket.Price, 
+                    IssuedDate = issuedTicket.IssuedDate
                 })
                 .Take(10)
                 .ToArrayAsync(cancellationToken);
 
-            Response<InvoiceDto[]> response = new()
+            Response<IssuedTicketHistoryDto[]> response = new()
             {
                 Message = "Ok",
                 Data = data

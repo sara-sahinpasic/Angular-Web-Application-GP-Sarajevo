@@ -6,14 +6,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Invoices;
 
-public sealed class Invoice : Entity
+public class Invoice : Entity
 {
     public Guid UserId { get; set; }
     public User User { get; set; } = null!;
-    //public Guid RelationId { get; set; } todo: add later
-    public Guid TicketId { get; set; }
-    public Ticket Ticket { get; set; } = null!;
     public Guid PaymentOptionId { get; set; }
+    public virtual ICollection<IssuedTicket> IssuedTickets { get; set; } = new List<IssuedTicket>();
 
     [NotMapped]
     public PaymentOptions PaymentOption 
@@ -21,7 +19,7 @@ public sealed class Invoice : Entity
         get => PaymentOptions.From(PaymentOptionId.ToString()); 
         set => PaymentOptionId = new Guid(value.ToString());
     }
-    public DateTime PurchaseDate { get; set; }
-    public double Price { get; set; }
-    public int Amount { get; set; }
+
+    public DateTime InvoicingDate { get; set; }
+    public double Total { get; set; }
 }

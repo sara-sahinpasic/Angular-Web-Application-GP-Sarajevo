@@ -31,8 +31,8 @@ public sealed class DataContext : DbContext
 
         modelBuilder.Entity<User>()
             .HasOne<Role>()
-            .WithOne()
-            .HasForeignKey<User>(r => r.RoleId);
+            .WithMany()
+            .HasForeignKey(r => r.RoleId);
 
         modelBuilder.Entity<Request>()
             .HasOne<Status>()

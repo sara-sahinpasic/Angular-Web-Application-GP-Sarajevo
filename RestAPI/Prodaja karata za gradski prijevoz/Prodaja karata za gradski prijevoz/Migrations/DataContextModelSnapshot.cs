@@ -28,27 +28,19 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("InvoicingDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("PaymentOptionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("Total")
                         .HasColumnType("float");
-
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TicketId");
 
                     b.HasIndex("UserId");
 
@@ -120,6 +112,12 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("InvoiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("IssuedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
@@ -133,6 +131,8 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("TicketId");
 
@@ -352,8 +352,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -388,19 +387,11 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>
                 {
-                    b.HasOne("Domain.Entities.Tickets.Ticket", "Ticket")
-                        .WithMany()
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Ticket");
 
                     b.Navigation("User");
                 });
@@ -416,6 +407,10 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
             modelBuilder.Entity("Domain.Entities.Tickets.IssuedTicket", b =>
                 {
+                    b.HasOne("Domain.Entities.Invoices.Invoice", null)
+                        .WithMany("IssuedTickets")
+                        .HasForeignKey("InvoiceId");
+
                     b.HasOne("Domain.Entities.Tickets.Ticket", "Ticket")
                         .WithMany()
                         .HasForeignKey("TicketId")
@@ -447,8 +442,8 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
             modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
                     b.HasOne("Domain.Entities.Users.Role", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Users.User", "RoleId")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -462,6 +457,11 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>
+                {
+                    b.Navigation("IssuedTickets");
                 });
 #pragma warning restore 612, 618
         }

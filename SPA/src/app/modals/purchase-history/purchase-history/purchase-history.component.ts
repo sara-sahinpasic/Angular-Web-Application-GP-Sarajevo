@@ -1,16 +1,11 @@
-import { formatDate } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   Component,
   OnInit,
-  Inject,
-  LOCALE_ID,
 } from '@angular/core';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { PurchaseHistoryDto } from 'src/app/models/Purchase-history/PurchaseHistoryDto';
 import { environment } from 'src/environments/environment';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { FileService } from 'src/app/services/file-upload/file.service';
 import { tap } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
