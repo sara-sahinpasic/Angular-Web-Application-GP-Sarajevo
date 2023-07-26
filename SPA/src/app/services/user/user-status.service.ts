@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
@@ -16,10 +16,6 @@ export class UserStatusService {
   constructor(private httpClient: HttpClient, private userService: UserService) { }
 
   public getAvailableUserStatuses(): Observable<DataResponse<UserStatusDto[]>> {
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' +  this.userService.getUserJwtToken()
-    });
-
-    return this.httpClient.get<DataResponse<UserStatusDto[]>>(this.apiUrl + 'Profile/Status', { headers });
+    return this.httpClient.get<DataResponse<UserStatusDto[]>>(this.apiUrl + 'Profile/Status');
   }
 }

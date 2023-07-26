@@ -9,7 +9,6 @@ import {
 } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast/toast-message.service';
 
@@ -19,16 +18,12 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
   constructor(private userService: UserService, private router: Router, private toastMessageService: ToastMessageService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let userId: string = "";
 
-    this.userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => userId = user?.id ?? "")
-    )
-    .subscribe();
+    const authRequest: HttpRequest<unknown> = request.clone({
+      headers: request.headers.set("Authorization", `Bearer ${this.userService.getUserJwtToken()}`)
+    });
 
-    request.headers.append("Authorization", `Bearer ${userId}`);
-
-    return next.handle(request)
+    return next.handle(authRequest)
       .pipe(
         tap({
           error: this.logoutUserOnTokenExpiry.bind(this)
@@ -43,7 +38,7 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
 
     const response: HttpErrorResponse = event as HttpErrorResponse;
 
-    if (response.status == HttpStatusCode.Unauthorized) {
+    if (response.status == HttpStatusCode.Unauthorized && this.userService.getUserJwtToken()) {
       this.handleUnauthorizedAccess();
     }
   }

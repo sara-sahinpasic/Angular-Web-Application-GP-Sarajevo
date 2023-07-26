@@ -1,5 +1,5 @@
-import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { HttpClient, HttpEvent } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { RequestDto } from 'src/app/models/Request/RequestDto';
@@ -17,14 +17,9 @@ export class SpecialRequestService {
 
   requestDiscount(requestDiscountData: RequestDto): Observable<HttpEvent<DataResponse<string>>> {
     const formData = this.getFormDataFromObject(requestDiscountData);
-    const token: string | null = this.userService.getUserJwtToken();
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + token,
-    });
 
     return this.httpClient.post<DataResponse<string>>(`${this.baseApiUrl}Request/UploadFile`, formData, {
       reportProgress: true,
-      headers,
       observe: 'events'
     });
   }

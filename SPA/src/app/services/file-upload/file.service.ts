@@ -1,11 +1,8 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { UserStatusDto } from 'src/app/models/User/UserStatusDto';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserService } from '../user/user.service';
-import { Buffer } from 'buffer';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 
 
@@ -19,18 +16,13 @@ export class FileService {
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
   download(url: string): Observable<HttpResponse<Blob>> {
-    const token: string | null = this.userService.getUserJwtToken();
     let userId: string | undefined= "";
     this.userService.user$.pipe(
       tap((user: UserProfileModel | undefined) => userId = user?.id)
     )
     .subscribe();
 
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + token,
-    });
-
-    return this.httpClient.get(`${this.baseApiUrl}${url}?userId=${userId}`, { headers, responseType: 'blob', observe: 'response' })
+    return this.httpClient.get(`${this.baseApiUrl}${url}?userId=${userId}`, { responseType: 'blob', observe: 'response' })
       .pipe(
         tap((response: HttpResponse<Blob>) => {
           const fileContents: Blob = response.body as Blob;

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
   Component,
   OnInit,
@@ -34,16 +34,8 @@ export class PurchaseHistoryComponent implements OnInit {
     )
     .subscribe();
 
-    const token: string | null = localStorage.getItem('token');
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + token,
-    });
-
     this.httpClient
-      .get<DataResponse<PurchaseHistoryDto[]>>(`${this.url}PurchaseHistory/GetAllUserPurchases?userId=${userId}`,
-      {
-        headers,
-      })
+      .get<DataResponse<PurchaseHistoryDto[]>>(`${this.url}PurchaseHistory/GetAllUserPurchases?userId=${userId}`)
       .subscribe((r: DataResponse<PurchaseHistoryDto[]>) => {
         this.purchaseHistory = r.data;
       });
