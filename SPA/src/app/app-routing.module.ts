@@ -10,8 +10,8 @@ import { ProfileDeletedPageComponent } from './components/profile-deleted-page/p
 import { LoggedInGuard } from './guards/logged-in.guard';
 import { NotLoggedInGuard } from './guards/not-logged-in.guard';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history/purchase-history.component';
-import { RequestComponent } from './modals/request/request/request.component';
+import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history.component';
+import { RequestComponent } from './modals/request/request.component';
 
 
 const routes: Routes = [
