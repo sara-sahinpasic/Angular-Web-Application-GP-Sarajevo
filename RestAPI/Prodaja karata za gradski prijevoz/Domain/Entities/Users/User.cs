@@ -32,5 +32,20 @@ public sealed class User : Entity
     public DateTime RegistrationDate { get; set; }
     public DateTime ModifiedDate { get; set; }
     public bool Active { get; set; }
+    public Guid UserStatusId { get; set; }
+    
+    [NotMapped]
+    public Statuses Status 
+    { 
+        get
+        {
+            return Statuses.From(UserStatusId.ToString());
+        }
+        set
+        {
+            UserStatusId = Guid.Parse(value.ToString());
+        }
+    }
+
 }
 

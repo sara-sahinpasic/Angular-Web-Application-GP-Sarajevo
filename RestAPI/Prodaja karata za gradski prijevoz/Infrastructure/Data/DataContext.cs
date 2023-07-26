@@ -34,6 +34,11 @@ public sealed class DataContext : DbContext
             .WithMany()
             .HasForeignKey(r => r.RoleId);
 
+        modelBuilder.Entity<User>()
+            .HasOne<Status>()
+            .WithMany()
+            .HasForeignKey(user => user.UserStatusId);
+        
         modelBuilder.Entity<Request>()
             .HasOne<Status>()
             .WithMany()

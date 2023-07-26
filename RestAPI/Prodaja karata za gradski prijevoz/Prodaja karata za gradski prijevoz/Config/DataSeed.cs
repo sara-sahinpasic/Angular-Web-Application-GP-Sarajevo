@@ -124,7 +124,8 @@ public static class DataSeed
                 PhoneNumber = Faker.Phone.Number(),
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
-                Role = Roles.User
+                Role = Roles.User,
+                Status = Statuses.Default
             };
             Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(DefaultUserPassword);
 
