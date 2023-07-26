@@ -38,7 +38,6 @@ namespace Presentation.Controllers.Account
 
             Response<IssuedTicketHistoryDto[]> response = new()
             {
-                Message = "Ok",
                 Data = data
             };
 

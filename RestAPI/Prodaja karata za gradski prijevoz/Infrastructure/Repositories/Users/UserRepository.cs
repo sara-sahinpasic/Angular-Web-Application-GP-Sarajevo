@@ -15,4 +15,9 @@ public sealed class UserRepository : GenericRepository<User>, IUserRepository
 
         return GetAll().FirstOrDefaultAsync(user => user.Email!.ToLower() == email.ToLower(), cancellationToken);
     }
+
+    public Task<bool> IsUserRegisteredAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return GetAll().AnyAsync(user => user.Email.ToLower() == email.ToLower());
+    }
 }

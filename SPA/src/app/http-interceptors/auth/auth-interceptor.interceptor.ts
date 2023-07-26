@@ -4,8 +4,6 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpHeaders,
-  HttpResponse,
   HttpStatusCode,
   HttpErrorResponse
 } from '@angular/common/http';
@@ -14,8 +12,6 @@ import { UserService } from 'src/app/services/user/user.service';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast/toast-message.service';
-import { ToastMessage } from 'src/app/models/ToastMessage';
-import { ToastType } from 'src/app/enums/ToastType';
 
 @Injectable()
 export class AuthInterceptorInterceptor implements HttpInterceptor {

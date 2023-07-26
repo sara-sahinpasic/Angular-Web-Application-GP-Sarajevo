@@ -23,6 +23,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history/purchase-history.component';
 import { RequestComponent } from './modals/request/request/request.component';
 import { BaseModalComponent } from './modals/base-modal/base-modal.component';
+import { HttpInterceptorInterceptor } from './http-interceptors/http-interceptor.interceptor';
 import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interceptor.interceptor';
 
 @NgModule({
@@ -57,6 +58,11 @@ import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interc
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorInterceptor,
+      multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,

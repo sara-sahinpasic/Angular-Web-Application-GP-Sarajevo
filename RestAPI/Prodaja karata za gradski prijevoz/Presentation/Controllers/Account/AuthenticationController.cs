@@ -34,9 +34,16 @@ public sealed class AuthenticationController : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        if (userRequest is null)
-            return BadRequest("User cannot be null!");
+        if (await _userRepository.IsUserRegisteredAsync(userRequest.Email))
+        {
+            Response<string> errorResponse = new()
+            {
+                Message = "User is already registered!"
+            };
 
+            return BadRequest(errorResponse);
+        }
+        
         User user = new();
         objectMapperService.Map(userRequest, user);
 
@@ -82,14 +89,18 @@ public sealed class AuthenticationController : ControllerBase
     {
         LoginResult? loginResult = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
 
+        Response<string> errorResponse = new();
+
         if (loginResult is null)
         {
-            return BadRequest("User with those credentials not found.");
+            errorResponse.Message = "User with those credentials not found.";
+            return BadRequest(errorResponse);
         }
 
         if (!await _authService.IsUserActivatedAsync(loginData.Email, cancellationToken))
         {
-            return BadRequest("Account not activated. Check your email for the activation code."); // todo: create also if user exists in service
+            errorResponse.Message = "Account not activated. Check your email for the activation code.";
+            return BadRequest(errorResponse); // todo: create also if user exists in service
         }
 
         string message = loginResult.IsTwoWayAuth ? "Verification code sent to email" : "Successfully logged in.";

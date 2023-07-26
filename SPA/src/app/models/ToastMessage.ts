@@ -1,6 +1,6 @@
 import { ToastType } from "../enums/ToastType";
 
 export interface ToastMessage {
-  message: string,
+  message?: string,
   type: ToastType
 }

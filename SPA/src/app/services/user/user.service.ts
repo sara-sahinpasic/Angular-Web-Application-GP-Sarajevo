@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, catchError, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserLoginRequest } from '../../models/User/UserLoginRequest';
 import { UserVerifyLoginRequest } from '../../models/User/UserVerifyLoginRequest';
@@ -11,7 +11,6 @@ import { JwtService } from '../jwt/jwt.service';
 import { Router } from '@angular/router';
 import { UserLoginResponse } from '../../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
-import { ToastMessageService } from '../toast/toast-message.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,8 +36,7 @@ export class UserService {
   constructor(
     private httpClient: HttpClient,
     private jwtService: JwtService,
-    private router: Router,
-    private toastMessageService: ToastMessageService) {
+    private router: Router) {
       this.user = new BehaviorSubject(this.getUser() as UserProfileModel | undefined);
       this.user$ = this.user.asObservable();
       this.isActivated$ = this.isUserActivated.asObservable();
@@ -60,7 +58,6 @@ export class UserService {
           }
 
           this.isRegistrationSent.next(true);
-          this.toastMessageService.pushSuccessMessage(response.message);
         })
       );
   }
@@ -70,7 +67,6 @@ export class UserService {
       .pipe(
         tap(() => {
           this.isUserActivated.next(true);
-          this.toastMessageService.pushSuccessMessage("Activation sent"); //todo: get response from server
         })
       );
   }
@@ -87,11 +83,6 @@ export class UserService {
           localStorage.setItem("token", response.data.loginData);
           this.user.next(this.getUser());
           this.router.navigateByUrl(redirectionRoute);
-          this.toastMessageService.pushSuccessMessage(response.message);
-        }),
-        catchError((e) => {
-          console.error(e); // todo: take error message
-          return of();
         })
       );
   }
@@ -110,7 +101,6 @@ export class UserService {
       .pipe(
         tap((response: DataResponse<string>) => {
           localStorage.setItem("token", response.data);
-          this.toastMessageService.pushSuccessMessage(response.message);
 
           this.user.next(this.getUser());
           if (!redirectionRoute) {
@@ -126,7 +116,6 @@ export class UserService {
     return this.getUserDataFromToken();
   }
 
-  // todo: try to create an observable to return the user, maybe
   private getUserDataFromToken(): UserProfileModel | undefined {
     const token: string = localStorage.getItem('token') as string;
 
@@ -147,7 +136,6 @@ export class UserService {
     return this.httpClient.put<DataResponse<string>>(`${this.url}Profile`, userToUpdate, {headers})
       .pipe(
         tap((response: DataResponse<string>) => {
-          this.toastMessageService.pushSuccessMessage(response.message);
           if (!redirectionRoute) {
             return;
           }
@@ -176,7 +164,6 @@ export class UserService {
     return this.httpClient.delete<DataResponse<string>>(`${this.url}Profile?id=${id}`, {headers})
       .pipe(
         tap((response: DataResponse<string>) => {
-          this.toastMessageService.pushSuccessMessage(response.message);
           if (!redirectRoute) {
             return;
           }
