@@ -1,4 +1,5 @@
 ﻿using Application.Services.Abstractions.Interfaces.Authentication;
+using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.User;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Presentation.Controllers.Account;
 
@@ -42,9 +44,10 @@ public sealed class ProfileController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateProfile(UserUpdateRequestDto vM, CancellationToken cancellationToken,
+    public async Task<IActionResult> UpdateProfile([FromForm] UserUpdateRequestDto vM, CancellationToken cancellationToken,
     [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
-    [FromServices] IAuthService authService)
+    [FromServices] IAuthService authService,
+    [FromServices] IFileService fileService)
     {
         //ToDo: provjera da li je logiran
 
@@ -59,6 +62,21 @@ public sealed class ProfileController : ControllerBase
             };
 
             return NotFound(errorResponse);
+        }
+        if (vM.ProfileImageFile is not null)
+        {
+            string? filePath = await fileService.UploadFileAsync(new[] { "jpg", "jpeg", "png" }, vM.ProfileImageFile, "ProfileImages", cancellationToken);
+
+            if (filePath is null)
+            {
+                Response<string?> errorResponse = new()
+                {
+                    Message = "File extension not valid",
+                };
+                return NotFound(errorResponse);
+            }
+
+            data.ProfileImagePath = filePath;
         }
 
         objectMapperService.Map(vM, data);
@@ -119,7 +137,30 @@ public sealed class ProfileController : ControllerBase
             Message = "",
             Data = data
         };
+
         return Ok(response);
+    }
+
+    [HttpGet("UserImage/{id}")]
+    public async Task<IActionResult> GetUserImage(Guid id)
+    {
+        string path = _userRepository.GetAll().Where(x => x.Id == id).Select(x => x.ProfileImagePath).First();
+
+        if (string.IsNullOrEmpty(path))
+        {
+            return NotFound();
+        }
+
+        byte[] bytes = await System.IO.File.ReadAllBytesAsync(path);
+        string base64 = Convert.ToBase64String(bytes);
+
+        string[] pathParts = path.Split(".");
+        string extension = pathParts[pathParts.Length - 1];
+        Response<string> responseOk = new()
+        {
+            Data = $"data:image/{extension};base64, {base64}"
+        };
+        return Ok(responseOk);
     }
 }
 

@@ -1,4 +1,6 @@
-﻿namespace Domain.ViewModels;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Domain.ViewModels;
 
 public sealed class UserUpdateRequestDto
 {
@@ -7,4 +9,5 @@ public sealed class UserUpdateRequestDto
     public string? LastName { get; set; }
     public string PhoneNumber { get; set; }
     public string? Address { get; set; }
+    public IFormFile? ProfileImageFile { get; set; }
 }

@@ -24,14 +24,14 @@ public sealed class FileService : IFileService
         _configuration = configuration;
     }
 
-    public async Task<string?> UploadFileAsync(string[] acceptedExtensions, IFormFile file, CancellationToken cancellationToken = default)
+    public async Task<string?> UploadFileAsync(string[] acceptedExtensions, IFormFile file, string folderName = "", CancellationToken cancellationToken = default)
     {
         if (!IsValidExtension(acceptedExtensions, file))
         {
             return null;
         }
 
-        string uploadsDir = _hostingEnvironment.ContentRootPath;
+        string uploadsDir = Path.Combine(_hostingEnvironment.ContentRootPath, folderName); 
 
         if (!Directory.Exists(uploadsDir))
             Directory.CreateDirectory(uploadsDir);
@@ -44,7 +44,8 @@ public sealed class FileService : IFileService
         await stream.FlushAsync(cancellationToken);
 
         return fullPath;
-    }
+    }    
+
 
     private static string GetRandomFileName(IFormFile file)
     {

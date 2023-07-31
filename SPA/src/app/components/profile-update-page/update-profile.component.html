@@ -7,8 +7,8 @@
     <div class="row">
       <div class="col">
         <label for="ime">Fotografija: </label>
-        <img src="./assets/X.png" class="img-thumbnail">
-        <button class="fotografija" (click)="ucitajFotografiju()">Učitaj fotografiju</button>
+        <img #profileImage [src]="profileModel.profileImageBase64" class="img-thumbnail">
+        <input type="file" class="profileImage" accept="image/*" (change)="uploadImage($event, profileImage)">
       </div>
       <div class="col">
         <form>

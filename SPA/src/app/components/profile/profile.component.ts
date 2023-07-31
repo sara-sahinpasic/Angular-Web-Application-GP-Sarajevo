@@ -26,6 +26,11 @@ export class ProfileComponent implements OnInit {
         tap((user: UserProfileModel | undefined) => (this.profileModel = user!))
       )
       .subscribe();
+    this.userService.getProfileImage().subscribe(
+      {
+      next: (x) => (this.profileModel.profileImageBase64 = x.data),
+      error: () => (this.profileModel.profileImageBase64 = "./assets/X.png"),
+    });
   }
 
   navigateToProfile() {

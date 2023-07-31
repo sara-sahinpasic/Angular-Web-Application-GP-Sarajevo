@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./update-profile.component.scss'],
 })
 export class UpdateProfileComponent implements OnInit {
-  constructor(private _userService: UserService) { }
+  constructor(private _userService: UserService) {}
 
   profileModel: UserProfileModel = {
     id: '',
@@ -22,18 +22,28 @@ export class UpdateProfileComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this._userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => this.profileModel = user!)
-    )
-    .subscribe();
+    this._userService.user$
+      .pipe(
+        tap((user: UserProfileModel | undefined) => (this.profileModel = user!))
+      )
+      .subscribe();
   }
 
   save() {
     this._userService.updateUser(this.profileModel, '/profile').subscribe();
   }
 
-  // todo
-  ucitajFotografiju() {
-    throw new Error('Method not implemented.');
+  uploadImage(event: Event, profileImageElement: HTMLImageElement) {
+    const inputEvent: InputEvent = event as InputEvent;
+    const inputElement: HTMLInputElement =
+      inputEvent.target as HTMLInputElement;
+    const fileReader: FileReader = new FileReader();
+    let base64String: string;
+    this.profileModel.profileImageFile = inputElement.files?.item(0) as File;
+    fileReader.readAsDataURL(inputElement.files?.item(0) as Blob);
+    fileReader.onload = () => {
+      base64String = fileReader.result as string;
+      profileImageElement.src = base64String;
+    };
   }
 }

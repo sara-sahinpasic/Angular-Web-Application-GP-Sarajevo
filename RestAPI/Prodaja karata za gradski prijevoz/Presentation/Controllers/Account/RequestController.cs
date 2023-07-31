@@ -51,7 +51,7 @@ namespace Presentation.Controllers.Account
             string[] acceptedFileExtensions = { "jpg", "jpeg", "png", "pdf" };
             IFormFile file = specialRequestRequestDto.Document;
 
-            string? filePath = await _fileService.UploadFileAsync(acceptedFileExtensions, file, cancellationToken);
+            string? filePath = await _fileService.UploadFileAsync(acceptedFileExtensions, file, cancellationToken: cancellationToken);
 
             if (filePath is null)
             {

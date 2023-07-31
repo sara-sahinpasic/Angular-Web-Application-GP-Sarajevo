@@ -1,8 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/services/modal/modal.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-base-modal',
