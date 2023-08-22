@@ -12,9 +12,11 @@ import { NotLoggedInGuard } from './guards/not-logged-in.guard';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history.component';
 import { RequestComponent } from './modals/request/request.component';
+import { ReviewComponent } from './components/review/review.component';
 
 
 const routes: Routes = [
+  { path: 'review', component: ReviewComponent},
   { path: 'request', component: RequestComponent, canActivate:[LoggedInGuard] },
   { path: 'purchaseHistory', component: PurchaseHistoryComponent, canActivate:[LoggedInGuard] },
   { path: 'delete', component: ProfileDeletedPageComponent, canActivate:[LoggedInGuard] },

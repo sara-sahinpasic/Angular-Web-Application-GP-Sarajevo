@@ -15,7 +15,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let ph of this.purchaseHistory">
+            <tr *ngFor="let ph of this.purchaseHistory | paginate:{
+              itemsPerPage: paginationModel.pageSize,
+              currentPage: paginationModel.page,
+              totalItems: paginationModel.totalCount
+            }; let i=index">
               <td>{{ ph.ticketName }}</td>
               <td>{{ ph.relationId }}</td>
               <td>{{ ph.price }}</td>
@@ -26,6 +30,15 @@
       </div>
     </div>
     <hr>
+    <div class="row">
+      <div class="col">
     <button class="downloadPdf" (click)="purchaseHistoryPrintButton()">Preuzmite Vašu historiju kupovine</button>
+  </div>
+  <div class="col">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onPageChange($event)">
+
+    </pagination-controls>
+
+  </div>
   </div>
 </div>

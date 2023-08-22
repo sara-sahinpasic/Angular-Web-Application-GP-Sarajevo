@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.User;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Presentation.Controllers.Account;
 

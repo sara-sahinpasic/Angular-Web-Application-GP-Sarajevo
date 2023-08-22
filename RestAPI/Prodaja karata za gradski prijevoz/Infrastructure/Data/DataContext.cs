@@ -4,6 +4,7 @@ using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Invoices;
 using Domain.Entities.Requests;
+using Domain.Entities.Reviews;
 
 namespace Infrastructure.Data;
 
@@ -18,6 +19,8 @@ public sealed class DataContext : DbContext
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<Status> Statuses { get; set; } = null!;
     public DbSet<IssuedTicket> IssuedTickets { get; set; } = null!;
+    public DbSet<Review> Reviews { get; set; } = null!;
+
 
     public DataContext(DbContextOptions options) : base(options) { }
 
@@ -176,54 +179,5 @@ public sealed class DataContext : DbContext
         modelBuilder.Entity<Ticket>()
              .HasData(tickets);
     }
-    /*private static void BuildInvoiceData(ModelBuilder modelBuilder)
-    {
-        List<Invoice> invoices = new()
-        {
-            new()
-            {
-                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                TicketId=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                //RelationId = true, ToDo: add later
-                Price = 0.60,
-                PurchaseDate=DateTime.Now,
-            },
-            new()
-            {
-                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                TicketId=new Guid("b8eec999-55ff-47b5-9ce0-cfedcabadba6"),
-                //RelationId = true, ToDo: add later
-                Price = 7.10,
-                PurchaseDate=DateTime.Now,
-            },
-            new()
-            {
-                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                TicketId=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                //RelationId = true, ToDo: add later
-                Price = 1.80,
-                PurchaseDate=DateTime.Now,
-            },
-            new()
-            {
-                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                TicketId=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                //RelationId = true, ToDo: add later
-                Price = 1.80,
-                PurchaseDate=DateTime.Now,
-            },
-            new()
-            {
-                //Id=new Guid("929cb30e-ae11-4653-8f20-41c3b39102bd"),
-                TicketId=new Guid("5dd86adc-50be-4db6-98c5-46c4a582b61a"),
-                //RelationId = true, ToDo: add later
-                Price = 3.20,
-                PurchaseDate=DateTime.Now,
-            }
-        };
-
-        modelBuilder.Entity<Invoice>()
-            .HasData(invoices);
-    }*/
-
+   
 }

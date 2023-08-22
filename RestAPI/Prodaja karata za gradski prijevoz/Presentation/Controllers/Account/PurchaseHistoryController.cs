@@ -1,5 +1,4 @@
-﻿using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
 using Presentation.DTO.Invoice;
@@ -28,9 +27,9 @@ namespace Presentation.Controllers.Account
                 .Include(issuedTicket => issuedTicket.Ticket)
                 .Where(issuedTicket => issuedTicket.UserId == userId)
                 .Select(issuedTicket => new IssuedTicketHistoryDto
-                { 
-                    TicketName = issuedTicket.Ticket.Name, 
-                    Price = issuedTicket.Ticket.Price, 
+                {
+                    TicketName = issuedTicket.Ticket.Name,
+                    Price = issuedTicket.Ticket.Price,
                     IssuedDate = issuedTicket.IssuedDate
                 })
                 .Take(10)
@@ -42,6 +41,6 @@ namespace Presentation.Controllers.Account
             };
 
             return Ok(response);
-        } 
+        }
     }
 }

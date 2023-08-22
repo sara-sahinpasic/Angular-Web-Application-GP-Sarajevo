@@ -5,7 +5,7 @@ import { Injectable, OnInit } from '@angular/core';
 })
 export class ModalService implements OnInit {
   public showRequestModalState: boolean = false;
-  public showPurchaseHistoryModalState: boolean = false;
+  public showReviewModalState: boolean = false;
   private showModalTitle: string = '';
 
   constructor() {}
@@ -15,13 +15,14 @@ export class ModalService implements OnInit {
     this.showRequestModalState = true;
     this.showModalTitle = 'Zahtjev';
   }
-  showPurchaseHistoryModal() {
-    this.showPurchaseHistoryModalState = true;
-    this.showModalTitle = 'Historija kupovina';
+  showReviewModal(){
+    this.showReviewModalState=true;
+    this.showModalTitle='';
   }
+
   closeModal() {
     this.showRequestModalState = false;
-    this.showPurchaseHistoryModalState = false;
+    this.showReviewModalState = false;
     this.showModalTitle = '';
   }
   getModalTitle(): string {

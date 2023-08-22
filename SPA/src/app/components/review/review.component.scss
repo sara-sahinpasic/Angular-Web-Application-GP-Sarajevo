@@ -13,47 +13,46 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 20px 5px 15px 5px;
-  width: 50%;
+  padding: 10px 20px 20px 20px;
+  width: 70%;
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 20px;
   background-color: rgb(255 255 255 / 75%);
 }
 
 h1 {
-  text-align: center;
+  text-align: left;
   margin-bottom: 5px;
-  font-weight: bold;
-  margin-left: 15px;
-}
-
-table {
-  border: 1px solid black;
-}
-
-th,td {
-  padding: 10px 30px 10px 30px;
-}
-
-th {
+  margin-top: 0px;
   font-weight: bolder;
 }
 
 hr {
-  border: 2px solid black;
+  margin-top: -5px;
 }
 
-.downloadPdf {
-  background-color: rgba(0, 0, 0, 0.916);
-  color: white;
+.review-modal {
+  background-color: rgba(255, 255, 255, 0.947);
+  color: black;
   font-weight: bolder;
   font-size: large;
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   border-color: rgba(0, 0, 0, 0.171);
   box-shadow: 2px 4px rgba(0, 0, 0, 0);
   transition: 0.5s;
   height: 35px;
-  margin-left: 20px;
 }
 
+a {
+  color: black;
+}
+
+th {
+  font-weight: bolder;
+  text-decoration: underline;
+}
+
+table {
+  border: 1px solid black;
+}

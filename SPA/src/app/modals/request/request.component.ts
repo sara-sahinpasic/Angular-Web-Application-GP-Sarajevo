@@ -1,5 +1,5 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { finalize, tap } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { RequestDto } from 'src/app/models/Request/RequestDto';
@@ -15,9 +15,12 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./request.component.scss'],
 })
 export class RequestComponent implements OnInit {
-  @Input() showModalRequest: boolean = false;
-  @Output() close: EventEmitter<void> = new EventEmitter<void>();
-  private allowedFileTypes: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
+  private allowedFileTypes: string[] = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'application/pdf',
+  ];
   protected userStatuses: Array<UserStatusDto> = [];
   protected requestData: RequestDto = {
     userId: '',
@@ -31,10 +34,12 @@ export class RequestComponent implements OnInit {
   constructor(
     private userStatusService: UserStatusService,
     private specialRequestService: SpecialRequestService,
-    private userService: UserService) {}
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.userStatusService.getAvailableUserStatuses()
+    this.userStatusService
+      .getAvailableUserStatuses()
       .pipe(
         tap((response: DataResponse<UserStatusDto[]>) => {
           this.userStatuses = response.data;
@@ -43,8 +48,12 @@ export class RequestComponent implements OnInit {
       )
       .subscribe();
 
-      this.userService.user$.pipe(
-        tap((user: UserProfileModel | undefined) => this.requestData.userId = user?.id)
+    this.userService.user$
+      .pipe(
+        tap(
+          (user: UserProfileModel | undefined) =>
+            (this.requestData.userId = user?.id)
+        )
       )
       .subscribe();
   }
@@ -71,19 +80,18 @@ export class RequestComponent implements OnInit {
     this.uploadProgress = 0;
     this.working = true;
 
-    this.specialRequestService.requestDiscount(this.requestData)
+    this.specialRequestService
+      .requestDiscount(this.requestData)
       .pipe(
         tap(this.showProgress.bind(this)),
-        finalize(() => this.working = false)
+        finalize(() => (this.working = false))
       )
       .subscribe();
   }
 
   private showProgress(event: HttpEvent<DataResponse<string>>): any {
     if (event.type === HttpEventType.UploadProgress) {
-      this.uploadProgress = Math.round(
-        (100 * event.loaded) / event.total!
-      );
+      this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
     }
   }
 }

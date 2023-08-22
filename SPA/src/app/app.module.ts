@@ -4,6 +4,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 // components
 import { AppComponent } from './app.component';
@@ -25,6 +26,8 @@ import { RequestComponent } from './modals/request/request.component';
 import { BaseModalComponent } from './modals/base-modal/base-modal.component';
 import { HttpInterceptorInterceptor } from './http-interceptors/http-interceptor.interceptor';
 import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interceptor.interceptor';
+import { ReviewComponent } from './components/review/review.component';
+import { ReviewModalComponent } from './modals/review-modal/review-modal.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +47,8 @@ import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interc
     PurchaseHistoryComponent,
     RequestComponent,
     BaseModalComponent,
+    ReviewComponent,
+    ReviewModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +57,7 @@ import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interc
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
+    NgxPaginationModule
   ],
   providers: [
     {

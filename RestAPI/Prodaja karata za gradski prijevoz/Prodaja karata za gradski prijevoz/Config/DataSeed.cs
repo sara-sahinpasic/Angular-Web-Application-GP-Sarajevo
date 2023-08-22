@@ -125,7 +125,8 @@ public static class DataSeed
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
                 Role = Roles.User,
-                Status = Statuses.Default
+                Status = Statuses.Default,
+                ProfileImagePath=""
             };
             Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(DefaultUserPassword);
 

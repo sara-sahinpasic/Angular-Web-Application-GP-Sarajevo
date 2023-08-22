@@ -14,4 +14,11 @@ public sealed class IssuedTicketRepository : GenericRepository<IssuedTicket>, II
         return GetAll().Where(issuedTicket => issuedTicket.UserId == userId)
             .ToListAsync(cancellationToken);
     }
+
+    public Task<bool> HasUserPurchasedAnyTicketAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return GetAll()
+             .Where(user => user.Id == userId)
+             .AnyAsync();
+    }    
 }

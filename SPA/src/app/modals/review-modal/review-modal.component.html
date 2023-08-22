@@ -1,0 +1,19 @@
+<div class="form-group">
+  <label for="exampleFormControlInput1">Naslov:</label>
+  <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="" [(ngModel)]="reviewModel.title">
+</div>
+
+<div class="form-group">
+  <label for="exampleFormControlTextarea1">Komentar:</label>
+  <textarea type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder=""
+    [(ngModel)]="reviewModel.description"></textarea>
+</div>
+
+<label>Ocjena:</label>
+<select class="form-select" [(ngModel)]="reviewModel.score">
+  <option *ngFor="let number of reviewModels; let i=index" [value]="number">
+    {{number}}
+  </option>
+</select>
+
+<button class="send-review" (click)="sendReviewButton()">Pošalji</button>
