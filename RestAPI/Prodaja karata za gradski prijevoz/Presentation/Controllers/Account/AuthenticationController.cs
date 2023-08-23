@@ -145,6 +145,16 @@ public sealed class AuthenticationController : ControllerBase
     [HttpPost("/resetPassword")]
     public async Task<IActionResult> ResetPasswordAction([FromBody] string email, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(email))
+        {
+            Response<string> badResponse = new()
+            {
+                Message = "The email field cannot be empty."
+            };
+
+            return BadRequest(badResponse);
+        }
+
         await _authService.ResetPasswordAsync(email, cancellationToken);
 
         Response<string> response = new()
