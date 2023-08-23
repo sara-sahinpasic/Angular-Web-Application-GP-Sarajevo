@@ -15,11 +15,12 @@ public sealed class DataContext : DbContext
     public DbSet<VerificationCode> VerificationCodes { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<Ticket> Tickets { get; set; } = null!;
-    public DbSet<PaymentOption> PaymentOptions { get; set; } = null!;
+    public DbSet<PaymentMethod> PaymentOptions { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<Status> Statuses { get; set; } = null!;
     public DbSet<IssuedTicket> IssuedTickets { get; set; } = null!;
     public DbSet<Review> Reviews { get; set; } = null!;
+    public DbSet<Tax> Taxes { get; set; } = null!;
 
 
     public DataContext(DbContextOptions options) : base(options) { }
@@ -51,15 +52,33 @@ public sealed class DataContext : DbContext
             .Property(p => p.Discount)
             .HasPrecision(5, 2);
 
+        modelBuilder.Entity<Tax>()
+            .Property(t => t.Percentage)
+            .HasPrecision(5, 2);
+
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);
         BuildUserStatus(modelBuilder);
         BuildTicketData(modelBuilder);
+        BuildTaxesData(modelBuilder);
+    }
+
+    private static void BuildTaxesData(ModelBuilder modelBuilder)
+    {
+        Tax tax = new()
+        {
+            Name = "PDV",
+            Percentage = 0.17,
+            Active = true
+        };
+
+        modelBuilder.Entity<Tax>()
+            .HasData(tax);
     }
 
     private static void BuildPaymentOptions(ModelBuilder modelBuilder)
     {
-        List<PaymentOption> paymentOptions = new()
+        List<PaymentMethod> paymentOptions = new()
         {
             new()
             {
@@ -73,7 +92,7 @@ public sealed class DataContext : DbContext
             }
         };
 
-        modelBuilder.Entity<PaymentOption>()
+        modelBuilder.Entity<PaymentMethod>()
             .HasData(paymentOptions);
     }
 

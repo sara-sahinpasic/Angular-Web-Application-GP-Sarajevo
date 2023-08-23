@@ -19,7 +19,7 @@ public sealed class FileController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> DownloadPurchaseHistory(Guid userId, CancellationToken cancellationToken)
     {
-        byte[] pdfContents = await _fileService.GeneratePurchaseHistoryPDFAsync(userId, cancellationToken);
+        byte[] pdfContents = await _fileService.GeneratePurchaseHistoryPDFAsync(userId, cancellationToken: cancellationToken);
 
         return File(pdfContents, "application/octet-stream", $"{userId} purchase history.pdf");
     }

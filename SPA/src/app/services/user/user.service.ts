@@ -178,11 +178,13 @@ export class UserService {
       .put<DataResponse<string>>(`${this.url}Profile`, formData)
       .pipe(
         tap((response: DataResponse<string>) => {
+          localStorage.setItem("token", response.data);
+          this.user.next(this.getUser());
+
           if (!redirectionRoute) {
             return;
           }
-          localStorage.setItem('token', response.data);
-          this.user.next(this.getUser());
+
           this.router.navigateByUrl(redirectionRoute);
         })
       );

@@ -26,6 +26,8 @@ import { RequestComponent } from './modals/request/request.component';
 import { BaseModalComponent } from './modals/base-modal/base-modal.component';
 import { HttpInterceptorInterceptor } from './http-interceptors/http-interceptor.interceptor';
 import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interceptor.interceptor';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { CheckoutConfirmationComponent } from './components/checkout-confirmation/checkout-confirmation.component';
 import { ReviewComponent } from './components/review/review.component';
 import { ReviewModalComponent } from './modals/review-modal/review-modal.component';
 
@@ -47,6 +49,8 @@ import { ReviewModalComponent } from './modals/review-modal/review-modal.compone
     PurchaseHistoryComponent,
     RequestComponent,
     BaseModalComponent,
+    CheckoutComponent,
+    CheckoutConfirmationComponent,
     ReviewComponent,
     ReviewModalComponent,
   ],

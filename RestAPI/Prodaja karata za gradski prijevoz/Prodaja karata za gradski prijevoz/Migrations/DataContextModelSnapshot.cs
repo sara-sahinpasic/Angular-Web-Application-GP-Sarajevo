@@ -17,7 +17,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.13")
+                .HasAnnotation("ProductVersion", "6.0.21")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -34,7 +34,13 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.Property<Guid>("PaymentOptionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("TaxId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<double>("Total")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalWithoutTax")
                         .HasColumnType("float");
 
                     b.Property<Guid>("UserId")
@@ -42,12 +48,14 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TaxId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Payment.PaymentOption", b =>
+            modelBuilder.Entity("Domain.Entities.Payment.PaymentMethod", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,6 +79,37 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         {
                             Id = new Guid("46536a11-f5b3-4505-a13a-e7d44dda9ae9"),
                             Name = "Mail"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Payment.Tax", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Percentage")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("float(5)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Taxes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e363863b-ba6d-477f-9afb-15dcbf70616b"),
+                            Active = true,
+                            Name = "PDV",
+                            Percentage = 0.17000000000000001
                         });
                 });
 
@@ -423,11 +462,19 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>
                 {
+                    b.HasOne("Domain.Entities.Payment.Tax", "Tax")
+                        .WithMany()
+                        .HasForeignKey("TaxId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tax");
 
                     b.Navigation("User");
                 });

@@ -1,20 +1,24 @@
 ﻿using Application.Config.Email;
 using Application.Services.Abstractions.Interfaces.Authentication;
+using Application.Services.Abstractions.Interfaces.Checkout;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
+using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Implementations.Auth;
+using Application.Services.Implementations.Checkout;
 using Application.Services.Implementations.Hashing;
 using Application.Services.Implementations.Mapper;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Invoices;
+using Infrastructure.Repositories.Payment;
 using Infrastructure.Repositories.Requests;
 using Infrastructure.Repositories.Reviews;
 using Infrastructure.Repositories.Tickets;
@@ -38,8 +42,6 @@ public static partial class Services
 
     public static void AddSingletonServices(this WebApplicationBuilder builder)
     {
-        builder.Services.TryAddSingleton<IObjectMapperService, ObjectMapperService>();
-        builder.Services.TryAddSingleton<IPasswordService, PasswordService>();
     }
 
     public static void AddTransientServices(this WebApplicationBuilder builder)
@@ -47,6 +49,10 @@ public static partial class Services
         builder.Services.TryAddTransient<IEmailService, EmailService>();
         builder.Services.TryAddTransient<IAuthService, AuthService>();
         builder.Services.TryAddTransient<IFileService, FileService>();
+        builder.Services.TryAddTransient<ICheckoutService, CheckoutService>();
+        builder.Services.TryAddTransient<IObjectMapperService, ObjectMapperService>();
+        builder.Services.TryAddTransient<IPasswordService, PasswordService>();
+        builder.Services.TryAddTransient<IPDFGeneratorService, PDFGeneratorService>();
     }
 
     public static void AddRepositories(this WebApplicationBuilder builder)
@@ -58,7 +64,10 @@ public static partial class Services
         builder.Services.TryAddScoped<IRequestRepository, RequestRepository>();
         builder.Services.TryAddScoped<IInvoiceRepository, InvoiceRepository>();
         builder.Services.TryAddScoped<IIssuedTicketRepository, IssuedTicketRepository>();
+        builder.Services.TryAddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+        builder.Services.TryAddScoped<ITicketRepository, TicketRepository>();
         builder.Services.TryAddScoped<IReviewRepository, ReviewRepository>();
+        builder.Services.TryAddScoped<ITaxRepository, TaxRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)

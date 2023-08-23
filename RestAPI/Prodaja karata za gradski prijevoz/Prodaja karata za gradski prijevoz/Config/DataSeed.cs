@@ -1,9 +1,11 @@
 ﻿using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
+using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Invoices;
+using Domain.Entities.Payment;
 using Domain.Entities.Tickets;
 using Domain.Entities.Users;
 using Domain.Enums.PaymentOption;
@@ -24,7 +26,7 @@ public static class DataSeed
         IServiceProvider serviceProvider = serviceScope.ServiceProvider;
 
         IUnitOfWork unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-
+        
         ICollection<Guid> userIds = await SeedUsers(unitOfWork, serviceProvider);
 
         if (userIds.Count == 0)
@@ -40,6 +42,9 @@ public static class DataSeed
     private static async Task<ICollection<IssuedTicket>> SeedIssuedTickets(IUnitOfWork unitOfWork, ICollection<Guid> userIds, IServiceProvider serviceProvider)
     {
         IIssuedTicketRepository issuedTicketRepository = serviceProvider.GetRequiredService<IIssuedTicketRepository>();
+        ITicketRepository ticketRepository = serviceProvider.GetRequiredService<ITicketRepository>();
+
+        Ticket? oneWayTicket = await ticketRepository.GetByIdAsync(new Guid(Tickets.OneWay.ToString()), default);
         ICollection<IssuedTicket> issuedTickets = new List<IssuedTicket>(); ;
 
         for (int i = 0; i < InvoicesCount; ++i)
@@ -50,6 +55,7 @@ public static class DataSeed
             {
                 Id = Guid.NewGuid(),
                 TicketId = new Guid(Tickets.OneWay.ToString()),
+                Ticket = oneWayTicket,
                 UserId = userIds.ElementAt(randomUserIndex),
                 ValidFrom = DateTime.Now,
                 ValidTo = DateTime.Now.AddMinutes(60),
@@ -64,11 +70,13 @@ public static class DataSeed
         return issuedTickets;
     }
 
-    private static Task SeedInvoices(IUnitOfWork unitOfWork, ICollection<IssuedTicket> issuedTickets, IServiceProvider serviceProvider)
+    private static async Task SeedInvoices(IUnitOfWork unitOfWork, ICollection<IssuedTicket> issuedTickets, IServiceProvider serviceProvider)
     {
         IInvoiceRepository invoiceRepository = serviceProvider.GetRequiredService<IInvoiceRepository>();
-        issuedTickets = issuedTickets.OrderBy(issuedTicket => issuedTicket.UserId).ToList();
+        ITaxRepository taxRepository = serviceProvider.GetRequiredService<ITaxRepository>();
 
+        issuedTickets = issuedTickets.OrderBy(issuedTicket => issuedTicket.UserId).ToList();
+        Tax? tax = await taxRepository.GetActiveAsync(default);
 
         while (issuedTickets.Count > 0) 
         {
@@ -80,6 +88,9 @@ public static class DataSeed
                 break;
             }
 
+            double total = issuedTickets.Take(ticketPerInvoice).Sum(t => t.Ticket.Price);
+            double totalWithoutTaxes = total - (total * tax.Percentage);
+
             Invoice invoice = new()
             {
                 Id = Guid.NewGuid(),
@@ -88,6 +99,8 @@ public static class DataSeed
                 InvoicingDate = DateTime.Now,
                 UserId = issuedTicket.UserId,
                 IssuedTickets = issuedTickets.Where(it => it.UserId == issuedTicket.UserId).Take(ticketPerInvoice).ToList(),
+                TotalWithoutTax = totalWithoutTaxes,
+                Tax = tax
             };
 
             issuedTickets = issuedTickets.Skip(ticketPerInvoice).ToList();
@@ -95,7 +108,7 @@ public static class DataSeed
             invoiceRepository.Create(invoice);
         }
 
-        return unitOfWork.CommitAsync(default);
+        await unitOfWork.CommitAsync(default);
     }
 
     private static async Task<ICollection<Guid>> SeedUsers(IUnitOfWork unitOfWork, IServiceProvider app)

@@ -2,7 +2,7 @@
 
 namespace Domain.Entities.Payment;
 
-public sealed class PaymentOption : Entity
+public sealed class PaymentMethod : Entity
 {
     public string Name { get; set; } = null!;
 }

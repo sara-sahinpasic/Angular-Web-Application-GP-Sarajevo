@@ -1,13 +1,11 @@
 ﻿using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+using Domain.Entities.Invoices;
 using Domain.Entities.Tickets;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using PdfSharp.Pdf;
 using System.Text;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace Infrastructure.Services.File;
 
@@ -15,16 +13,18 @@ public sealed class FileService : IFileService
 {
     private readonly IWebHostEnvironment _hostingEnvironment;
     private readonly IIssuedTicketRepository _issuedTicketRepository;
-    private readonly IConfiguration _configuration;
+    private readonly IPDFGeneratorService _pdfGeneratorService;
 
-    public FileService(IWebHostEnvironment hostingEnvironment, IIssuedTicketRepository issuedTicketRepository, IConfiguration configuration)
+    public FileService(IWebHostEnvironment hostingEnvironment, IIssuedTicketRepository issuedTicketRepository, IPDFGeneratorService pdfGeneratorService)
     {
         _hostingEnvironment = hostingEnvironment;
         _issuedTicketRepository = issuedTicketRepository;
-        _configuration = configuration;
+        _pdfGeneratorService = pdfGeneratorService;
+
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
 
-    public async Task<string?> UploadFileAsync(string[] acceptedExtensions, IFormFile file, string folderName = "", CancellationToken cancellationToken = default)
+    public async Task<string?> SaveFileAsync(string[] acceptedExtensions, IFormFile file, string folderName = "", CancellationToken cancellationToken = default)
     {
         if (!IsValidExtension(acceptedExtensions, file))
         {
@@ -59,70 +59,63 @@ public sealed class FileService : IFileService
         return validExtensions.Contains(extension);
     }
 
-    public async Task<byte[]> GeneratePurchaseHistoryPDFAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<byte[]> GeneratePurchaseHistoryPDFAsync(Guid userId, bool shouldGenerateLocalFile = false, CancellationToken cancellationToken = default)
     {
-        ICollection<IssuedTicket> issuedTickets = await _issuedTicketRepository.GetAll()
-            .Include(issuedTicket => issuedTicket.Ticket)
-            .Where(issuedTicket => issuedTicket.UserId == userId)
-            .Select(issuedTicket => new IssuedTicket
-            {
-                Ticket = issuedTicket.Ticket,
-                IssuedDate = issuedTicket.IssuedDate
-            })
-            .ToArrayAsync();
+        ICollection<IssuedTicket> issuedTickets = await _issuedTicketRepository.GetUserIssuedTicketsForPurchaseHistoryReportAsync(userId, cancellationToken);
 
-        string purchaseHistoryHtml = GetPurchaseHistoryTableHtml(issuedTickets);
+        PdfDocument document = _pdfGeneratorService.CreatePurchaseHistoryPDFDocument(issuedTickets);
 
-        PdfDocument pdfDocument = PdfGenerator.GeneratePdf(purchaseHistoryHtml, PdfSharp.PageSize.A4);
         using MemoryStream memoryStream = new();
-        
-        pdfDocument.Save(memoryStream, true);
+
+        document.Save(memoryStream, false);
         byte[] pdfBytes = memoryStream.ToArray();
 
         return pdfBytes;
     }
 
-    private string GetPurchaseHistoryTableHtml(ICollection<IssuedTicket> issuedTickets)
+
+    public byte[] GenerateInvoicePDF(Invoice invoice, bool shouldGenerateLocalFile = false)
     {
-        StringBuilder stringBuilder = new();
+        PdfDocument pdfDocument = _pdfGeneratorService.CreateInvoicePDFDocument(invoice);
 
-        AppendStyles(stringBuilder);
+        using MemoryStream memoryStream = new();
 
-        stringBuilder.AppendLine("<h1>Historija kupovine</h1>");
-        stringBuilder.AppendLine("<div class=\"table-container\">");
-        stringBuilder.AppendLine("<table>");
-        stringBuilder.AppendLine(@"<thead>
-            <tr>
-              <th scope=""col"">Tip karte</th>
-              <th scope=""col"">Relacija </th>
-              <th scope=""col"">Cijena</th>
-              <th scope=""col"">Datum</th>
-            </tr>
-          </thead>");
+        pdfDocument.Save(memoryStream, true);
+        byte[] pdfBytes = memoryStream.ToArray();
 
-        foreach (IssuedTicket issuedTicket in issuedTickets)
+        if (shouldGenerateLocalFile)
         {
-            stringBuilder.AppendLine($@"<tbody>
-            <tr>
-              <td>{issuedTicket.Ticket.Name}</td>
-              <td>relationId</td>
-              <td>{issuedTicket.Ticket.Price}</td>
-              <td>{issuedTicket.IssuedDate.ToString("d")}</td>
-            </tr>
-          </tbody>");
+            CreatePDF($"{invoice.Id}.pdf", pdfBytes);
         }
 
-        stringBuilder.AppendLine("</table>");
-        stringBuilder.AppendLine("</div>");
-
-        return stringBuilder.ToString();
+        return pdfBytes;
     }
 
-    private void AppendStyles(StringBuilder stringBuilder)
+    private static void CreatePDF(string pdfName, byte[] pdfBytes)
     {
-        string pdfStylesPath = _configuration.GetSection("PDFStylesPath").Get<string>();
-        string contents = System.IO.File.ReadAllText(Path.GetFullPath("..\\" + pdfStylesPath + "\\PDF.css"));
+        if (!Directory.Exists("PDFs"))
+        {
+            Directory.CreateDirectory("PDFs");
+        }
 
-        stringBuilder.AppendLine($"<style>{contents}</style>");
+        System.IO.File.WriteAllBytes($"PDFs/{pdfName}", pdfBytes);
+    }
+
+    public byte[] GenerateIssuedTicketPDF(Invoice invoice, bool shouldGenerateLocalFile = false)
+    {
+        PdfDocument pdf = _pdfGeneratorService.CreateIssuedTicketsPDFDocument(invoice);
+        
+        using MemoryStream memoryStream = new();
+
+        pdf.Save(memoryStream, true);
+
+        byte[] pdfData = memoryStream.ToArray();
+
+        if (shouldGenerateLocalFile)
+        {
+            CreatePDF($"{invoice.Id}_Tickets.pdf", pdfData);
+        }
+
+        return pdfData;
     }
 }

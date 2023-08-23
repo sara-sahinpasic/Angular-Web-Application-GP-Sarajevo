@@ -9,6 +9,7 @@ export class ModalService implements OnInit {
   private showModalTitle: string = '';
 
   constructor() {}
+
   ngOnInit(): void {}
 
   showRequestModal() {
@@ -25,6 +26,7 @@ export class ModalService implements OnInit {
     this.showReviewModalState = false;
     this.showModalTitle = '';
   }
+
   getModalTitle(): string {
     return this.showModalTitle;
   }

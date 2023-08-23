@@ -64,7 +64,7 @@ public sealed class ProfileController : ControllerBase
         }
         if (vM.ProfileImageFile is not null)
         {
-            string? filePath = await fileService.UploadFileAsync(new[] { "jpg", "jpeg", "png" }, vM.ProfileImageFile, "ProfileImages", cancellationToken);
+            string? filePath = await fileService.SaveFileAsync(new[] { "jpg", "jpeg", "png" }, vM.ProfileImageFile, "ProfileImages", cancellationToken);
 
             if (filePath is null)
             {

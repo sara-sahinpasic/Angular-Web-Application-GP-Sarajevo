@@ -8,6 +8,11 @@ public sealed class PasswordService : IPasswordService
 {
     public Tuple<byte[], string> GeneratePasswordHashAndSalt(string password)
     {
+        if (string.IsNullOrEmpty(password))
+        {
+            throw new ArgumentException("Argument cannot be null or empty!", nameof(password));
+        }
+
         byte[] salt = new byte[256 / 8];
         byte[] hashedPassword = new byte[256 / 8];
 

@@ -1,6 +1,7 @@
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Implementations.Mapper;
 using Domain.Entities.Users;
+using Domain.Enums.User;
 
 namespace UnitTests.Services;
 
@@ -19,7 +20,8 @@ public sealed class ObjectMapperServiceTests
         User user = new()
         {
             FirstName = "amor",
-            LastName = "osmic"
+            LastName = "osmic",
+            Status = Statuses.Default
         };
 
         User userToMapTo = new();

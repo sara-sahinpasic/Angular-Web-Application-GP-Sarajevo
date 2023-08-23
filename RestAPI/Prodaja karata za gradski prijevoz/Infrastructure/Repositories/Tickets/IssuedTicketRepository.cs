@@ -2,6 +2,7 @@
 using Domain.Entities.Tickets;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 
 namespace Infrastructure.Repositories.Tickets;
 
@@ -13,6 +14,18 @@ public sealed class IssuedTicketRepository : GenericRepository<IssuedTicket>, II
     {
         return GetAll().Where(issuedTicket => issuedTicket.UserId == userId)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<IssuedTicket[]> GetUserIssuedTicketsForPurchaseHistoryReportAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return GetAll().Include(issuedTicket => issuedTicket.Ticket)
+            .Where(issuedTicket => issuedTicket.UserId == userId)
+            .Select(issuedTicket => new IssuedTicket
+            {
+                Ticket = issuedTicket.Ticket,
+                IssuedDate = issuedTicket.IssuedDate
+            })
+            .ToArrayAsync(cancellationToken);
     }
 
     public Task<bool> HasUserPurchasedAnyTicketAsync(Guid userId, CancellationToken cancellationToken = default)

@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="form-container">
+    <div id="header" class="row text-center">
+      <h1 class="text-center">Potvrda</h1>
+    </div>
+    <div id="content" class="d-flex flex-column mb-3 fs-5">
+      <div>
+        <strong>Kupac:</strong> {{ user!.firstName }} {{ user!.lastName }}
+      </div>
+      <div>
+        <strong>Relacija:</strong> neka
+      </div>
+      <div>
+        <strong>Tip karte:</strong> {{ checkoutModel?.cardType!.name }}
+      </div>
+      <div>
+        <strong>Količina:</strong> {{ checkoutModel?.quantity }}
+      </div>
+      <div>
+        <strong>Način plaćanja:</strong> {{ checkoutModel?.paymentMethod!.name }}
+      </div>
+    </div>
+    <div id="footer">
+      <button class="primary" (click)="confirmPurchase()">Potvrdi</button>
+    </div>
+  </div>
+</div>

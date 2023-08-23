@@ -1,4 +1,5 @@
 ﻿using Domain.Abstractions.Classes;
+using Domain.Entities.Payment;
 using Domain.Entities.Tickets;
 using Domain.Entities.Users;
 using Domain.Enums.PaymentOption;
@@ -11,7 +12,7 @@ public class Invoice : Entity
     public Guid UserId { get; set; }
     public User User { get; set; } = null!;
     public Guid PaymentOptionId { get; set; }
-    public virtual ICollection<IssuedTicket> IssuedTickets { get; set; } = new List<IssuedTicket>();
+    public virtual IEnumerable<IssuedTicket> IssuedTickets { get; set; } = new List<IssuedTicket>();
 
     [NotMapped]
     public PaymentOptions PaymentOption 
@@ -22,4 +23,7 @@ public class Invoice : Entity
 
     public DateTime InvoicingDate { get; set; }
     public double Total { get; set; }
+    public double TotalWithoutTax { get; set; }
+    public Guid TaxId { get; set; }
+    public Tax Tax { get; set; } = null!;
 }

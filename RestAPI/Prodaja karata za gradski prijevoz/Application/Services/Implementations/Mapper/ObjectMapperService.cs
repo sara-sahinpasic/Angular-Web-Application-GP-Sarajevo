@@ -6,8 +6,8 @@ public sealed class ObjectMapperService : IObjectMapperService
 {
     public void Map<From, To>(From fromObject, To toObject)
     {
-        if (fromObject == null || toObject == null)
-            throw new Exception("Object cannot be null.");
+        ArgumentNullException.ThrowIfNull(fromObject);
+        ArgumentNullException.ThrowIfNull(toObject);
 
         var toType = typeof(To);
         var fromType = typeof(From);
