@@ -2,7 +2,6 @@
 using Domain.Entities.Tickets;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Immutable;
 
 namespace Infrastructure.Repositories.Tickets;
 
@@ -31,7 +30,7 @@ public sealed class IssuedTicketRepository : GenericRepository<IssuedTicket>, II
     public Task<bool> HasUserPurchasedAnyTicketAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         return GetAll()
-             .Where(user => user.Id == userId)
+             .Where(issuedTicket => issuedTicket.UserId == userId)
              .AnyAsync();
     }    
 }
