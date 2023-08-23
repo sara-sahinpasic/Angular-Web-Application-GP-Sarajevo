@@ -1,30 +1,6 @@
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  @include flex-center;
-  height: calc(100% - 149px);
-}
-
 .form-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   padding: 20px 5px 15px 5px;
   width: 50%;
-  border: 1px solid rgba(0, 0, 0, 0);
-  border-radius: 20px;
-  background-color: rgb(255 255 255 / 75%);
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 5px;
-  font-weight: bold;
-  margin-left: 15px;
 }
 
 table {
@@ -42,18 +18,3 @@ th {
 hr {
   border: 2px solid black;
 }
-
-.downloadPdf {
-  background-color: rgba(0, 0, 0, 0.916);
-  color: white;
-  font-weight: bolder;
-  font-size: large;
-  border: 2px solid black;
-  border-radius: 10px;
-  border-color: rgba(0, 0, 0, 0.171);
-  box-shadow: 2px 4px rgba(0, 0, 0, 0);
-  transition: 0.5s;
-  height: 35px;
-  margin-left: 20px;
-}
-

@@ -1,30 +1,6 @@
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  @include flex-center;
-  height: calc(100% - 149px);
-}
-
 .form-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 10px 20px 20px 20px;
   width: 70%;
-  border: 1px solid rgba(0, 0, 0, 0);
-  border-radius: 20px;
-  background-color: rgb(255 255 255 / 75%);
-}
-
-h1 {
-  text-align: left;
-  margin-bottom: 5px;
-  margin-top: 0px;
-  font-weight: bolder;
+  overflow: auto;
 }
 
 hr {
@@ -53,6 +29,21 @@ th {
   text-decoration: underline;
 }
 
+thead {
+  font-size: large;
+}
+
 table {
-  border: 1px solid black;
+  border: 1px solid #000;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.table-container {
+  height: 40vh;
+  overflow: auto;
+}
+
+td {
+  word-wrap: anywhere;
 }

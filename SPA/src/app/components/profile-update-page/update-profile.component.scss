@@ -1,51 +1,6 @@
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  @include flex-center;
-  height: calc(100% - 149px);
-}
-
 .form-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
   padding: 10px 40px 10px 40px;
   width: 450px;
-  border: 1px solid rgba(0, 0, 0, 0);
-  border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.75);
-}
-
-.nav {
-  display: flex;
-  flex-direction: row;
-}
-
-h1 {
-  text-align: left;
-  margin-bottom: 7px;
-  font-weight: bolder;
-}
-
-.izmjena {
-  background-color: rgba(0, 0, 0, 0.916);
-  color: white;
-  font-weight: bolder;
-  font-size: large;
-  border: 2px solid black;
-  border-radius: 10px;
-  box-shadow: 2px 4px #434343;
-  margin-top: 7px;
-}
-
-label {
-  font-weight: bold;
-  margin-top: 5px;
-  float: left;
 }
 
 .box {
@@ -58,17 +13,4 @@ img {
   height: 150px;
   margin: 3px 0px 0px 0px;
   background-color: white;
-}
-
-.profileImage {
-  background-color: rgba(0, 0, 0, 0.916);
-  color: white;
-  border: 1px solid black;
-  border-radius: 10px;
-  box-shadow: 1px 3px #434343;
-  font-weight: lighter;
-  font-size: small;
-  width: 80%;
-  height: 12%;
-  margin-top: 5px;
 }

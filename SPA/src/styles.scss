@@ -63,3 +63,46 @@ button.secondary {
 a {
   cursor: pointer;
 }
+
+label {
+  font-weight:bold;
+}
+
+h1 {
+  font-weight: bolder;
+}
+
+.form-container {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 20px;
+  width: 550px;
+  padding: 20px 45px 30px 45px;
+  background-color: rgb(255 255 255 / 65%);
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 149px);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, .5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, .5);
+  border-radius: 5px;
+}

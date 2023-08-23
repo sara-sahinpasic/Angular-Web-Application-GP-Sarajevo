@@ -1,67 +1,18 @@
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  @include flex-center;
-  height: calc(100% - 149px);
-}
-
 .form-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   padding: 10px 20px 20px 20px;
   width: 60%;
-  border: 1px solid rgba(0, 0, 0, 0);
-  border-radius: 20px;
-  background-color: rgb(255 255 255 / 75%);
 }
 
 .box {
   border: 1px solid black;
   width: 100%;
   margin-top: 4px;
+  padding: 0 2%;
 }
 
 .nav {
   display: flex;
   flex-direction: row;
-}
-
-h1 {
-  text-align: left;
-  margin-bottom: 5px;
-  margin-top: 0px;
-  font-weight: bolder;
-}
-
-.izmjena {
-  background-color: rgba(0, 0, 0, 0.916);
-  color: white;
-  font-weight: bolder;
-  font-size: large;
-  border: 2px solid black;
-  border-radius: 10px;
-  box-shadow: 1px 2px #434343;
-  margin-top: 7px;
-  height: 30px;
-}
-
-.obrisi {
-  background-color: rgba(255, 255, 255, 0.947);
-  color: black;
-  font-weight: bolder;
-  font-size: large;
-  border: 2px solid black;
-  border-radius: 10px;
-  border-color: rgba(0, 0, 0, 0.171);
-  box-shadow: 2px 4px rgba(0, 0, 0, 0);
-  transition: 0.5s;
-  margin-top: 7px;
-  height: 30px;
 }
 
 .data,
@@ -81,13 +32,11 @@ h1 {
 
 label {
   width: 100%;
-  margin-left: 2%;
-  font-weight: bold;
 }
 
 input {
   width: 96%;
-  margin: 0% 0% 2% 2%;
+  margin-bottom: 2%;
   background-color: rgba(255, 255, 255, 0.251);
   border: 2px solid rgba(104, 104, 104, 0.187);
 }

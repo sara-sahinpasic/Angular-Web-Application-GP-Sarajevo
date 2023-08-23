@@ -1,20 +1,20 @@
 <div class="container">
   <div class="form-container">
     <div class="login-form" *ngIf="!isVerifyLoginRequestSent">
-      <h1>Prijava </h1>
-      <p id="uvod">
+      <h1 class="text-center mb-1">Prijava</h1>
+      <p class="text-center mb-2">
         Postanite član i iz udobnosti svoga doma kupite kartu, i ne propustite ponude i akcije.
       </p>
       <label for="email">E-Mail: *</label>
-      <input id="email" type="email" placeholder="" [(ngModel)]="userLoginRequest.email" required=""> <br />
+      <input id="email" class="form-control" type="email" placeholder="" [(ngModel)]="userLoginRequest.email" required="">
       <label for="lozinka">Lozinka: *</label>
-      <input id="lozinka" type="password" placeholder="" [(ngModel)]="userLoginRequest.password" required=""><br />
+      <input id="lozinka" class="form-control" type="password" placeholder="" [(ngModel)]="userLoginRequest.password" required="">
       <!-- <input id="check" type="checkbox">
       <label for="check"> Zapamti podatke</label> -->
       <a routerLink="/resetPassword">Zaboravljena lozinka?</a>
 
-      <button class="primary" (click)="login()">Prijava</button>
-      <button class="secondary" (click)="navigateToRegistration()">Registruj se</button>
+      <button class="primary mt-4" (click)="login()">Prijava</button>
+      <button class="secondary mt-3" (click)="navigateToRegistration()">Registruj se</button>
     </div>
     <div class="verify-login-container" *ngIf="isVerifyLoginRequestSent">
       <h3>Molimo vas unesite kod koji je poslan na Vaš mail</h3>

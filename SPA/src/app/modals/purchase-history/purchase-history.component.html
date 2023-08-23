@@ -2,7 +2,7 @@
   <div class="form-container">
 
     <div class="row justify-content-center" id="content" #content>
-      <h1>Historija kupovine </h1>
+      <h1 class="text-center mb-2">Historija kupovine </h1>
 
       <div class="col-auto">
         <table class="table">
@@ -32,7 +32,7 @@
     <hr>
     <div class="row">
       <div class="col">
-    <button class="downloadPdf" (click)="purchaseHistoryPrintButton()">Preuzmite Vašu historiju kupovine</button>
+    <button class="primary" (click)="purchaseHistoryPrintButton()">Preuzmite Vašu historiju kupovine</button>
   </div>
   <div class="col">
     <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onPageChange($event)">

@@ -1,23 +1,25 @@
 <div class="container">
-  <div class="form-container" style="overflow-y: scroll;">
+  <div class="form-container">
     <h1>Utisci </h1>
     <hr />
-    <table class="table table-bordered">
-      <thead style="font-size: large">
-        <tr>
-          <th> Naslov </th>
-          <th> Utisak </th>
-          <th> Ocjena</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let r of this.reviewTable">
-          <td>{{r.title}}</td>
-          <td>{{r.description}}</td>
-          <td>{{r.score}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container mb-3">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th> Naslov </th>
+            <th> Utisak </th>
+            <th> Ocjena</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of this.reviewTable">
+            <td>{{r.title}}</td>
+            <td>{{r.description}}</td>
+            <td>{{r.score}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="row">
       <div class="col">
@@ -43,11 +45,13 @@
 
             <li class="page-item">
               <a (click)="nextPage()" class="page-link" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Next</span>
+                <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
           </ul>
         </nav>
       </div>
     </div>
+  </div>
+</div>

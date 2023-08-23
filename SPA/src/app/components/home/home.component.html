@@ -1,12 +1,16 @@
 <div class="container">
   <div class="form-container">
-    <h1>PRETRAGA </h1>
-    <form>
-      <input id="polaznaStanica" type="text" placeholder="Polazna stanica">
-      <input id="cilj" type="text" placeholder="Cilj">
-      <input id="datum" type="date" placeholder="">
-      <input id="sat" type="time" placeholder="">
-    </form>
-    <button [routerLink]="['/checkout']">Pretraži</button>
+    <h1 class="text-center mb-3">PRETRAGA</h1>
+    <div class="controls-container">
+      <div class="route-container mb-2">
+        <input id="polaznaStanica" class="form-control" type="text" placeholder="Polazna stanica">
+        <input id="cilj" type="text" class="form-control ms-2" placeholder="Cilj">
+      </div>
+      <div class="time-container mb-2">
+        <input id="datum" type="date" class="form-control" placeholder="">
+        <input id="sat" type="time" class="form-control ms-2" placeholder="">
+      </div>
+    </div>
+    <button [routerLink]="['/checkout']" class="primary">Pretraži</button>
   </div>
 </div>

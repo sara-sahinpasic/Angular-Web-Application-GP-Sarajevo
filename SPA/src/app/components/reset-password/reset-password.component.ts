@@ -28,18 +28,17 @@ export class ResetPasswordComponent implements OnInit {
   sendResetPasswordRequest() {
     this.formGroup.markAllAsTouched();
 
-    if (!this.formGroup.valid) {
+    if (this.formGroup.invalid) {
       return;
     }
 
     const email: string = this.formGroup.get("email")!.value;
-
-    // this.userService.resetPassword(email).subscribe();
+    this.userService.resetPassword(email).subscribe();
   }
 
   private initializeValidators() {
     this.formGroup = this.formBuilder.group({
-      email: ["", Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]
+      email: ["", Validators.compose([Validators.pattern(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/), Validators.required])]
     })
   }
 }
