@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription, debounceTime, fromEvent, tap } from 'rxjs';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { tap } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -7,46 +8,38 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
-export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ResetPasswordComponent implements OnInit {
 
   @ViewChild("email") resetPasswordInput?: ElementRef<HTMLInputElement>;
-  private onKeyup$?: Observable<Event>;
-  private subscription?: Subscription;
   protected isEmailValid: boolean | undefined = undefined;
   protected isResetPasswordRequestSent: boolean = false;
+  protected formGroup!: FormGroup;
 
-  constructor(private userService: UserService) { }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    this.onKeyup$ = fromEvent(this.resetPasswordInput?.nativeElement as HTMLInputElement, "keyup")
-      .pipe(
-        tap((val: Event) => {
-          const target: HTMLInputElement = val.target as HTMLInputElement;
-
-          this.isEmailValid = this.validateEmail(target.value as string);
-        }),
-        debounceTime(1000)
-      );
-
-    this.subscription = this.onKeyup$.subscribe();
-  }
+  constructor(private userService: UserService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.initializeValidators();
     this.userService.isResetPasswordRequestSent$.pipe(
       tap((val: boolean) => this.isResetPasswordRequestSent = val)
     )
       .subscribe();
   }
 
-  sendResetPasswordRequest(email: string) {
-    this.userService.resetPassword(email).subscribe();
+  sendResetPasswordRequest() {
+    this.formGroup.markAllAsTouched();
+
+    if (!this.formGroup.valid) {
+      return;
+    }
+
+    const email: string = this.formGroup.get("email")!.value;
+
+    // this.userService.resetPassword(email).subscribe();
   }
 
-  private validateEmail(email: string): boolean {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+  private initializeValidators() {
+    this.formGroup = this.formBuilder.group({
+      email: ["", Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]
+    })
   }
 }
