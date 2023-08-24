@@ -1,5 +1,5 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { finalize, tap } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { RequestDto } from 'src/app/models/Request/RequestDto';
@@ -12,9 +12,9 @@ import { UserService } from 'src/app/services/user/user.service';
 @Component({
   selector: 'app-request',
   templateUrl: './request.component.html',
-  styleUrls: ['./request.component.scss'],
+  styleUrls: ['./request.component.scss']
 })
-export class RequestComponent implements OnInit {
+export class RequestComponent {
   private allowedFileTypes: string[] = [
     'image/jpeg',
     'image/jpg',
@@ -37,7 +37,16 @@ export class RequestComponent implements OnInit {
     private userService: UserService
   ) {}
 
+
   ngOnInit(): void {
+    // hacky way to fix the ExpressionChangedAfterItHasBeenCheckedError bug
+    // with this async call we call the Angular change detection again (there was something about the Macro and Micro stack but I haven't delved much into it)
+    setTimeout(() => {
+      this.setup();
+    }, 0);
+  }
+
+  setup(): void {
     this.userStatusService
       .getAvailableUserStatuses()
       .pipe(
