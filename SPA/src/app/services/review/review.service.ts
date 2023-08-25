@@ -14,12 +14,6 @@ export class ReviewService {
 
   constructor(private httpClient: HttpClient) {}
 
-  public getAllReviews(): Observable<DataResponse<ReviewDto[]>> {
-    return this.httpClient.get<DataResponse<ReviewDto[]>>(
-      `${this.apiUrl}Review/GetAllReviews`
-    );
-  }
-
   public postReview(
     reviewModel: ReviewModel
   ): Observable<DataResponse<ReviewDto[]>> {

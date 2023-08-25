@@ -1,0 +1,43 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  @include flex-center;
+  height: calc(100% - 149px);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 20px 20px 20px;
+  width: 35%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 20px;
+  background-color: rgb(255 255 255 / 75%);
+}
+
+h1 {
+  text-align: left;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  font-weight: bolder;
+}
+
+table {
+  border: 1px solid black;
+}
+
+.title {
+  font-weight: bolder;
+  font-size: larger;
+  border-style: hidden !important;
+}
+
+.date,
+.td-button {
+  border-style: hidden !important;
+}

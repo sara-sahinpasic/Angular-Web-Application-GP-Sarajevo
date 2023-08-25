@@ -1,11 +1,15 @@
 ﻿using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
+using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
+using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Invoices;
+using Domain.Entities.News;
 using Domain.Entities.Payment;
+using Domain.Entities.Reviews;
 using Domain.Entities.Tickets;
 using Domain.Entities.Users;
 using Domain.Enums.PaymentOption;
@@ -19,6 +23,8 @@ public static class DataSeed
     private const int UserCount = 5;
     private const string DefaultUserPassword = "0000";
     private const int InvoicesCount = 100;
+    private const int NewsCount = 20;
+    private const int ReviewsCount = 15;
 
     public static async Task SeedData(this WebApplication app)
     {
@@ -26,7 +32,7 @@ public static class DataSeed
         IServiceProvider serviceProvider = serviceScope.ServiceProvider;
 
         IUnitOfWork unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        
+
         ICollection<Guid> userIds = await SeedUsers(unitOfWork, serviceProvider);
 
         if (userIds.Count == 0)
@@ -34,9 +40,41 @@ public static class DataSeed
             return;
         }
 
-        ICollection<IssuedTicket> issuedTickets =  await SeedIssuedTickets(unitOfWork, userIds, serviceProvider);
+        ICollection<IssuedTicket> issuedTickets = await SeedIssuedTickets(unitOfWork, userIds, serviceProvider);
 
         await SeedInvoices(unitOfWork, issuedTickets, serviceProvider);
+        await SeedNews(unitOfWork, serviceProvider);
+        await SeedReviews(unitOfWork, serviceProvider);
+    }
+    private static async Task SeedReviews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        IReviewRepository reviewRepository = serviceProvider.GetRequiredService<IReviewRepository>();
+        for (int i = 0; i < ReviewsCount; i++)
+        {
+            Review review = new Review
+            {
+                Title = Faker.Company.Name(),
+                Description = Faker.Lorem.Paragraph(),
+                Score = new Random().Next(1, 5)
+            };
+            reviewRepository.Create(review);
+        }
+        await unitOfWork.CommitAsync(default);
+    }
+    private static async Task SeedNews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        INewsRepository newsRepository = serviceProvider.GetRequiredService<INewsRepository>();
+        for (int i = 0; i < NewsCount; i++)
+        {
+            News news = new News
+            {
+                Title = Faker.Company.Name(),
+                Content = Faker.Lorem.Paragraph(),
+                Date = DateTime.UtcNow
+            };
+            newsRepository.Create(news);
+        }
+        await unitOfWork.CommitAsync(default);
     }
 
     private static async Task<ICollection<IssuedTicket>> SeedIssuedTickets(IUnitOfWork unitOfWork, ICollection<Guid> userIds, IServiceProvider serviceProvider)
@@ -45,15 +83,14 @@ public static class DataSeed
         ITicketRepository ticketRepository = serviceProvider.GetRequiredService<ITicketRepository>();
 
         Ticket? oneWayTicket = await ticketRepository.GetByIdAsync(new Guid(Tickets.OneWay.ToString()), default);
-        ICollection<IssuedTicket> issuedTickets = new List<IssuedTicket>(); ;
+        ICollection<IssuedTicket> issuedTickets = new List<IssuedTicket>();
 
         for (int i = 0; i < InvoicesCount; ++i)
         {
             int randomUserIndex = Random.Shared.Next(0, UserCount);
 
-            IssuedTicket issuedTicket= new()
+            IssuedTicket issuedTicket = new()
             {
-                Id = Guid.NewGuid(),
                 TicketId = new Guid(Tickets.OneWay.ToString()),
                 Ticket = oneWayTicket,
                 UserId = userIds.ElementAt(randomUserIndex),
@@ -78,12 +115,12 @@ public static class DataSeed
         issuedTickets = issuedTickets.OrderBy(issuedTicket => issuedTicket.UserId).ToList();
         Tax? tax = await taxRepository.GetActiveAsync(default);
 
-        while (issuedTickets.Count > 0) 
+        while (issuedTickets.Count > 0)
         {
             int ticketPerInvoice = Random.Shared.Next(1, 6);
             IssuedTicket? issuedTicket = issuedTickets.FirstOrDefault();
 
-            if (issuedTicket is null) 
+            if (issuedTicket is null)
             {
                 break;
             }
@@ -93,7 +130,6 @@ public static class DataSeed
 
             Invoice invoice = new()
             {
-                Id = Guid.NewGuid(),
                 PaymentOption = PaymentOptions.Card,
                 Total = 1.8 * ticketPerInvoice,
                 InvoicingDate = DateTime.Now,
@@ -111,16 +147,16 @@ public static class DataSeed
         await unitOfWork.CommitAsync(default);
     }
 
-    private static async Task<ICollection<Guid>> SeedUsers(IUnitOfWork unitOfWork, IServiceProvider app)
+    private static async Task<ICollection<Guid>> SeedUsers(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
-        IUserRepository userRepository = app.GetRequiredService<IUserRepository>();
-        
+        IUserRepository userRepository = serviceProvider.GetRequiredService<IUserRepository>();
+
         if (userRepository.GetAll().Any())
         {
             return new List<Guid>();
         }
-        
-        IPasswordService passwordService = app.GetRequiredService<IPasswordService>();
+
+        IPasswordService passwordService = serviceProvider.GetRequiredService<IPasswordService>();
 
         ICollection<Guid> userIds = new List<Guid>();
 
@@ -133,13 +169,12 @@ public static class DataSeed
                 LastName = Faker.Name.Last(),
                 Active = true,
                 DateOfBirth = Faker.Identification.DateOfBirth(),
-                Id = Guid.NewGuid(),
                 PhoneNumber = Faker.Phone.Number(),
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
                 Role = Roles.User,
                 Status = Statuses.Default,
-                ProfileImagePath=""
+                ProfileImagePath = ""
             };
             Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(DefaultUserPassword);
 

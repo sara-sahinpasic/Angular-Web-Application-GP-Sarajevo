@@ -54,29 +54,6 @@ public sealed class ReviewController : ControllerBase
             return Ok(response);
         }
     }
-    [HttpGet("GetAllReviews")]
-    public async Task<IActionResult> GetAllReviews([FromServices] IReviewRepository reviewRepository)
-    {
-        var data = await reviewRepository
-           .GetAll()
-           .OrderByDescending(review => review.DateOfCreation)
-           .Select(review => new ReviewDto
-           {
-               Title = review.Title,
-               Description = review.Description,
-               Score = review.Score
-           })
-           .ToArrayAsync();
-
-        Response<ReviewDto[]> response = new()
-        {
-            Message = "",
-            Data = data
-        };
-
-        return Ok(response);
-    }
-
     [HttpGet("Pagination")]
     public async Task<IActionResult> GetPage([FromServices] IReviewRepository reviewRepository, int page, int pageSize)
     {
@@ -99,7 +76,7 @@ public sealed class ReviewController : ControllerBase
     }
 
     [HttpGet("ReviewPagesCount")]
-    public async Task<IActionResult> GetReviewCout([FromServices] IReviewRepository reviewRepository, double pageSize)
+    public async Task<IActionResult> GetReviewCount([FromServices] IReviewRepository reviewRepository, double pageSize)
     {
         var total = await reviewRepository
            .GetAll()
@@ -113,5 +90,5 @@ public sealed class ReviewController : ControllerBase
         return Ok(response);
     }
 }
-    
+
 

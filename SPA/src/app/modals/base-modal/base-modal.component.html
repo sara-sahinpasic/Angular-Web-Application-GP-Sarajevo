@@ -11,6 +11,7 @@
       <div class="modal-body">
         <app-request *ngIf="modalService.showRequestModalState"></app-request>
         <app-review-modal *ngIf="modalService.showReviewModalState"></app-review-modal>
+        <app-news-modal *ngIf="modalService.showNewsModalState" [newsId]="modalService.data"></app-news-modal>
       </div>
     </div>
   </div>

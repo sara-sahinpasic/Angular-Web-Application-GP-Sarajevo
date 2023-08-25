@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Invoices;
 using Domain.Entities.Requests;
 using Domain.Entities.Reviews;
+using Domain.Entities.News;
 
 namespace Infrastructure.Data;
 
@@ -20,6 +21,7 @@ public sealed class DataContext : DbContext
     public DbSet<Status> Statuses { get; set; } = null!;
     public DbSet<IssuedTicket> IssuedTickets { get; set; } = null!;
     public DbSet<Review> Reviews { get; set; } = null!;
+    public DbSet<News> News { get; set; } = null!;
     public DbSet<Tax> Taxes { get; set; } = null!;
 
 
@@ -42,7 +44,7 @@ public sealed class DataContext : DbContext
             .HasOne<Status>()
             .WithMany()
             .HasForeignKey(user => user.UserStatusId);
-        
+
         modelBuilder.Entity<Request>()
             .HasOne<Status>()
             .WithMany()
@@ -199,5 +201,5 @@ public sealed class DataContext : DbContext
         modelBuilder.Entity<Ticket>()
              .HasData(tickets);
     }
-   
+
 }

@@ -16,20 +16,22 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { CheckoutConfirmationComponent } from './components/checkout-confirmation/checkout-confirmation.component';
 import { CheckoutConfirmGuard } from './guards/checkout/checkout-confirm.guard';
 import { ReviewComponent } from './components/review/review.component';
+import { NewsComponent } from './components/news/news.component';
 
 const routes: Routes = [
-  { path: 'review', component: ReviewComponent },
-  { path: 'request', component: RequestComponent, canActivate: [LoggedInGuard] },
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [LoggedInGuard, CheckoutConfirmGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [LoggedInGuard] },
-  { path: 'purchaseHistory', component: PurchaseHistoryComponent, canActivate: [LoggedInGuard] },
-  { path: 'delete', component: ProfileDeletedPageComponent, canActivate: [LoggedInGuard] },
-  { path: 'update', component: UpdateProfileComponent, canActivate: [LoggedInGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] },
-  { path: 'registracija', component: RegistrationComponent, canActivate: [NotLoggedInGuard]},
-  { path: 'activate/:token', component: ActivateAccountComponent,canActivate: [NotLoggedInGuard] },
-  { path: 'prijava', component: LogInComponent, canActivate: [NotLoggedInGuard] },
-  { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard] },
+  { path: 'news', component: NewsComponent},
+  { path: 'review', component: ReviewComponent},
+  { path: 'request', component: RequestComponent, canActivate:[LoggedInGuard] },
+  { path: 'purchaseHistory', component: PurchaseHistoryComponent, canActivate:[LoggedInGuard] },
+  { path: 'delete', component: ProfileDeletedPageComponent, canActivate:[LoggedInGuard] },
+  { path: 'update', component: UpdateProfileComponent, canActivate:[LoggedInGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate:[LoggedInGuard] },
+  { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard]},
+  { path: 'activate/:token', component: ActivateAccountComponent,canActivate:[NotLoggedInGuard] },
+  { path: 'prijava', component: LogInComponent, canActivate:[NotLoggedInGuard] },
+  { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard]  },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }
 ];

@@ -30,6 +30,8 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { CheckoutConfirmationComponent } from './components/checkout-confirmation/checkout-confirmation.component';
 import { ReviewComponent } from './components/review/review.component';
 import { ReviewModalComponent } from './modals/review-modal/review-modal.component';
+import { NewsComponent } from './components/news/news.component';
+import { NewsModalComponent } from './modals/news-modal/news-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { ReviewModalComponent } from './modals/review-modal/review-modal.compone
     CheckoutConfirmationComponent,
     ReviewComponent,
     ReviewModalComponent,
+    NewsComponent,
+    NewsModalComponent,
   ],
   imports: [
     BrowserModule,

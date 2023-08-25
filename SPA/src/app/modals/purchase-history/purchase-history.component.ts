@@ -16,7 +16,7 @@ import { Pagination } from 'src/app/models/Pagination/Pagination';
 export class PurchaseHistoryComponent implements OnInit {
   purchaseHistory: Array<PurchaseHistoryDto> = [];
 
-  private url: string = environment.apiUrl;
+  private apiUrl: string = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClient,
@@ -29,7 +29,6 @@ export class PurchaseHistoryComponent implements OnInit {
     page: 1,
     totalCount: 0,
   };
-  private apiUrl: string = environment.apiUrl;
 
   ngOnInit(): void {
     let userId: string | undefined;
@@ -40,7 +39,7 @@ export class PurchaseHistoryComponent implements OnInit {
 
     this.httpClient
       .get<DataResponse<PurchaseHistoryDto[]>>(
-        `${this.url}PurchaseHistory/GetAllUserPurchases?userId=${userId}`
+        `${this.apiUrl}PurchaseHistory/GetAllUserPurchases?userId=${userId}`
       )
       .subscribe((r: DataResponse<PurchaseHistoryDto[]>) => {
         this.purchaseHistory = r.data;
