@@ -1,16 +1,17 @@
 <div class="container">
   <div class="form-container">
 
-    <div class="row justify-content-center" id="content" #content>
+    <div class="justify-content-center" id="content" #content>
       <h1 class="text-center mb-2">Historija kupovine </h1>
-      <div class="col-auto">
+
+      <div class="overflow-auto w-100 table-container ps-2 pe-2">
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Tip karte</th>
-              <th scope="col">Relacija</th>
-              <th scope="col">Cijena</th>
-              <th scope="col">Datum</th>
+              <th scope="">Tip karte</th>
+              <th scope="">Relacija</th>
+              <th scope="">Cijena</th>
+              <th scope="">Datum</th>
             </tr>
           </thead>
           <tbody>
@@ -28,14 +29,15 @@
         </table>
       </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col">
-        <button class="primary" (click)="purchaseHistoryPrintButton()">Preuzmite Vašu historiju kupovine</button>
-      </div>
-      <div class="col">
+
+    <div class="mt-2">
+      <div class="paging d-flex justify-content-center">
         <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onPageChange($event)">
         </pagination-controls>
       </div>
+      <div class="">
+        <button class="primary" (click)="purchaseHistoryPrintButton()">Preuzmite Vašu historiju kupovine</button>
+      </div>
     </div>
   </div>
+</div>

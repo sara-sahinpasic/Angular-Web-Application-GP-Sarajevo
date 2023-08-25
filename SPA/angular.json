@@ -33,7 +33,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "bootstrap/scss/bootstrap.scss"
             ],
             "scripts": [
               "bootstrap/dist/js/bootstrap.min.js"

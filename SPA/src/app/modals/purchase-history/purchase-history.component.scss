@@ -1,20 +1,32 @@
 .form-container {
   padding: 20px 5px 15px 5px;
   width: 50%;
+
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 992px) {
+    width: 81%;
+  }
+
+  @media only screen and (min-width: 992px) and (max-width: 1200px) {
+    width: 60%;
+  }
+}
+
+.table-container {
+  height: 40vh;
 }
 
 table {
   border: 1px solid black;
 }
 
-th,td {
+th, td {
   padding: 10px 30px 10px 30px;
 }
 
 th {
   font-weight: bolder;
-}
-
-hr {
-  border: 2px solid black;
 }

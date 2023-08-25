@@ -1,6 +1,11 @@
+// $score-marker-color:v #DAF7A6;
 .form-container {
   width: 70%;
   overflow: auto;
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 hr {
@@ -33,17 +38,32 @@ thead {
   font-size: large;
 }
 
-table {
-  border: 1px solid #000;
-  width: 100%;
-  margin-bottom: 0;
-}
-
-.table-container {
+.reviews-container {
+  --score-marker-color: #7CFC00;
   height: 40vh;
   overflow: auto;
+
+  & > .row {
+    border-bottom: 1px solid black;
+    width: 95%;
+  }
 }
 
-td {
+.row.content {
   word-wrap: anywhere;
+}
+
+.row.title {
+  font-weight: bold;
+}
+
+.score-marker {
+  border: 2px solid var(--score-marker-color);
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+}
+
+.score-marker-filled {
+  background-color: var(--score-marker-color);
 }

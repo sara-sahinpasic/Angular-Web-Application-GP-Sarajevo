@@ -13,24 +13,27 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./review.component.scss'],
 })
 export class ReviewComponent implements OnInit {
+
+  shouldShowReviewButton: boolean = false;
+  protected reviewTable: Array<ReviewDto> = [];
+  public paginationModel: Pagination = {
+    pageSize: 4,
+    page: 1,
+  };
+  pages: number = 0;
+  pagesArray: Array<number> = [];
+  private apiUrl: string = environment.apiUrl;
+  protected scoreMarkerColors: string[] = ["#C41E3A", "#FCF55F", "#009E60"];
+
   constructor(
     private modalService: ModalService,
     private userService: UserService,
     private httpClient: HttpClient
   ) {}
 
-  shouldShowReviewButton: boolean = false;
-  protected reviewTable: Array<ReviewDto> = [];
-
-  public paginationModel: Pagination = {
-    pageSize: 4,
-    page: 1,
-  };
-
-  pages: number = 0;
-  pagesArray: Array<number> = [];
-
-  private apiUrl: string = environment.apiUrl;
+  getMarkerColor(score: number): string {
+    return this.scoreMarkerColors[Math.floor(score / 2)];
+  }
 
   ngOnInit(): void {
     this.isUserLoggedIn();
