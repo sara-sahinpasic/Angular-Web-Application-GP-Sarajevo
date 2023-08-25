@@ -67,6 +67,7 @@ public sealed class DataContext : DbContext
     {
         Tax tax = new()
         {
+            Id = new Guid("e363863b-ba6d-477f-9afb-15dcbf70616b"),
             Name = "PDV",
             Percentage = 0.17,
             Active = true
