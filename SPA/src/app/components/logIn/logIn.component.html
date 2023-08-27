@@ -5,11 +5,21 @@
       <p class="text-center mb-2">
         {{ localizationService.localize("login_paragraph") }}
       </p>
-      <label for="email">{{ localizationService.localize("login_email") }}</label>
-      <input id="email" class="form-control" type="email" placeholder="" [(ngModel)]="userLoginRequest.email" required="">
-      <label for="lozinka">{{ localizationService.localize("login_password") }}</label>
-      <input id="lozinka" class="form-control" type="password" placeholder="" [(ngModel)]="userLoginRequest.password" required="">
-      <!-- <input id="check" type="checkbox">
+      <form [formGroup]="formGroup">
+        <label for="email">{{ localizationService.localize("login_email") }}</label>
+        <input id="email" class="form-control" type="email" placeholder="" formControlName="email"
+          [class.is-invalid]="formGroup.get('email')?.invalid && formGroup.get('email')?.touched">
+        <div class="invalid-feedback">
+          {{ localizationService.localize("required_field_error_message") }}
+        </div>
+        <label for="lozinka">{{ localizationService.localize("login_password") }}</label>
+        <input id="lozinka" class="form-control" type="password" placeholder="" formControlName="password"
+          [class.is-invalid]="formGroup.get('password')?.invalid && formGroup.get('password')?.touched">
+        <div class="invalid-feedback">
+          {{ localizationService.localize("required_field_error_message") }}
+        </div>
+      </form>
+        <!-- <input id="check" type="checkbox">
       <label for="check"> Zapamti podatke</label> -->
       <a routerLink="/resetPassword">{{ localizationService.localize("login_forgotten_password") }}</a>
 

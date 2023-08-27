@@ -13,6 +13,8 @@ public sealed class Messages
         { "auth_controller_login_action_user_not_found", "Korisnik nije pronađen." },
         { "auth_controller_login_action_account_not_active", "Račun nije aktivan. Provjerite e-mail za aktivacijski kod." },
         { "auth_controller_login_action_two_way_auth", "Verifikacijski kod je poslan na e-mail." },
+        { "auth_controller_login_action_email_cannot_be_empty", "E-mail polje ne smije biti prazno." },
+        { "auth_controller_login_action_password_cannot_be_empty", "Lozinka ne smije biti prazna." },
         { "auth_controller_login_action_login_success", "Uspješna prijava." },
 
         { "auth_controller_authenticate_login_incorrect_login_code", "Verifikacijski kod neispravan. Pokušajte ponovo." },
@@ -58,6 +60,8 @@ public sealed class Messages
 
         { "auth_controller_login_action_user_not_found", "User with those credentials not found." },
         { "auth_controller_login_action_account_not_active", "Account not activated. Check your email for the activation code." },
+        { "auth_controller_login_action_email_cannot_be_empty", "The e-mail field cannot be empty." },
+        { "auth_controller_login_action_password_cannot_be_empty", "The password field cannot be empty." },
         { "auth_controller_login_action_two_way_auth", "Verification code sent to email." },
         { "auth_controller_login_action_login_success", "Successfully logged in." },
 

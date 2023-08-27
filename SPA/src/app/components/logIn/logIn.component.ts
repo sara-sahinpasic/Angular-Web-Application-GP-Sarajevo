@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, TitleStrategy } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserLoginRequest } from 'src/app/models/User/UserLoginRequest';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
@@ -16,17 +17,39 @@ export class LogInComponent implements OnInit {
   enableVerifyButton: boolean = false;
   userLoginRequest: UserLoginRequest = {};
   userId?: string;
+  protected formGroup!: FormGroup;
 
-  constructor(private router: Router, private userService: UserService, protected localizationService: LocalizationService) { }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    protected localizationService: LocalizationService,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.userService.hasUserSentVerifyRequest$.pipe(
       tap((val: boolean) => this.isVerifyLoginRequestSent = val)
     )
     .subscribe();
+    this.initializeValidators()
+  }
+
+  initializeValidators() {
+    this.formGroup = this.formBuilder.group({
+      email: ["", Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)])],
+      password: ["", Validators.required]
+    });
   }
 
   login() {
+    this.formGroup.markAllAsTouched();
+
+    if (this.formGroup.invalid) {
+      return;
+    }
+
+    this.userLoginRequest.email = this.formGroup.get("email")?.value;
+    this.userLoginRequest.password = this.formGroup.get("password")?.value;
+
     this.userService.login(this.userLoginRequest).subscribe();
   }
 

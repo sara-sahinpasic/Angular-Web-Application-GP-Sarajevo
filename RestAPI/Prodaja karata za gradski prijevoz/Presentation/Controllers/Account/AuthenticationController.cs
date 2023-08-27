@@ -98,9 +98,22 @@ public sealed class AuthenticationController : ControllerBase
         UserLoginRequestDto loginData,
         CancellationToken cancellationToken)
     {
+        Response errorResponse = new();
+        
+        if (string.IsNullOrEmpty(loginData.Password))
+        {
+            errorResponse.Message = "auth_controller_login_action_email_cannot_be_empty";
+            return BadRequest(errorResponse);
+        }
+
+        if (string.IsNullOrEmpty(loginData.Email))
+        {
+            errorResponse.Message = "auth_controller_login_action_password_cannot_be_empty";
+            return BadRequest(errorResponse);
+        }
+
         LoginResult? loginResult = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
 
-        Response errorResponse = new();
 
         if (loginResult is null)
         {
