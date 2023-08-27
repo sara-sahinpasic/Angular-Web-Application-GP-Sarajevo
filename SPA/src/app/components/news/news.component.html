@@ -21,7 +21,6 @@
         <li class="page-item">
           <a (click)="prevPage()" class="page-link" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">{{ localizationService.localize("paging_prev_page") }}</span>
           </a>
         </li>
         <li class="page-item" *ngFor="let page of this.pagesArray">
@@ -31,7 +30,6 @@
         </li>
         <li class="page-item">
           <a (click)="nextPage()" class="page-link" aria-label="Next">
-            <span class="sr-only">{{ localizationService.localize("paging_next_page") }}</span>
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
