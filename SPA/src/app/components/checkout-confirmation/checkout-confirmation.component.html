@@ -1,27 +1,44 @@
 <div class="container">
   <div class="form-container">
     <div id="header" class="row text-center">
-      <h1 class="text-center">Potvrda</h1>
+      <h1 class="text-center">{{ localizationService.localize("checkout_finish_title") }}</h1>
     </div>
     <div id="content" class="d-flex flex-column mb-3 fs-5">
       <div>
-        <strong>Kupac:</strong> {{ user!.firstName }} {{ user!.lastName }}
+        <strong>
+          {{ localizationService.localize("checkout_finish_buyer_label") }}
+        </strong>
+        {{ user!.firstName }} {{ user!.lastName }}
       </div>
       <div>
-        <strong>Relacija:</strong> neka
+        <strong>
+          {{ localizationService.localize("checkout_finish_route_label") }}
+        </strong>
+        neka
       </div>
       <div>
-        <strong>Tip karte:</strong> {{ checkoutModel?.cardType!.name }}
+        <strong>
+          {{ localizationService.localize("checkout_finish_ticket_type_label") }}
+        </strong>
+        {{ checkoutModel?.cardType!.name }}
       </div>
       <div>
-        <strong>Količina:</strong> {{ checkoutModel?.quantity }}
+        <strong>
+          {{ localizationService.localize("checkout_finish_qty_label") }}
+        </strong>
+        {{ checkoutModel?.quantity }}
       </div>
       <div>
-        <strong>Način plaćanja:</strong> {{ checkoutModel?.paymentMethod!.name }}
+        <strong>
+          {{ localizationService.localize("checkout_finish_payment_method_label") }}
+        </strong>
+        {{ checkoutModel?.paymentMethod!.name }}
       </div>
     </div>
     <div id="footer">
-      <button class="primary" (click)="confirmPurchase()">Potvrdi</button>
+      <button class="primary" (click)="confirmPurchase()">
+        {{ localizationService.localize("checkout_finish_confirm_purchase_btn_text") }}
+      </button>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -12,12 +13,14 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class ProfileComponent implements OnInit {
   public profileModel!: UserProfileModel;
-  showModalRequest: boolean = false;
+  protected showModalRequest: boolean = false;
+  protected locale!: string | null;
 
   constructor(
     private _router: Router,
     private userService: UserService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    protected localizationService: LocalizationService
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +34,8 @@ export class ProfileComponent implements OnInit {
       next: (x) => (this.profileModel.profileImageBase64 = x.data),
       error: () => (this.profileModel.profileImageBase64 = "./assets/X.png"),
     });
+
+    this.locale = this.localizationService.getLocale();
   }
 
   navigateToProfile() {
@@ -57,6 +62,7 @@ export class ProfileComponent implements OnInit {
   }
 
   showModal() {
+    this.modalService.setModalTitle(this.localizationService.localize("request_modal_title"));
     this.modalService.showRequestModal();
   }
 }

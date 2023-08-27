@@ -18,7 +18,7 @@ export class SpecialRequestService {
   requestDiscount(requestDiscountData: RequestDto): Observable<HttpEvent<DataResponse<string>>> {
     const formData = this.getFormDataFromObject(requestDiscountData);
 
-    return this.httpClient.post<DataResponse<string>>(`${this.baseApiUrl}Request/UploadFile`, formData, {
+    return this.httpClient.post<DataResponse<string>>(`${this.baseApiUrl}Request/SendRequest`, formData, {
       reportProgress: true,
       observe: 'events'
     });

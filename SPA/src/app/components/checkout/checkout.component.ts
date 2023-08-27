@@ -3,14 +3,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { TicketModel } from 'src/app/models/card-type/CardTypeModel';
 import { CheckoutModel } from 'src/app/models/checkout/CheckoutModel';
 import { PaymentMethodModel } from 'src/app/models/payment-method/PaymentMethodModel';
 import { CheckoutService } from 'src/app/services/checkout/checkout.service';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { PaymentMethodService } from 'src/app/services/payment/payment-method.service';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
-import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-checkout',
@@ -30,9 +29,9 @@ export class CheckoutComponent implements OnInit {
     private checkoutService: CheckoutService,
     private paymentMethodService: PaymentMethodService,
     private ticketService: TicketService,
-    private userService: UserService,
     private formBuilder: FormBuilder,
-    private router: Router) {
+    private router: Router,
+    protected localizationService: LocalizationService) {
 
       if (this.checkoutService.isCheckoutModelValid()) {
         this.checkoutModel = this.checkoutService.getCheckoutModel() as CheckoutModel;

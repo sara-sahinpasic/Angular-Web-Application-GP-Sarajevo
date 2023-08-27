@@ -1,16 +1,16 @@
 <div class="container">
   <div class="form-container">
-    <h1 class="text-center mb-3">PRETRAGA</h1>
+    <h1 class="text-center mb-3">{{ localizationService.localize("home_search") }}</h1>
     <div class="controls-container">
       <div class="route-container mb-2">
-        <input id="polaznaStanica" class="form-control" type="text" placeholder="Polazna stanica">
-        <input id="cilj" type="text" class="form-control ms-2" placeholder="Cilj">
+        <input id="polaznaStanica" class="form-control" type="text" [placeholder]="localizationService.localize('home_start_station_placeholder_text')">
+        <input id="cilj" type="text" class="form-control ms-2" [placeholder]="localizationService.localize('home_end_station_placeholder_text')">
       </div>
       <div class="time-container mb-2">
         <input id="datum" type="date" class="form-control" placeholder="">
         <input id="sat" type="time" class="form-control ms-2" placeholder="">
       </div>
     </div>
-    <button [routerLink]="['/checkout']" class="primary">Pretraži</button>
+    <button [routerLink]="['/checkout']" class="primary">{{ localizationService.localize("home_search_btn_text") }}</button>
   </div>
 </div>

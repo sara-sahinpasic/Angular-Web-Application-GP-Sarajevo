@@ -3,7 +3,7 @@
     <select class="form-control" style="background-color: rgba(108, 117, 125, 0.916); color: white;"
       [(ngModel)]="requestData.userStatusId">
       <option *ngFor="let userStatus of userStatuses; let i=index" [value]="userStatus.id">
-        Mjesečna karta - {{userStatus.name}}
+        {{ localizationService.localize("request_modal_monthly_card_text") }} - {{userStatus.name}}
       </option>
     </select>
   </div>
@@ -11,10 +11,10 @@
 
 <div class="row mt-5">
   <div class="col">
-    <div class="custom-file">
+    <div class="custom-file d-flex flex-column">
+      <label class="custom-file-label" for="customFile">{{ localizationService.localize("request_modal_upload_file_label") }}</label>
       <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" class="custom-file-input" id="customFile"
         (change)="handleFileInput($any($event.target).files)" [disabled]="working">
-      <label class="custom-file-label" for="customFile">{{ uploadFileLabel }}</label>
     </div>
   </div>
 </div>
@@ -27,4 +27,4 @@
   </div>
 </div>
 
-<button class="request" (click)="sendRequestButton()">Pošalji zahtjev</button>
+<button class="request" (click)="sendRequestButton()">{{ localizationService.localize("request_modal_send_request_btn_text") }}</button>

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
 import { ReviewDto } from 'src/app/models/Review/ReviewDto';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { environment } from 'src/environments/environment';
@@ -28,7 +29,8 @@ export class ReviewComponent implements OnInit {
   constructor(
     private modalService: ModalService,
     private userService: UserService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    protected localizationService: LocalizationService
   ) {}
 
   getMarkerColor(score: number): string {

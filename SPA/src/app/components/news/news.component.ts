@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { NewsDto } from 'src/app/models/News/NewsDto';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { environment } from 'src/environments/environment';
 
@@ -12,9 +13,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./news.component.scss'],
 })
 export class NewsComponent implements OnInit {
+
   constructor(
     private modalService: ModalService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    protected localizationService: LocalizationService
   ) {}
 
   newsTable: Array<NewsDto> = [];

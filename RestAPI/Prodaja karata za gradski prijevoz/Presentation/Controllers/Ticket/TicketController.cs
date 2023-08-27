@@ -25,7 +25,7 @@ public sealed class TicketController : ControllerBase
             .AsNoTracking()
             .ToArrayAsync(cancellationToken);
 
-        Response<Ticket[]> response = new()
+        Response response = new()
         {
             Data = tickets
         };

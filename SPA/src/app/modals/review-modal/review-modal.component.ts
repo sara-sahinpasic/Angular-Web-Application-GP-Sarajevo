@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ReviewModel } from 'src/app/models/Review/ReviewModel';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ReviewService } from 'src/app/services/review/review.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -11,7 +12,8 @@ import { UserService } from 'src/app/services/user/user.service';
 export class ReviewModalComponent {
   constructor(
     private userService: UserService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    protected localizationService: LocalizationService
   ) {}
 
   public reviewModel: ReviewModel = {

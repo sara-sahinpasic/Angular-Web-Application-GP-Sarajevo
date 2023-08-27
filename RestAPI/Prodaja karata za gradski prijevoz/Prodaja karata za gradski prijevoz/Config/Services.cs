@@ -1,9 +1,11 @@
 ﻿using Application.Config.Email;
+using Application.Localization;
 using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Checkout;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Hashing;
+using Application.Services.Abstractions.Interfaces.Localization;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
@@ -16,6 +18,7 @@ using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Checkout;
 using Application.Services.Implementations.Hashing;
+using Application.Services.Implementations.Localization;
 using Application.Services.Implementations.Mapper;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Invoices;
@@ -44,6 +47,7 @@ public static partial class Services
 
     public static void AddSingletonServices(this WebApplicationBuilder builder)
     {
+        builder.Services.TryAddSingleton<Messages>();
     }
 
     public static void AddTransientServices(this WebApplicationBuilder builder)
@@ -70,12 +74,12 @@ public static partial class Services
         builder.Services.TryAddScoped<ITicketRepository, TicketRepository>();
         builder.Services.TryAddScoped<IReviewRepository, ReviewRepository>();
         builder.Services.TryAddScoped<INewsRepository, NewsRepository>();
-
         builder.Services.TryAddScoped<ITaxRepository, TaxRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)
     {
         builder.Services.TryAddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.TryAddScoped<ILocalizationService, LocalizationService>();
     }
 }

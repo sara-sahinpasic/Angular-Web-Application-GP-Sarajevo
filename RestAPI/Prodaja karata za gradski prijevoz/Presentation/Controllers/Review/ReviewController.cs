@@ -32,9 +32,9 @@ public sealed class ReviewController : ControllerBase
 
         if (!hasUserPurchasedAnyTicket)
         {
-            Response<string?> errorResponse = new()
+            Response errorResponse = new()
             {
-                Message = "You haven't purchased any Tickets."
+                Message = "review_controller_add_review_no_purchased_tickets_error"
             };
             return BadRequest(errorResponse);
         }
@@ -47,9 +47,9 @@ public sealed class ReviewController : ControllerBase
             _reviewRepository.Create(newReview);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            Response<string?> response = new()
+            Response response = new()
             {
-                Message = "Review succesfully created"
+                Message = "review_controller_add_review_success"
             };
             return Ok(response);
         }
@@ -82,7 +82,7 @@ public sealed class ReviewController : ControllerBase
            .GetAll()
            .CountAsync();
 
-        Response<double> response = new()
+        Response response = new()
         {
             Data = Math.Ceiling(total / pageSize)
         };

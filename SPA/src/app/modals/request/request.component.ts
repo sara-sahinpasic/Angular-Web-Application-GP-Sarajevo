@@ -1,10 +1,11 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { finalize, tap } from 'rxjs';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { RequestDto } from 'src/app/models/Request/RequestDto';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserStatusDto } from 'src/app/models/User/UserStatusDto';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { SpecialRequestService } from 'src/app/services/special-request/special-request.service';
 import { UserStatusService } from 'src/app/services/user/user-status.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -14,27 +15,28 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss']
 })
-export class RequestComponent {
+export class RequestComponent implements OnInit {
+
+  protected userStatuses: Array<UserStatusDto> = [];
+  protected working = false;
+  protected uploadFile?: File | null;
+  protected uploadProgress?: number;
+  protected requestData: RequestDto = {
+    userId: '',
+    userStatusId: '',
+  };
   private allowedFileTypes: string[] = [
     'image/jpeg',
     'image/jpg',
     'image/png',
     'application/pdf',
   ];
-  protected userStatuses: Array<UserStatusDto> = [];
-  protected requestData: RequestDto = {
-    userId: '',
-    userStatusId: '',
-  };
-  protected working = false;
-  protected uploadFile?: File | null;
-  protected uploadFileLabel: string | undefined = 'Choose a file to upload';
-  protected uploadProgress?: number;
 
   constructor(
     private userStatusService: UserStatusService,
     private specialRequestService: SpecialRequestService,
-    private userService: UserService
+    private userService: UserService,
+    protected localizationService: LocalizationService
   ) {}
 
 
@@ -70,18 +72,17 @@ export class RequestComponent {
   handleFileInput(files: FileList) {
     if (files.length > 0) {
       this.uploadFile = files.item(0);
-      this.uploadFileLabel = this.uploadFile?.name;
     }
   }
 
   sendRequestButton() {
     if (!this.uploadFile) {
-      alert('Choose a file to upload first');
+      alert(this.localizationService.localize("request_modal_no_file_selected_error_message"));
       return;
     }
 
     if (this.allowedFileTypes.indexOf(this.uploadFile.type) == -1) {
-      alert('This file type is not supported');
+      alert(this.localizationService.localize("request_modal_file_not_supported_error_message"));
       return;
     }
 

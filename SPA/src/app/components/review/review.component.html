@@ -1,6 +1,6 @@
 <div class="container">
   <div class="form-container">
-    <h1>Utisci </h1>
+    <h1>{{ localizationService.localize("impressions_title") }}</h1>
     <hr />
     <div class="reviews-container mb-3">
       <div class="row m-0 mb-4" *ngFor="let r of this.reviewTable">
@@ -21,7 +21,7 @@
     <div class="row pagination">
       <div class="col">
         <button class="review-modal" data-bs-toggle="modal" data-bs-target="#base-modal" *ngIf="shouldShowReviewButton"
-          (click)="showReviewModalButton()">Ostavi utisak</button>
+          (click)="showReviewModalButton()">{{ localizationService.localize("impressions_leave_review") }}</button>
       </div>
 
       <div class="col">
@@ -30,7 +30,7 @@
             <li class="page-item">
               <a (click)="prevPage()" class="page-link" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
+                <span class="sr-only">{{ localizationService.localize("paging_prev_page") }}</span>
               </a>
             </li>
 
@@ -42,7 +42,7 @@
 
             <li class="page-item">
               <a (click)="nextPage()" class="page-link" aria-label="Next">
-                <span class="sr-only">Next</span>
+                <span class="sr-only">{{ localizationService.localize("paging_next_page") }}</span>
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>

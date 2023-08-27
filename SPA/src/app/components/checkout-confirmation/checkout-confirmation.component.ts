@@ -4,6 +4,7 @@ import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { CheckoutModel } from 'src/app/models/checkout/CheckoutModel';
 import { CheckoutService } from 'src/app/services/checkout/checkout.service';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ToastMessageService } from 'src/app/services/toast/toast-message.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -21,7 +22,8 @@ export class CheckoutConfirmationComponent implements OnInit {
     private checkoutService: CheckoutService,
     private userService: UserService,
     private toastMessageService: ToastMessageService,
-    private router: Router) {}
+    private router: Router,
+    protected localizationService: LocalizationService) {}
 
   ngOnInit(): void {
     if (!this.checkoutService.isCheckoutModelValid()) {

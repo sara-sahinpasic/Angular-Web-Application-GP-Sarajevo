@@ -2,16 +2,16 @@
   <div class="form-container">
 
     <div class="justify-content-center" id="content" #content>
-      <h1 class="text-center mb-2">Historija kupovine </h1>
+      <h1 class="text-center mb-2">{{ localizationService.localize("purchase_history_title") }}</h1>
 
       <div class="overflow-auto w-100 table-container ps-2 pe-2">
         <table class="table">
           <thead>
             <tr>
-              <th scope="">Tip karte</th>
-              <th scope="">Relacija</th>
-              <th scope="">Cijena</th>
-              <th scope="">Datum</th>
+              <th scope="">{{ localizationService.localize("purchase_history_card_type_column_title") }}</th>
+              <th scope="">{{ localizationService.localize("purchase_history_route_column_title") }}</th>
+              <th scope="">{{ localizationService.localize("purchase_history_price_column_title") }}</th>
+              <th scope="">{{ localizationService.localize("purchase_history_date_column_title") }}</th>
             </tr>
           </thead>
           <tbody>
@@ -36,7 +36,9 @@
         </pagination-controls>
       </div>
       <div class="">
-        <button class="primary" (click)="purchaseHistoryPrintButton()">Preuzmite Vašu historiju kupovine</button>
+        <button class="primary" (click)="purchaseHistoryPrintButton()">
+          {{ localizationService.localize("purchase_history_download_report_btn_text") }}
+        </button>
       </div>
     </div>
   </div>

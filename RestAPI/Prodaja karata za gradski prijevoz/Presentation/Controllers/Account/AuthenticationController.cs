@@ -36,9 +36,9 @@ public sealed class AuthenticationController : ControllerBase
     {
         if (await _userRepository.IsUserRegisteredAsync(userRequest.Email))
         {
-            Response<string> errorResponse = new()
+            Response errorResponse = new()
             {
-                Message = "User is already registered!"
+                Message = "auth_controller_register_action_user_registered_error"
             };
 
             return BadRequest(errorResponse);
@@ -49,9 +49,9 @@ public sealed class AuthenticationController : ControllerBase
 
         RegisterResult registerResult = await _authService.RegisterAsync(user, userRequest.Password!, cancellationToken);
 
-        Response<RegisterResult> response = new()
+        Response response = new()
         {
-            Message = "User succesfully created",
+            Message = "auth_controller_register_action_success",
             Data = registerResult
         };
 
@@ -62,10 +62,16 @@ public sealed class AuthenticationController : ControllerBase
     public async Task<IActionResult> ActivateAction(string tokenString, CancellationToken cancellationToken)
     {
         RegistrationToken? registrationToken = await _registrationTokenRepository.GetByTokenStringAsync(tokenString, cancellationToken);
+        Response errorResponse;
 
         if (registrationToken is null)
         {
-            return BadRequest("Token not valid");
+            errorResponse = new()
+            {
+                Message = "auth_controller_activate_action_invalid_token"
+            };
+
+            return BadRequest(errorResponse);
         }
 
         User? user = await _userRepository.GetByIdAsync(registrationToken.UserId, cancellationToken);
@@ -74,7 +80,12 @@ public sealed class AuthenticationController : ControllerBase
         {
             await _authService.ResendActivationCodeAsync(user!.Email!, cancellationToken);
 
-            return BadRequest("Token has expired. A new one has been sent.");
+            errorResponse = new()
+            {
+                Message = "auth_controller_activate_action_expired_token_error"
+            };
+
+            return BadRequest(errorResponse);
         }
 
         await _authService.ActivateUserAccountAsync(user!, registrationToken, cancellationToken);
@@ -89,23 +100,23 @@ public sealed class AuthenticationController : ControllerBase
     {
         LoginResult? loginResult = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
 
-        Response<string> errorResponse = new();
+        Response errorResponse = new();
 
         if (loginResult is null)
         {
-            errorResponse.Message = "User with those credentials not found.";
+            errorResponse.Message = "auth_controller_login_action_user_not_found";
             return BadRequest(errorResponse);
         }
 
         if (!await _authService.IsUserActivatedAsync(loginData.Email, cancellationToken))
         {
-            errorResponse.Message = "Account not activated. Check your email for the activation code.";
+            errorResponse.Message = "auth_controller_login_action_account_not_active";
             return BadRequest(errorResponse); // todo: create also if user exists in service
         }
 
-        string message = loginResult.IsTwoWayAuth ? "Verification code sent to email" : "Successfully logged in.";
+        string message = loginResult.IsTwoWayAuth ? "auth_controller_login_action_two_way_auth" : "auth_controller_login_action_login_success";
 
-        Response<LoginResult> response = new()
+        Response response = new()
         {
             Message = message,
             Data = loginResult
@@ -120,24 +131,24 @@ public sealed class AuthenticationController : ControllerBase
         CancellationToken cancellationToken)
     {
         VerificationCode? verificationCode = await verificationCodeRepository.GetByUserIdAndCodeAsync(authLoginData.UserId, authLoginData.Code, cancellationToken);
+        Response response = new();
 
         if (verificationCode is null)
         {
-            return BadRequest("Login code not correct. Try again.");
+            response.Message = "auth_controller_authenticate_login_incorrect_login_code";
+            return BadRequest(response);
         }
 
         if (_authService.HasAuthCodeExpired(verificationCode, cancellationToken))
         {
-            return BadRequest("Login code expired.");
+            response.Message = "auth_controller_authenticate_login_code_expired";
+            return BadRequest(response);
         }
 
         string token = await _authService.AuthenticateLoginAsync(verificationCode, cancellationToken);
 
-        Response<string> response = new()
-        {
-            Message = "Success",
-            Data = token
-        };
+        response.Message = "auth_controller_login_action_login_success";
+        response.Data = token;
 
         return Ok(response);
     }
@@ -145,23 +156,18 @@ public sealed class AuthenticationController : ControllerBase
     [HttpPost("/resetPassword")]
     public async Task<IActionResult> ResetPasswordAction([FromBody] string email, CancellationToken cancellationToken)
     {
+        Response response = new();
+
         if (string.IsNullOrEmpty(email))
         {
-            Response<string> badResponse = new()
-            {
-                Message = "The email field cannot be empty."
-            };
+            response.Message = "auth_controller_reset_password_error_empty_email_field";
 
-            return BadRequest(badResponse);
+            return BadRequest(response);
         }
 
         await _authService.ResetPasswordAsync(email, cancellationToken);
 
-        Response<string> response = new()
-        {
-            Message = "Success",
-            Data = "You can check your email now for a new password"
-        };
+        response.Message = "auth_controller_reset_password_success";
 
         return Ok(response);
     }

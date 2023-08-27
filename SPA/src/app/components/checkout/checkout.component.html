@@ -1,39 +1,39 @@
 <div class="container">
   <div class="form-container">
     <div id="header" class="row text-center">
-      <h1 class="text-center">Checkout</h1>
+      <h1 class="text-center">{{ localizationService.localize("checkout_title") }}</h1>
       <h5>Relacija</h5>
     </div>
     <form [formGroup]="formGroup">
       <div id="content">
         <div class="mb-3">
-          <label for="card_type" class="form-label">Tip karte*: </label>
+          <label for="card_type" class="form-label">{{ localizationService.localize("checkout_card_type_label") }}</label>
           <select name="" id="card_type" class="form-select" formControlName="cardTypeId" [class.is-invalid]="formGroup.get('cardTypeId')?.invalid && formGroup.get('cardTypeId')?.touched">
             <option *ngFor="let cardType of cardTypes" [value]="cardType.id">{{ cardType.name }}</option>
           </select>
           <div class="invalid-feedback">
-            Morate odabrati jednu opciju
+            {{ localizationService.localize("required_field_error_message") }}
           </div>
         </div>
         <div class="mb-3">
-          <label for="quantity" class="form-label">Količina*: </label>
+          <label for="quantity" class="form-label">{{ localizationService.localize("checkout_qty_label") }}</label>
           <input min="1" type="number" id="quantity" class="form-control" formControlName="quantity" [class.is-invalid]="formGroup.get('quantity')?.invalid && formGroup.get('quantity')?.touched" />
           <div class="invalid-feedback">
-            Količina mora biti veća od 0
+            {{ localizationService.localize("checkout_qty_error_text") }}
           </div>
         </div>
         <div class="mb-3">
-          <label for="payment_option" class="form-label">Način plaćanja*: </label>
+          <label for="payment_option" class="form-label">{{ localizationService.localize("checkout_payment_method_label") }}</label>
           <select name="" id="payment_option" class="form-select" formControlName="paymentMethodId" [class.is-invalid]="formGroup.get('paymentMethodId')?.invalid && formGroup.get('paymentMethodId')?.touched">
             <option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod.id">{{ paymentMethod.name }}</option>
           </select>
           <div class="invalid-feedback">
-            Morate odabrati jednu opciju
+            {{ localizationService.localize("required_field_error_message") }}
           </div>
         </div>
       </div>
       <div id="footer">
-        <button class="primary" (click)="checkout()">Kupi</button>
+        <button class="primary" (click)="checkout()">{{ localizationService.localize("checkout_buy_btn_text") }}</button>
       </div>
     </form>
   </div>

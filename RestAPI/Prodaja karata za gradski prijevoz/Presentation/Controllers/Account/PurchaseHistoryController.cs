@@ -35,7 +35,7 @@ namespace Presentation.Controllers.Account
                 .Take(10)
                 .ToArrayAsync(cancellationToken);
 
-            Response<IssuedTicketHistoryDto[]> response = new()
+            Response response = new()
             {
                 Data = data
             };

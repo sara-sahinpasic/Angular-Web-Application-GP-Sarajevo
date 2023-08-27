@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -9,7 +10,10 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./update-profile.component.scss'],
 })
 export class UpdateProfileComponent implements OnInit {
-  constructor(private _userService: UserService) {}
+
+  protected locale!: string | null;
+
+  constructor(private _userService: UserService, protected localizationService: LocalizationService) {}
 
   profileModel: UserProfileModel = {
     id: '',
@@ -27,6 +31,8 @@ export class UpdateProfileComponent implements OnInit {
         tap((user: UserProfileModel | undefined) => (this.profileModel = user!))
       )
       .subscribe();
+
+    this.locale = this.localizationService.getLocale();
   }
 
   save() {

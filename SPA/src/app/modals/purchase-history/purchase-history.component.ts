@@ -8,20 +8,23 @@ import { tap } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
+
 @Component({
   selector: 'app-purchase-history',
   templateUrl: './purchase-history.component.html',
   styleUrls: ['./purchase-history.component.scss'],
 })
 export class PurchaseHistoryComponent implements OnInit {
-  purchaseHistory: Array<PurchaseHistoryDto> = [];
 
+  protected purchaseHistory: Array<PurchaseHistoryDto> = [];
   private apiUrl: string = environment.apiUrl;
 
   constructor(
     private httpClient: HttpClient,
     private fileService: FileService,
-    private userService: UserService
+    private userService: UserService,
+    protected localizationService: LocalizationService
   ) {}
 
   public paginationModel: Pagination = {
@@ -49,6 +52,7 @@ export class PurchaseHistoryComponent implements OnInit {
   purchaseHistoryPrintButton() {
     this.fileService.download('File/DownloadPurchaseHistory').subscribe();
   }
+
   onPageChange(event) {
     this.paginationModel.page = event;
   }

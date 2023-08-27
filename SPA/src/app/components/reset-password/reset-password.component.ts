@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -11,11 +12,12 @@ import { UserService } from 'src/app/services/user/user.service';
 export class ResetPasswordComponent implements OnInit {
 
   @ViewChild("email") resetPasswordInput?: ElementRef<HTMLInputElement>;
+  protected locale!: string | null;
   protected isEmailValid: boolean | undefined = undefined;
   protected isResetPasswordRequestSent: boolean = false;
   protected formGroup!: FormGroup;
 
-  constructor(private userService: UserService, private formBuilder: FormBuilder) { }
+  constructor(private userService: UserService, private formBuilder: FormBuilder, protected localizationService: LocalizationService) { }
 
   ngOnInit() {
     this.initializeValidators();
@@ -23,6 +25,8 @@ export class ResetPasswordComponent implements OnInit {
       tap((val: boolean) => this.isResetPasswordRequestSent = val)
     )
       .subscribe();
+
+    this.locale = this.localizationService.getLocale();
   }
 
   sendResetPasswordRequest() {

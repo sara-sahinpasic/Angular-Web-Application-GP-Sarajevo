@@ -1,7 +1,7 @@
 <div class="mb-5">
   <div class="navTop">
   </div>
-  <nav class="navbar navbar-expand-md navbar-light bg-light p-0 position-absolute w-100">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light p-0 position-absolute w-100">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button collapsed" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -9,44 +9,49 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item pe-3 ps-3 pt-2 pb-2">
-            <span class="d-md-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+            <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
               <a [routerLink]="['/']">Home</a>
             </span>
-            <a class="d-none d-md-block" [routerLink]="['/']">Home</a>
+            <a class="d-none d-lg-block" [routerLink]="['/']">Home</a>
           </li>
 
           <li class="nav-item pe-3 ps-3 pt-2 pb-2" routerLinkActive="selected" *ngIf="!!user">
-            <span class="d-md-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-              <a [routerLink]="['/profile']">Profil</a>
+            <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+              <a [routerLink]="['/profile']">{{ localizationService.localize("navigation_profile") }}</a>
             </span>
-            <a class="d-none d-md-block" [routerLink]="['/profile']">Profil</a>
+            <a class="d-none d-lg-block" [routerLink]="['/profile']">{{ localizationService.localize("navigation_profile") }}</a>
           </li>
 
           <li class="nav-item pe-3 ps-3 pt-2 pb-2"  routerLinkActive="selected">
-            <span class="d-md-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-              <a href="#relacije">Relacije</a>
+            <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+              <a href="#relacije">{{ localizationService.localize("navigation_routes") }}</a>
             </span>
-            <a class="d-none d-md-block" href="#relacije">Relacije</a>
+            <a class="d-none d-lg-block" href="#relacije">{{ localizationService.localize("navigation_routes") }}</a>
           </li>
 
           <li class="nav-item pe-3 ps-3 pt-2 pb-2" routerLinkActive="selected">
-            <span class="d-md-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-              <a [routerLink]="['/review']">Utisci</a>
+            <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+              <a [routerLink]="['/review']">{{ localizationService.localize("navigation_impressions") }}</a>
             </span>
-            <a class="d-none d-md-block" [routerLink]="['/review']">Utisci</a>
+            <a class="d-none d-lg-block" [routerLink]="['/review']">{{ localizationService.localize("navigation_impressions") }}</a>
           </li>
 
           <li class="nav-item pe-3 ps-3 pt-2 pb-2" routerLinkActive="selected">
-            <span class="d-md-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-              <a [routerLink]="['/news']">Novosti</a>
+            <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+              <a [routerLink]="['/news']">{{ localizationService.localize("navigation_news") }}</a>
             </span>
-            <a class="d-none d-md-block" [routerLink]="['/news']">Novosti</a>
+            <a class="d-none d-lg-block" [routerLink]="['/news']">{{ localizationService.localize("navigation_news") }}</a>
           </li>
         </ul>
 
-        <div class="d-flex login-container pe-3 ps-3 pt-2 pb-2">
-          <div class="d-md-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-            <a id="prijava" [routerLink]="['/prijava']" *ngIf="!user">Prijava</a>
+        <div class="d-flex login-container pe-3 ps-3 pt-2 pb-2 flex-column flex-lg-row">
+          <div class="locale-container me-5">
+            <a (click)="setLocale('bs')" class="pe-2" [class]="{'locale-selected': localizationService.getLocale() != 'en', 'locale': true}">BS</a>
+            <a (click)="setLocale('en')" class="ms-2"
+              [class]="{'locale-selected': localizationService.getLocale() == 'en', 'locale': true}">EN</a>
+          </div>
+          <div class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+            <a id="prijava" [routerLink]="['/prijava']" *ngIf="!user">{{ localizationService.localize("navigation_login") }}</a>
             <div class="d-flex align-items-center user-info-container" *ngIf="!!user">
               <span>{{ user.email }}</span>
               <a (click)="logout()" class="ms-2">
@@ -54,8 +59,8 @@
               </a>
             </div>
           </div>
-          <div class="d-none d-md-block">
-            <a id="prijava" [routerLink]="['/prijava']" *ngIf="!user">Prijava</a>
+          <div class="d-none d-lg-block">
+            <a id="prijava" [routerLink]="['/prijava']" *ngIf="!user">{{ localizationService.localize("navigation_login") }}</a>
             <div class="d-flex align-items-center user-info-container" *ngIf="!!user">
               <span>{{ user.email }}</span>
               <a (click)="logout()" class="ms-2">
@@ -67,5 +72,4 @@
       </div>
     </div>
   </nav>
-
 </div>

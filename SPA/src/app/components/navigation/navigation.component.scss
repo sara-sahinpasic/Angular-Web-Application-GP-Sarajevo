@@ -19,7 +19,7 @@ li a, .login-container a {
   color: black;
 }
 
-li:not(.selected) a:hover, .login-container a:hover {
+li:not(.selected) a:hover, .login-container a:hover, .locale-selected {
   color: lighten(#000, 50%);
 }
 
@@ -39,4 +39,8 @@ button.navbar-toggler {
 
 .navbar {
   z-index: 10;
+}
+
+.locale:first-of-type {
+  border-right: 1px solid #000;
 }

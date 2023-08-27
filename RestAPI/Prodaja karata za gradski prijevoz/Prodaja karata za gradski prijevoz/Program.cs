@@ -1,11 +1,12 @@
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Prodaja_karata_za_gradski_prijevoz.Config;
+using Prodaja_karata_za_gradski_prijevoz.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers()
+builder.Services.AddControllers(config => config.Filters.Add<LocalizationAttribute>())
     .AddApplicationPart(Presentation.PresentationAssembly.Assembly);
 
 // Setup database provider
@@ -21,7 +22,6 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "SPA", builder =>
     {
-        // todo: add to config: sprint 2
         builder.WithOrigins(spaUrl.Split(";"))
             .SetIsOriginAllowed(isOriginAllowed: _ => true)
             .WithExposedHeaders("Content-Disposition")

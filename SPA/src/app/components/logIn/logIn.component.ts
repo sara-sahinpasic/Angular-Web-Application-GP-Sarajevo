@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserLoginRequest } from 'src/app/models/User/UserLoginRequest';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -16,13 +17,13 @@ export class LogInComponent implements OnInit {
   userLoginRequest: UserLoginRequest = {};
   userId?: string;
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(private router: Router, private userService: UserService, protected localizationService: LocalizationService) { }
 
   ngOnInit() {
     this.userService.hasUserSentVerifyRequest$.pipe(
       tap((val: boolean) => this.isVerifyLoginRequestSent = val)
     )
-      .subscribe();
+    .subscribe();
   }
 
   login() {

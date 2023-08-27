@@ -1,19 +1,19 @@
 <div class="form-group">
-  <label for="exampleFormControlInput1">Naslov:</label>
+  <label for="exampleFormControlInput1">{{ localizationService.localize("review_modal_title_label") }}</label>
   <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="" [(ngModel)]="reviewModel.title">
 </div>
 
 <div class="form-group">
-  <label for="exampleFormControlTextarea1">Komentar:</label>
+  <label for="exampleFormControlTextarea1">{{ localizationService.localize("review_modal_content_label") }}</label>
   <textarea type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder=""
     [(ngModel)]="reviewModel.description"></textarea>
 </div>
 
-<label>Ocjena:</label>
+<label>{{ localizationService.localize("review_modal_score_label") }}</label>
 <select class="form-select" [(ngModel)]="reviewModel.score">
   <option *ngFor="let number of reviewModels; let i=index" [value]="number">
     {{number}}
   </option>
 </select>
 
-<button class="send-review" (click)="sendReviewButton()">Pošalji</button>
+<button class="send-review" (click)="sendReviewButton()">{{ localizationService.localize("review_modal_send_btn_text") }}</button>

@@ -13,19 +13,24 @@ import { ToastMessageService } from '../services/toast/toast-message.service';
 import { ToastMessage } from '../models/ToastMessage';
 import { ToastType } from '../enums/ToastType';
 import { DataResponse } from '../models/DataResponse';
+import { LocalizationService } from '../services/localization/localization.service';
 
 @Injectable()
 export class HttpInterceptorInterceptor implements HttpInterceptor {
 
-  constructor(private toastService: ToastMessageService) { }
-  //todo: add error handling here
+  constructor(private toastService: ToastMessageService, private localizationService: LocalizationService) { }
+
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const toastMessage: ToastMessage = {
       message: undefined,
       type: ToastType.Success
     };
 
-    return next.handle(request)
+    const modifiedRequest: HttpRequest<unknown> = request.clone({
+      headers: request.headers.set("Locale", `${this.localizationService.getLocale()}`)
+    });
+
+    return next.handle(modifiedRequest)
       .pipe(
         tap({
           next: (event: HttpEvent<unknown>) => this.handleSuccessMessage(event, toastMessage),

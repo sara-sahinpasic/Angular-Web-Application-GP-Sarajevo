@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserRegisterRequest } from 'src/app/models/User/UserRegisterRequest';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -11,6 +12,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
+
   public userRequest: UserRegisterRequest = {
     firstName: '',
     lastName: '',
@@ -27,7 +29,8 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private userService: UserService,
     private _router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    protected localizationService: LocalizationService
   ) { }
 
   ngOnInit() {
@@ -39,10 +42,8 @@ export class RegistrationComponent implements OnInit {
   }
 
   registration() {
-    /*
-    ToDo: Toast messages when input fields are empty
-    */
     this.registrationForm.markAllAsTouched();
+
     if (this.registrationForm.valid) {
       this.userService.register(this.userRequest).subscribe();
     }

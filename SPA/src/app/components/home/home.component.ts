@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LocalizationService } from 'src/app/services/localization/localization.service';
 
 @Component({
   selector: 'app-home',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
-  constructor() { }
+  constructor(protected localizationService: LocalizationService) { }
 }

@@ -26,51 +26,33 @@ public sealed class ProfileController : ControllerBase
         _userRepository = userRepository;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken, [FromServices] IObjectMapperService objectMapperService)
-    {
-        //ToDo: provjera da li je logiran
-
-        var user = await _userRepository.GetByIdAsync(id, cancellationToken);
-
-        if (user == null)
-        {
-            return NotFound("Nema podataka");
-        }
-        var userDto = new UserProfileDto();
-        objectMapperService.Map(user, userDto);
-        return Ok(userDto);
-    }
-
     [HttpPut]
     public async Task<IActionResult> UpdateProfile([FromForm] UserUpdateRequestDto vM, CancellationToken cancellationToken,
     [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
     [FromServices] IAuthService authService,
     [FromServices] IFileService fileService)
     {
-        //ToDo: provjera da li je logiran
-
         var data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken);
 
         if (data == null)
         {
-            Response<object?> errorResponse = new()
+            Response errorResponse = new()
             {
-                Message = "No user found",
-                Data = null
+                Message = "profile_controller_update_profile_no_user_found"
             };
 
             return NotFound(errorResponse);
         }
+
         if (vM.ProfileImageFile is not null)
         {
             string? filePath = await fileService.SaveFileAsync(new[] { "jpg", "jpeg", "png" }, vM.ProfileImageFile, "ProfileImages", cancellationToken);
 
             if (filePath is null)
             {
-                Response<string?> errorResponse = new()
+                Response errorResponse = new()
                 {
-                    Message = "File extension not valid",
+                    Message = "profile_controller_update_profile_file_extension_error",
                 };
                 return NotFound(errorResponse);
             }
@@ -87,9 +69,9 @@ public sealed class ProfileController : ControllerBase
         DateTime tokenIssuedAtDate = authService.GetJwtIssuedDateFromToken(token);
         string jwtToken = authService.GenerateJwtToken(data, tokenIssuedAtDate);
 
-        Response<string> responseOk = new()
+        Response responseOk = new()
         {
-            Message = "User successfully updated!",
+            Message = "profile_controller_update_profile_update_success",
             Data = jwtToken
         };
 
@@ -99,14 +81,13 @@ public sealed class ProfileController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
     {
-        //ToDo: provjera da li je logiran
-
         var data = await _userRepository.GetByIdAsync(id, cancellationToken);
+
         if (data == null)
         {
-            Response<object?> response = new()
+            Response response = new()
             {
-                Message = "No user found",
+                Message = "profile_controller_delete_profile_no_user_found",
                 Data = null
             };
 
@@ -116,9 +97,9 @@ public sealed class ProfileController : ControllerBase
         _userRepository.Delete(data);
         await unitOfWork.CommitAsync(cancellationToken);
 
-        Response<string> responseOk = new()
+        Response responseOk = new()
         {
-            Message = "User successfully deleted!",
+            Message = "profile_controller_delete_profile_success",
         };
         return Ok(responseOk);
     }
@@ -131,9 +112,8 @@ public sealed class ProfileController : ControllerBase
             .Select(status => new UserStatusDto { Name = status.Name, Id = status.Id })
             .ToArrayAsync();
 
-        Response<UserStatusDto[]> response = new()
+        Response response = new()
         {
-            Message = "",
             Data = data
         };
 
@@ -155,7 +135,7 @@ public sealed class ProfileController : ControllerBase
 
         string[] pathParts = path.Split(".");
         string extension = pathParts[pathParts.Length - 1];
-        Response<string> responseOk = new()
+        Response responseOk = new()
         {
             Data = $"data:image/{extension};base64, {base64}"
         };

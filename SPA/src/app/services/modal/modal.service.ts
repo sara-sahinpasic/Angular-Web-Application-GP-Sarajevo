@@ -8,7 +8,7 @@ export class ModalService implements OnInit {
   public showReviewModalState: boolean = false;
   public showNewsModalState: boolean = false;
 
-  private showModalTitle: string = '';
+  private modalTitle: string = '';
 
   public data: any;
 
@@ -18,26 +18,29 @@ export class ModalService implements OnInit {
 
   showRequestModal() {
     this.showRequestModalState = true;
-    this.showModalTitle = 'Zahtjev';
   }
+
   showReviewModal() {
     this.showReviewModalState = true;
-    this.showModalTitle = '';
   }
+
   showNewsModal() {
     this.showNewsModalState = true;
-    this.showModalTitle = '';
+  }
+
+  setModalTitle(title: string) {
+    this.modalTitle = title;
   }
 
   closeModal() {
     this.showRequestModalState = false;
     this.showReviewModalState = false;
     this.showNewsModalState = false;
-    this.showModalTitle = '';
+    this.modalTitle = '';
     this.data = null;
   }
 
   getModalTitle(): string {
-    return this.showModalTitle;
+    return this.modalTitle;
   }
 }

@@ -19,21 +19,6 @@ namespace Presentation.Controllers.News
             this.newsRepository = newsRepository;
         }
 
-       /* [HttpGet("GetAllNews")]
-        public async Task<IActionResult> GetAllNews()
-        {
-            var data = await newsRepository
-               .GetAll()
-               .OrderByDescending(news => news.Date)
-               .ToArrayAsync();
-
-            Response<Domain.Entities.News.News[]> response = new()
-            {
-                Data = data
-            };
-
-            return Ok(response);
-        }*/
         [HttpGet("GetNewsById")]
         public async Task<IActionResult> GetNewsById(Guid id, CancellationToken cancellationToken, [FromServices] IObjectMapperService objectMapperService)
         {
@@ -41,10 +26,9 @@ namespace Presentation.Controllers.News
 
             if (data == null)
             {
-                Response<object?> errorResponse = new()
+                Response errorResponse = new()
                 {
-                    Message = "No news was found.",
-                    Data = null
+                    Message = "news_controller_get_news_by_id_no_news_found_error"
                 };
 
                 return NotFound(errorResponse);
@@ -53,7 +37,7 @@ namespace Presentation.Controllers.News
             var news = new NewsDto();
             objectMapperService.Map(data, news);
 
-            Response<NewsDto> response = new()
+            Response response = new()
             {
                 Data = news
             };
@@ -78,7 +62,7 @@ namespace Presentation.Controllers.News
                 .Take(pageSize)
                 .ToArrayAsync();
 
-            Response<NewsDto[]> response = new()
+            Response response = new()
             {
                 Data = newsPerPage
             };
@@ -94,7 +78,7 @@ namespace Presentation.Controllers.News
                .GetAll()
                .CountAsync();
 
-            Response<double> response = new()
+            Response response = new()
             {
                 Data = Math.Ceiling(total / pageSize)
             };

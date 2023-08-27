@@ -1,25 +1,27 @@
 <div class="container">
   <div class="form-container">
     <div class="login-form" *ngIf="!isVerifyLoginRequestSent">
-      <h1 class="text-center mb-1">Prijava</h1>
+      <h1 class="text-center mb-1">{{ localizationService.localize("login_title") }}</h1>
       <p class="text-center mb-2">
-        Postanite član i iz udobnosti svoga doma kupite kartu, i ne propustite ponude i akcije.
+        {{ localizationService.localize("login_paragraph") }}
       </p>
-      <label for="email">E-Mail: *</label>
+      <label for="email">{{ localizationService.localize("login_email") }}</label>
       <input id="email" class="form-control" type="email" placeholder="" [(ngModel)]="userLoginRequest.email" required="">
-      <label for="lozinka">Lozinka: *</label>
+      <label for="lozinka">{{ localizationService.localize("login_password") }}</label>
       <input id="lozinka" class="form-control" type="password" placeholder="" [(ngModel)]="userLoginRequest.password" required="">
       <!-- <input id="check" type="checkbox">
       <label for="check"> Zapamti podatke</label> -->
-      <a routerLink="/resetPassword">Zaboravljena lozinka?</a>
+      <a routerLink="/resetPassword">{{ localizationService.localize("login_forgotten_password") }}</a>
 
-      <button class="primary mt-4" (click)="login()">Prijava</button>
-      <button class="secondary mt-3" (click)="navigateToRegistration()">Registruj se</button>
+      <button class="primary mt-4" (click)="login()">{{ localizationService.localize("login_login_btn_text") }}</button>
+      <button class="secondary mt-3" (click)="navigateToRegistration()">{{ localizationService.localize("login_register_btn_text") }}</button>
     </div>
     <div class="verify-login-container" *ngIf="isVerifyLoginRequestSent">
-      <h3>Molimo vas unesite kod koji je poslan na Vaš mail</h3>
+      <h3>{{ localizationService.localize("verify_login_paragraph") }}</h3>
       <input #codeInput type="text" (keyup)="validateCodeLength(codeInput.value)">
-      <button class="primary" (click)="verifyLogin(codeInput.value)" [disabled]="!enableVerifyButton">Potvrdi kod</button>
+      <button class="primary" (click)="verifyLogin(codeInput.value)" [disabled]="!enableVerifyButton">
+        {{ localizationService.localize("verify_login_btn_text") }}
+      </button>
     </div>
   </div>
 </div>

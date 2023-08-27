@@ -31,17 +31,17 @@ namespace Presentation.Controllers.Account
             _hostingEnvironment = hostingEnvironment;
         }
 
-        [HttpPost("UploadFile")]
+        [HttpPost("SendRequest")]
         [RequestSizeLimit(RequestSizeLimit)]
-        public async Task<IActionResult> UploadFileAction([FromForm] SpecialRequestRequestDto specialRequestRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> SendRequestAction([FromForm] SpecialRequestRequestDto specialRequestRequestDto, CancellationToken cancellationToken)
         {
             bool hasAnyActiveRequests = await _requestRepository.HasAnyActiveRequests(specialRequestRequestDto.UserId, cancellationToken);
 
             if (hasAnyActiveRequests)
             {
-                Response<string?> activeRequestErrorResponse = new()
+                Response activeRequestErrorResponse = new()
                 {
-                    Message = "One request has been sent already. Please, wait until it's processed."
+                    Message = "request_controller_send_request_action_multiple_requests_error"
                 };
 
                 return BadRequest(activeRequestErrorResponse);
@@ -54,9 +54,9 @@ namespace Presentation.Controllers.Account
 
             if (filePath is null)
             {
-                Response<string?> errorResponse = new()
+                Response errorResponse = new()
                 {
-                    Message = "File extension not valid"
+                    Message = "request_controller_send_request_action_file_extension_error"
                 };
 
                 return BadRequest(errorResponse);
@@ -74,9 +74,9 @@ namespace Presentation.Controllers.Account
             _requestRepository.Create(newRequest);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            Response<string?> response = new()
+            Response response = new()
             {
-                Message = "Successfully sent the request",
+                Message = "request_controller_send_request_action_success",
             };
             
             return Ok(response);

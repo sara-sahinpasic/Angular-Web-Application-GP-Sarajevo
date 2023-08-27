@@ -37,9 +37,9 @@ public sealed class CheckoutController : ControllerBase
 
         if (user is null)
         {
-            Response<string> badRequestReponse = new()
+            Response badRequestReponse = new()
             {
-                Message = "Cannot complete purchase as the user was not found. Try to login first."
+                Message = "checkout_controller_checkout_no_user_found_error"
             };
 
             return BadRequest(badRequestReponse);
@@ -50,9 +50,9 @@ public sealed class CheckoutController : ControllerBase
 
         if (!doesPaymentMethodExist || !doesTicketExtis)
         {
-            Response<string> badResponse = new()
+            Response badResponse = new()
             {
-                Message = "Faulty data. Please, try again."
+                Message = "checkout_controller_checkout_faulty_data"
             };
 
             return BadRequest(badResponse);
@@ -84,9 +84,9 @@ public sealed class CheckoutController : ControllerBase
         await _checkoutService.IssueTicketAsync(invoice, user, cancellationToken);
         await _checkoutService.IssueInvoiceAsync(invoice, user, cancellationToken);
 
-        Response<string> response = new()
+        Response response = new()
         {
-            Message = "Success! Your tickets and invoice will arrive in your email inbox shortly. Check your spam folder if you cannot find it."
+            Message = "checkout_controller_checkout_success"
         };
 
         return Ok(response);

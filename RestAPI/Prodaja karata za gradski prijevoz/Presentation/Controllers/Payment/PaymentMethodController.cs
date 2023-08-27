@@ -26,7 +26,7 @@ public sealed class PaymentMethodController : ControllerBase
             .AsNoTracking()
             .ToArrayAsync(cancellationToken);
 
-        Response<PaymentMethod[]> response = new()
+        Response response = new()
         {
             Data = paymentMethods
         };
