@@ -3,18 +3,19 @@ import { Injectable, OnInit } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class ModalService implements OnInit {
+export class ModalService {
   public showRequestModalState: boolean = false;
   public showReviewModalState: boolean = false;
   public showNewsModalState: boolean = false;
-
-  private modalTitle: string = '';
-
   public data: any;
+  private modalTitle: string = '';
+  private modalCloseBtn?: HTMLButtonElement;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  setCloseBtn(btn: HTMLButtonElement) {
+    this.modalCloseBtn = btn;
+  }
 
   showRequestModal() {
     this.showRequestModalState = true;
@@ -38,6 +39,7 @@ export class ModalService implements OnInit {
     this.showNewsModalState = false;
     this.modalTitle = '';
     this.data = null;
+    this.modalCloseBtn?.click();
   }
 
   getModalTitle(): string {

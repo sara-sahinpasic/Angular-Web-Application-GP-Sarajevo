@@ -6,6 +6,7 @@ import { RequestDto } from 'src/app/models/Request/RequestDto';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { UserStatusDto } from 'src/app/models/User/UserStatusDto';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 import { SpecialRequestService } from 'src/app/services/special-request/special-request.service';
 import { UserStatusService } from 'src/app/services/user/user-status.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -36,7 +37,8 @@ export class RequestComponent implements OnInit {
     private userStatusService: UserStatusService,
     private specialRequestService: SpecialRequestService,
     private userService: UserService,
-    protected localizationService: LocalizationService
+    private modalService: ModalService,
+    protected localizationService: LocalizationService,
   ) {}
 
 
@@ -94,7 +96,10 @@ export class RequestComponent implements OnInit {
       .requestDiscount(this.requestData)
       .pipe(
         tap(this.showProgress.bind(this)),
-        finalize(() => (this.working = false))
+        finalize(() => {
+          this.working = false;
+          this.modalService.closeModal();
+        })
       )
       .subscribe();
   }
