@@ -24,10 +24,21 @@ public sealed class ReviewController : ControllerBase
         this._unitOfWork = unitOfWork;
         this._issuedTicket = issuedTicket;
     }
+
     [HttpPost("AddReview")]
     public async Task<IActionResult> AddReview([FromServices] IObjectMapperService objectMapperService,
          ReviewDto reviewDto, CancellationToken cancellationToken)
     {
+        if (IsReviewRequstInvalid(reviewDto))
+        {
+            Response invalidResponse = new()
+            {
+                Message = "review_controller_add_review_invalid_input"
+            };
+
+            return BadRequest(invalidResponse);
+        }
+
         bool hasUserPurchasedAnyTicket = await _issuedTicket.HasUserPurchasedAnyTicketAsync(reviewDto.UserId, cancellationToken);
 
         if (!hasUserPurchasedAnyTicket)
@@ -54,6 +65,13 @@ public sealed class ReviewController : ControllerBase
             return Ok(response);
         }
     }
+
+    // it's better to create a seperate validator but this is quicker
+    private bool IsReviewRequstInvalid(ReviewDto reviewDto)
+    {
+        return string.IsNullOrEmpty(reviewDto.Title) || string.IsNullOrEmpty(reviewDto.Description) || reviewDto.Score <= 0 || reviewDto.Score > 5;
+    }
+
     [HttpGet("Pagination")]
     public async Task<IActionResult> GetPage([FromServices] IReviewRepository reviewRepository, int page, int pageSize)
     {

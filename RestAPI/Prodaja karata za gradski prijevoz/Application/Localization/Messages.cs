@@ -45,6 +45,7 @@ public sealed class Messages
         // review controller
         { "review_controller_add_review_no_purchased_tickets_error", "Niste kupili niti jednu kartu." },
         { "review_controller_add_review_success", "Uspješno ste ostavili utisak." },
+        { "review_controller_add_review_invalid_input", "Unos nije validan. Molimo Vas, provjerite Vaš unos." },
     };
 
     public Dictionary<string, string> En { get; } = new() {
@@ -90,5 +91,6 @@ public sealed class Messages
         // review controller
         { "review_controller_add_review_no_purchased_tickets_error", "You haven't purchased any Tickets." },
         { "review_controller_add_review_success", "You have successfully left a review." },
+        { "review_controller_add_review_invalid_input", "Invalid input. Please, check your data." },
     };
 }
