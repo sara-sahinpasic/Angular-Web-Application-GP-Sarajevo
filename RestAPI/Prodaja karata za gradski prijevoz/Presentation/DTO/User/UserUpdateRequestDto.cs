@@ -10,4 +10,5 @@ public sealed class UserUpdateRequestDto
     public string PhoneNumber { get; set; }
     public string? Address { get; set; }
     public IFormFile? ProfileImageFile { get; set; }
+    public string? Password { get; set; }
 }

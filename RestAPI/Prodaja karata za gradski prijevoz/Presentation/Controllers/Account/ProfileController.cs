@@ -1,5 +1,6 @@
 ﻿using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.File;
+using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
@@ -28,9 +29,9 @@ public sealed class ProfileController : ControllerBase
 
     [HttpPut]
     public async Task<IActionResult> UpdateProfile([FromForm] UserUpdateRequestDto vM, CancellationToken cancellationToken,
-    [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
-    [FromServices] IAuthService authService,
-    [FromServices] IFileService fileService)
+        [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
+        [FromServices] IAuthService authService, [FromServices] IFileService fileService,
+        [FromServices] IPasswordService passwordService)
     {
         var data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken);
 
@@ -61,6 +62,14 @@ public sealed class ProfileController : ControllerBase
         }
 
         objectMapperService.Map(vM, data);
+
+        if (vM.Password is not null && vM.Password.Length >= 8)
+        {
+            Tuple<byte[], string> password = passwordService.GeneratePasswordHashAndSalt(vM.Password);
+
+            data.PasswordHash = password.Item2;
+            data.PasswordSalt = password.Item1;
+        }
 
         _userRepository.Update(data);
         await unitOfWork.CommitAsync(cancellationToken);

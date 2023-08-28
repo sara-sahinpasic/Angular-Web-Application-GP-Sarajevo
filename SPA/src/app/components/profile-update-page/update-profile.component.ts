@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
+import { UserEditPrfileModel } from 'src/app/models/User/UserEditProfileModel';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -11,31 +13,50 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class UpdateProfileComponent implements OnInit {
 
-  protected locale!: string | null;
+  protected formGroup!: FormGroup;
 
-  constructor(private _userService: UserService, protected localizationService: LocalizationService) {}
+  constructor(private _userService: UserService, protected localizationService: LocalizationService, private formBuilder: FormBuilder) {}
 
-  profileModel: UserProfileModel = {
-    id: '',
-    firstName: '',
-    lastName: '',
-    dateOfBirth: new Date(),
-    phoneNumber: '',
-    address: '',
-    email: '',
-  };
+  profileModel: UserEditPrfileModel = {};
 
   ngOnInit(): void {
     this._userService.user$
       .pipe(
-        tap((user: UserProfileModel | undefined) => (this.profileModel = user!))
+        tap(this.mapResultToModel.bind(this))
       )
       .subscribe();
 
-    this.locale = this.localizationService.getLocale();
+      this.initializeValidators();
+  }
+
+  initializeValidators() {
+    this.formGroup = this.formBuilder.group({
+      password: ["", Validators.minLength(8)]
+    })
+  }
+
+  mapResultToModel(user: UserProfileModel | undefined) {
+    this.profileModel.address = user?.address;
+    this.profileModel.firstName = user?.firstName;
+    this.profileModel.lastName = user?.lastName;
+    this.profileModel.id = user?.id;
+    this.profileModel.phoneNumber = user?.phoneNumber;
+    this.profileModel.profileImageBase64 = user?.profileImageBase64;
   }
 
   save() {
+    this.formGroup.markAllAsTouched();
+
+    if (this.formGroup.invalid) {
+      return;
+    }
+
+    this.profileModel.password = null;
+console.log(this.formGroup)
+    if (this.formGroup.get("password")?.value != "") {
+      this.profileModel.password = this.formGroup.get("password")?.value;
+    }
+
     this._userService.updateUser(this.profileModel, '/profile').subscribe();
   }
 

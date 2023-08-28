@@ -11,22 +11,28 @@
         <input type="file" class="form-control mt-2" accept="image/*" (change)="uploadImage($event, profileImage)">
       </div>
       <div class="col">
-        <form>
-          <label for="ime" class="mt-2">{{ localizationService.localize("edit_profile_name_label") }}</label>
-          <input id="ime" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.firstName"
+        <label for="ime" class="mt-2">{{ localizationService.localize("edit_profile_name_label") }}</label>
+        <input id="ime" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.firstName"
             [ngModelOptions]="{standalone: true}">
 
-          <label for="prezime" class="mt-2">{{ localizationService.localize("edit_profile_surname_label") }}</label>
-          <input id="prezime" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.lastName"
-            [ngModelOptions]="{standalone: true}">
+        <label for="prezime" class="mt-2">{{ localizationService.localize("edit_profile_surname_label") }}</label>
+        <input id="prezime" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.lastName"
+          [ngModelOptions]="{standalone: true}">
 
-          <label for="brojTelefona" class="mt-2">{{ localizationService.localize("edit_profile_phone_number_label") }}</label>
-          <input id="brojTelefona" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.phoneNumber"
-            [ngModelOptions]="{standalone: true}">
+        <label for="brojTelefona" class="mt-2">{{ localizationService.localize("edit_profile_phone_number_label") }}</label>
+        <input id="brojTelefona" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.phoneNumber"
+          [ngModelOptions]="{standalone: true}">
 
-          <label for="adresa" class="mt-2">{{ localizationService.localize("edit_profile_address_label") }}</label>
-          <input id="adresa" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.address"
-            [ngModelOptions]="{standalone: true}">
+        <label for="adresa" class="mt-2">{{ localizationService.localize("edit_profile_address_label") }}</label>
+        <input id="adresa" class="form-control" type="text" placeholder="" [(ngModel)]="profileModel.address"
+          [ngModelOptions]="{standalone: true}">
+
+        <form [formGroup]="formGroup">
+          <label for="password" class="mt-2">{{ localizationService.localize("edit_profile_password_label") }}</label>
+          <input id="password" formControlName="password" class="form-control" type="text" placeholder="" [class.is-invalid]="formGroup.get('password')?.invalid && formGroup.get('password')?.touched"/>
+          <div class="invalid-feedback">
+            {{ localizationService.localize("edit_profile_password_length_error") }}
+          </div>
         </form>
       </div>
     </div>
