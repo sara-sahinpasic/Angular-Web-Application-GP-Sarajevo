@@ -17,8 +17,16 @@ import { CheckoutConfirmationComponent } from './components/checkout-confirmatio
 import { CheckoutConfirmGuard } from './guards/checkout/checkout-confirm.guard';
 import { ReviewComponent } from './components/review/review.component';
 import { NewsComponent } from './components/news/news.component';
+import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
+import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
+import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
+import { AdminReportPageComponent } from './components/admin/admin-report-page/admin-report-page.component';
 
 const routes: Routes = [
+  { path: 'admin/report', component: AdminReportPageComponent},
+  { path: 'admin/company', component: AdminCompanyPageComponent},
+  { path: 'admin/users', component: AdminUsersPageComponent},
+  { path: 'admin', component: AdminHomePageComponent},
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [LoggedInGuard, CheckoutConfirmGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [LoggedInGuard] },
   { path: 'news', component: NewsComponent},

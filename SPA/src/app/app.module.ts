@@ -32,6 +32,11 @@ import { ReviewComponent } from './components/review/review.component';
 import { ReviewModalComponent } from './modals/review-modal/review-modal.component';
 import { NewsComponent } from './components/news/news.component';
 import { NewsModalComponent } from './modals/news-modal/news-modal.component';
+import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
+import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
+import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
+import { AdminReportPageComponent } from './components/admin/admin-report-page/admin-report-page.component';
+import { AdminNavPageComponent } from './components/admin/admin-nav-page/admin-nav-page.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +62,11 @@ import { NewsModalComponent } from './modals/news-modal/news-modal.component';
     ReviewModalComponent,
     NewsComponent,
     NewsModalComponent,
+    AdminHomePageComponent,
+    AdminUsersPageComponent,
+    AdminCompanyPageComponent,
+    AdminReportPageComponent,
+    AdminNavPageComponent
   ],
   imports: [
     BrowserModule,
