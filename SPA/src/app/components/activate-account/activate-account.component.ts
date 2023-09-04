@@ -12,7 +12,7 @@ export class ActivateAccountComponent implements OnInit {
 
   private token: string = "";
   isActivated: boolean = false;
-  // todo: create a centralized error handler for API errors
+
   constructor(private activatedRoute: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit(): void {

@@ -5,7 +5,6 @@ using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Implementations.Checkout;
-using Castle.DynamicProxy;
 using Domain.Entities.Invoices;
 using Domain.Entities.Payment;
 using Domain.Entities.Tickets;

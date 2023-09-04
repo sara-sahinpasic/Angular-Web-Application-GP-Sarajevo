@@ -72,13 +72,8 @@ export class HttpInterceptorInterceptor implements HttpInterceptor {
     const response: HttpErrorResponse = event as HttpErrorResponse;
     toastMessage.type = ToastType.Error;
 
-    if (response.status == HttpStatusCode.BadRequest) {
-      this.handleBadRequestResponse(response, toastMessage);
-      return;
-    }
-
-    if (response.status == HttpStatusCode.NotFound) {
-      this.handleNotFoundResponse(response, toastMessage);
+    if (response.status == HttpStatusCode.BadRequest || response.status == HttpStatusCode.NotFound) {
+      this.showErrorMessage(response, toastMessage);
       return;
     }
 
@@ -87,13 +82,7 @@ export class HttpInterceptorInterceptor implements HttpInterceptor {
     }
   }
 
-  handleNotFoundResponse(response: HttpErrorResponse, toastMessage: ToastMessage) {
-    if (response.error.message) {
-      toastMessage.message = response.error.message;
-    }
-  }
-
-  private handleBadRequestResponse(response: HttpErrorResponse, toastMessage: ToastMessage) {
+  private showErrorMessage(response: HttpErrorResponse, toastMessage: ToastMessage) {
     if (response.error.message) {
       toastMessage.message = response.error.message;
     }

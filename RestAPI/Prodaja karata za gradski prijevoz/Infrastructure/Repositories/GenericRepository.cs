@@ -22,7 +22,7 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(id, nameof(id));
-
+        
         return _dataContext.Set<TEntity>()
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
     }
