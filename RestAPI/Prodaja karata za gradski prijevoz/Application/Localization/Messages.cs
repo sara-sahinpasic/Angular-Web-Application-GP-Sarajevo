@@ -40,6 +40,7 @@ public sealed class Messages
         { "checkout_controller_checkout_no_user_found_error", "Nije bilo moguće okončati kupovinu. Pokušajte se ulogovati prvo." },
         { "checkout_controller_checkout_faulty_data", "Pogrešni podaci. Molimo, pokušajte ponovo." },
         { "checkout_controller_checkout_success", "Uspjeh! Račun i karte su Vam poslani na e-mail. Provjerite i svoj Spam folder." },
+        { "checkout_controller_checkout_faulty_route", "Unesena je nepostojeća ruta." },
 
         // news controller
         { "news_controller_get_news_by_id_no_news_found_error", "Obavjesti nisu pronađene." },
@@ -48,6 +49,9 @@ public sealed class Messages
         { "review_controller_add_review_no_purchased_tickets_error", "Niste kupili niti jednu kartu." },
         { "review_controller_add_review_success", "Uspješno ste ostavili utisak." },
         { "review_controller_add_review_invalid_input", "Unos nije validan. Molimo Vas, provjerite Vaš unos." },
+
+        // route controller
+        { "route_controller_no_routes_found_message", "Nije pronađena niti jedna aktivna ruta za zadani period." }
     };
 
     public Dictionary<string, string> En { get; } = new() {
@@ -88,6 +92,7 @@ public sealed class Messages
         { "checkout_controller_checkout_no_user_found_error", "Cannot complete purchase as the user was not found. Try to login first." },
         { "checkout_controller_checkout_faulty_data", "Faulty data. Please, try again." },
         { "checkout_controller_checkout_success", "Success! Your tickets and invoice will arrive in your email inbox shortly. Check your spam folder if you cannot find it." },
+        { "checkout_controller_checkout_faulty_route", "Unknown route has been provided." },
 
         // news controller
         { "news_controller_get_news_by_id_no_news_found_error", "No news was found." },
@@ -96,5 +101,8 @@ public sealed class Messages
         { "review_controller_add_review_no_purchased_tickets_error", "You haven't purchased any Tickets." },
         { "review_controller_add_review_success", "You have successfully left a review." },
         { "review_controller_add_review_invalid_input", "Invalid input. Please, check your data." },
+        
+        // route controller
+        { "route_controller_no_routes_found_message", "No active routes were found for the selected time period." }
     };
 }

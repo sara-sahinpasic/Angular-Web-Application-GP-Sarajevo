@@ -198,6 +198,80 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Routes.Holiday", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Holidays");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Routes.Route", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ActiveOnHolidays")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ActiveOnWeekends")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("EndStationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StartStationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("TimeOfArival")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("TimeOfDeparture")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndStationId");
+
+                    b.HasIndex("StartStationId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("Routes");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Stations.Station", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stations");
+                });
+
             modelBuilder.Entity("Domain.Entities.Tickets.IssuedTicket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -209,6 +283,9 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
                     b.Property<DateTime>("IssuedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RouteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
@@ -225,6 +302,8 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
+
+                    b.HasIndex("RouteId");
 
                     b.HasIndex("TicketId");
 
@@ -485,6 +564,71 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.ToTable("VerificationCodes");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Vehicles.Manufacturer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manufacturers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Vehicles.Vehicle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BuildYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ManufacturerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("VehicleTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManufacturerId");
+
+                    b.HasIndex("VehicleTypeId");
+
+                    b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Vehicles.VehicleType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VehicleTypes");
+                });
+
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>
                 {
                     b.HasOne("Domain.Entities.Payment.Tax", "Tax")
@@ -513,11 +657,44 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.Routes.Route", b =>
+                {
+                    b.HasOne("Domain.Entities.Stations.Station", "EndStation")
+                        .WithMany()
+                        .HasForeignKey("EndStationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Stations.Station", "StartStation")
+                        .WithMany()
+                        .HasForeignKey("StartStationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Vehicles.Vehicle", "Vehicle")
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EndStation");
+
+                    b.Navigation("StartStation");
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("Domain.Entities.Tickets.IssuedTicket", b =>
                 {
                     b.HasOne("Domain.Entities.Invoices.Invoice", null)
                         .WithMany("IssuedTickets")
                         .HasForeignKey("InvoiceId");
+
+                    b.HasOne("Domain.Entities.Routes.Route", "Route")
+                        .WithMany()
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.Tickets.Ticket", "Ticket")
                         .WithMany()
@@ -530,6 +707,8 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Route");
 
                     b.Navigation("Ticket");
 
@@ -571,6 +750,25 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Vehicles.Vehicle", b =>
+                {
+                    b.HasOne("Domain.Entities.Vehicles.Manufacturer", "Manufacturer")
+                        .WithMany()
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Vehicles.VehicleType", "VehicleType")
+                        .WithMany()
+                        .HasForeignKey("VehicleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manufacturer");
+
+                    b.Navigation("VehicleType");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>

@@ -2,7 +2,7 @@
   <div class="form-container">
     <div id="header" class="row text-center">
       <h1 class="text-center">{{ localizationService.localize("checkout_title") }}</h1>
-      <h5>Relacija</h5>
+      <h5>{{ selectedRoute.startStation.name }} - {{ selectedRoute.endStation.name }}</h5>
     </div>
     <form [formGroup]="formGroup">
       <div id="content">

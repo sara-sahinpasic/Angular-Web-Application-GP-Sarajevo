@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, TitleStrategy } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserLoginRequest } from 'src/app/models/User/UserLoginRequest';
+import { CacheService } from 'src/app/services/cache/cache.service';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -23,6 +24,7 @@ export class LogInComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     protected localizationService: LocalizationService,
+    private cacheService: CacheService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -50,7 +52,15 @@ export class LogInComponent implements OnInit {
     this.userLoginRequest.email = this.formGroup.get("email")?.value;
     this.userLoginRequest.password = this.formGroup.get("password")?.value;
 
-    this.userService.login(this.userLoginRequest).subscribe();
+    let redirectionRoute: string | null = this.cacheService.getDataFromCache("redirectUrl");
+
+    if (!redirectionRoute) {
+      this.userService.login(this.userLoginRequest).subscribe();
+      return;
+    }
+
+    this.userService.login(this.userLoginRequest, redirectionRoute).subscribe();
+    this.cacheService.unsetCacheItem("redirectUrl");
   }
 
   verifyLogin(code: string) {

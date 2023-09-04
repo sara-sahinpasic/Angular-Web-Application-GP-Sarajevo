@@ -2,15 +2,38 @@
   <div class="form-container">
     <h1 class="text-center mb-3">{{ localizationService.localize("home_search") }}</h1>
     <div class="controls-container">
-      <div class="route-container mb-2">
-        <input id="polaznaStanica" class="form-control" type="text" [placeholder]="localizationService.localize('home_start_station_placeholder_text')">
-        <input id="cilj" type="text" class="form-control ms-2" [placeholder]="localizationService.localize('home_end_station_placeholder_text')">
-      </div>
-      <div class="time-container mb-2">
-        <input id="datum" type="date" class="form-control" placeholder="">
-        <input id="sat" type="time" class="form-control ms-2" placeholder="">
+      <form [formGroup]="formGroup">
+        <div class="route-container mb-2 d-flex flex-row">
+          <div class="start-station-container w-50 pe-1">
+            <input id="polaznaStanica" class="form-control" list="startStationsList" formControlName="start"
+              (blur)="initDesitnationStations()"
+              [placeholder]="localizationService.localize('home_start_station_placeholder_text')"
+              [class.is-invalid]="formGroup.get('start')?.invalid && formGroup.get('start')?.touched" />
+            <datalist id="startStationsList">
+              <option *ngFor="let station of startingStations" [value]="station.name"></option>
+            </datalist>
+            <div class="invalid-feedback">
+              {{ localizationService.localize("routes_station_error_message") }}
+            </div>
+          </div>
+          <div class="destination-station-container ms-1 w-50">
+            <input id="cilj" type="text" class="form-control" formControlName="end" list="endStationsList"
+              [placeholder]="localizationService.localize('home_end_station_placeholder_text')"
+              [class.is-invalid]="formGroup.get('end')?.invalid && formGroup.get('end')?.touched" />
+            <datalist id="endStationsList">
+              <option *ngFor="let station of endingStations" [value]="station.name"></option>
+            </datalist>
+            <div class="invalid-feedback">
+              {{ localizationService.localize("routes_station_error_message") }}
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="time-container mb-2 d-flex flex-row">
+        <input id="datum" type="date" class="form-control" placeholder="" [(ngModel)]="routeDate.date" />
+        <input id="sat" type="time" class="form-control ms-2" placeholder="" [(ngModel)]="routeDate.time" [disabled]="!!!routeDate.date" />
       </div>
     </div>
-    <button [routerLink]="['/checkout']" class="primary">{{ localizationService.localize("home_search_btn_text") }}</button>
+    <button (click)="search()" class="primary">{{ localizationService.localize("home_search_btn_text") }}</button>
   </div>
 </div>

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+using Domain.Entities.Tickets;
+using Domain.Enums.OrderBy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
 using Presentation.DTO.Invoice;
-using Microsoft.EntityFrameworkCore;
-using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+using System.Linq.Expressions;
 
 namespace Presentation.Controllers.Account
 {
@@ -22,19 +24,19 @@ namespace Presentation.Controllers.Account
         [HttpGet]
         public async Task<IActionResult> GetAllUserPurchases(Guid userId, CancellationToken cancellationToken)
         {
-            var data = await _issuedTicketRepository
-                .GetAll()
-                .Include(issuedTicket => issuedTicket.Ticket)
-                .Where(issuedTicket => issuedTicket.UserId == userId)
-                .Select(issuedTicket => new IssuedTicketHistoryDto
-                {
-                    TicketName = issuedTicket.Ticket.Name,
-                    Price = issuedTicket.Ticket.Price,
-                    IssuedDate = issuedTicket.IssuedDate
-                })
-                .Take(10)
-                .ToArrayAsync(cancellationToken);
+            Expression<Func<IssuedTicket, IssuedTicketHistoryDto>> selector = issuedTicket => new IssuedTicketHistoryDto
+            {
+                TicketName = issuedTicket.Ticket.Name,
+                Price = issuedTicket.Ticket.Price,
+                IssuedDate = issuedTicket.IssuedDate,
+                StartStationName = issuedTicket.Route.StartStation.Name,
+                EndStationName = issuedTicket.Route.EndStation.Name
+            };
 
+            Expression<Func<IssuedTicket, object>> orderBy = issuedTicket => issuedTicket.IssuedDate;
+
+            var data = await _issuedTicketRepository.GetByUserIdAsync(userId, selector, orderBy, OrderBy.Descending, cancellationToken);
+                
             Response response = new()
             {
                 Data = data

@@ -13,8 +13,11 @@ using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
+using Application.Services.Abstractions.Interfaces.Repositories.Routes;
+using Application.Services.Abstractions.Interfaces.Repositories.Stations;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
+using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Checkout;
 using Application.Services.Implementations.Hashing;
@@ -26,8 +29,11 @@ using Infrastructure.Repositories.News;
 using Infrastructure.Repositories.Payment;
 using Infrastructure.Repositories.Requests;
 using Infrastructure.Repositories.Reviews;
+using Infrastructure.Repositories.Routes;
+using Infrastructure.Repositories.Stations;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.Users;
+using Infrastructure.Repositories.Vehicles;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.File;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -75,6 +81,12 @@ public static partial class Services
         builder.Services.TryAddScoped<IReviewRepository, ReviewRepository>();
         builder.Services.TryAddScoped<INewsRepository, NewsRepository>();
         builder.Services.TryAddScoped<ITaxRepository, TaxRepository>();
+        builder.Services.TryAddScoped<IVehicleRepository, VehicleRepository>();
+        builder.Services.TryAddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
+        builder.Services.TryAddScoped<IManufacturerRepository, ManufacturerRepository>();
+        builder.Services.TryAddScoped<IRouteRepository, RouteRepository>();
+        builder.Services.TryAddScoped<IHolidayRepository, HolidayRepository>();
+        builder.Services.TryAddScoped<IStationRepository, StationRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)

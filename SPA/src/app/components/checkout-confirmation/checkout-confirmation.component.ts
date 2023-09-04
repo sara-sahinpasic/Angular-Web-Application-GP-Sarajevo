@@ -15,7 +15,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class CheckoutConfirmationComponent implements OnInit {
 
-  protected checkoutModel: CheckoutModel | null = this.checkoutService.getCheckoutModel();
+  protected checkoutModel: CheckoutModel = this.checkoutService.getCheckoutModel()!;
   protected user?: UserProfileModel;
 
   constructor(

@@ -51,7 +51,7 @@
               [class]="{'locale-selected': localizationService.getLocale() == 'en', 'locale': true}">EN</a>
           </div>
           <div class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-            <a id="prijava" [routerLink]="['/prijava']" *ngIf="!user">{{ localizationService.localize("navigation_login") }}</a>
+            <a id="prijava" [routerLink]="['/login']" *ngIf="!user">{{ localizationService.localize("navigation_login") }}</a>
             <div class="d-flex align-items-center user-info-container" *ngIf="!!user">
               <span>{{ user.email }}</span>
               <a (click)="logout()" class="ms-2">
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="d-none d-lg-block">
-            <a id="prijava" [routerLink]="['/prijava']" *ngIf="!user">{{ localizationService.localize("navigation_login") }}</a>
+            <a id="prijava" [routerLink]="['/login']" *ngIf="!user">{{ localizationService.localize("navigation_login") }}</a>
             <div class="d-flex align-items-center user-info-container" *ngIf="!!user">
               <span>{{ user.email }}</span>
               <a (click)="logout()" class="ms-2">

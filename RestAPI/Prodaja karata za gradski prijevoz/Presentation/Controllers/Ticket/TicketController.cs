@@ -1,6 +1,5 @@
 ﻿using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Domain.Entities.Tickets;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
@@ -8,7 +7,6 @@ using Presentation.DTO;
 namespace Presentation.Controllers.CardType;
 
 [ApiController]
-[Authorize]
 [Route("[controller]")]
 public sealed class TicketController : ControllerBase
 {

@@ -6,6 +6,9 @@ using Domain.Entities.Invoices;
 using Domain.Entities.Requests;
 using Domain.Entities.Reviews;
 using Domain.Entities.News;
+using Domain.Entities.Stations;
+using Domain.Entities.Vehicles;
+using Domain.Entities.Routes;
 
 namespace Infrastructure.Data;
 
@@ -23,6 +26,12 @@ public sealed class DataContext : DbContext
     public DbSet<Review> Reviews { get; set; } = null!;
     public DbSet<News> News { get; set; } = null!;
     public DbSet<Tax> Taxes { get; set; } = null!;
+    public DbSet<Station> Stations { get; set; } = null!;
+    public DbSet<Vehicle> Vehicles { get; set; } = null!;
+    public DbSet<VehicleType> VehicleTypes { get; set; } = null!;
+    public DbSet<Manufacturer> Manufacturers { get; set; } = null!;
+    public DbSet<Route> Routes { get; set; } = null!;
+    public DbSet<Holiday> Holidays { get; set; } = null!;
 
 
     public DataContext(DbContextOptions options) : base(options) { }
@@ -57,6 +66,16 @@ public sealed class DataContext : DbContext
         modelBuilder.Entity<Tax>()
             .Property(t => t.Percentage)
             .HasPrecision(5, 2);
+
+        modelBuilder.Entity<Route>()
+            .HasOne(r => r.StartStation)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Route>()
+            .HasOne(r => r.EndStation)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
 
         BuildPaymentOptions(modelBuilder);
         BuildUserRoles(modelBuilder);

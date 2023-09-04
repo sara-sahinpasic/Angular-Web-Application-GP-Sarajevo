@@ -93,6 +93,9 @@ export class Messages {
       checkout_finish_qty_label: "Količina:",
       checkout_finish_payment_method_label: "Način plaćanja:",
       checkout_finish_confirm_purchase_btn_text: "Potvrdi",
+      routes_choose_btn_label: "Odaberi",
+      routes_station_error_message: "Molimo Vas, odaberite jednu od ponuđenih stanica.",
+      must_login_error_message: "Molimo Vas da se ulogujete kako biste izvršili radnju."
     },
     en: {
       home_search: "SEARCH",
@@ -187,6 +190,9 @@ export class Messages {
       checkout_finish_qty_label: "Quantity:",
       checkout_finish_payment_method_label: "Payment method:",
       checkout_finish_confirm_purchase_btn_text: "Confirm purchase",
+      routes_choose_btn_label: "Choose",
+      routes_station_error_message: "Please, select on of the offered stations.",
+      must_login_error_message: "Please, login to continue."
     }
   }
 }

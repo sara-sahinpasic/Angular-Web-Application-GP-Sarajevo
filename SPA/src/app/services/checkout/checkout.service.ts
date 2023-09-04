@@ -13,14 +13,15 @@ import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 })
 export class CheckoutService {
 
-  private relationId?: string;
   private url: string = environment.apiUrl;
   private checkoutFinishModel: FinishCheckoutModel = {
     userId: "",
     paymentMethodId: "",
     quantity: 0,
-    ticketId: ""
+    ticketId: "",
+    routeId: ""
   };
+  private checkoutPlaceholderModel: CheckoutModel | null = null;
 
   constructor(private httpClient: HttpClient, private userService: UserService) {
     this.userService.user$.pipe(
@@ -30,40 +31,27 @@ export class CheckoutService {
   }
 
   public setCheckoutModel(model: CheckoutModel) {
-    localStorage.setItem("checkoutData", JSON.stringify(model));
-  }
-
-  public setRelation(relationId: string) {
-    this.relationId = relationId;
+    this.checkoutPlaceholderModel = model;
   }
 
   public getCheckoutModel(): CheckoutModel | null {
-    const model: string | null = localStorage.getItem("checkoutData");
-
-    if (!model) {
-      return null;
-    }
-
-    return JSON.parse(model) as CheckoutModel;
+    return this.checkoutPlaceholderModel;
   }
 
   private clearCheckoutModel() {
-    localStorage.removeItem("checkoutData");
-
     this.checkoutFinishModel = {
       userId: "",
       paymentMethodId: "",
       quantity: 0,
-      ticketId: ""
+      ticketId: "",
+      routeId: ""
     };
   }
 
   public checkout(): Observable<DataResponse<string>> {
     const model: CheckoutModel = this.getCheckoutModel() as CheckoutModel;
 
-    this.checkoutFinishModel.paymentMethodId = model.paymentMethod!.id;
-    this.checkoutFinishModel.quantity = model.quantity;
-    this.checkoutFinishModel.ticketId = model.cardType!.id;
+    this.mapToFinishModel(model);
 
     return this.httpClient.post<DataResponse<string>>(`${this.url}Checkout/Finish`, this.checkoutFinishModel)
       .pipe(
@@ -71,9 +59,18 @@ export class CheckoutService {
       );
   }
 
+  private mapToFinishModel(model: CheckoutModel) {
+    this.checkoutFinishModel.paymentMethodId = model.paymentMethod!.id;
+    this.checkoutFinishModel.quantity = model.quantity;
+    this.checkoutFinishModel.ticketId = model.cardType!.id;
+    this.checkoutFinishModel.routeId = model.selectedRoute?.id!;
+    this.checkoutFinishModel.date = model.selectedRoute?.dateStamp.date;
+  }
+
   public isCheckoutModelValid(): boolean {
     const checkoutModel: CheckoutModel | null = this.getCheckoutModel();
 
-    return !!checkoutModel && !!checkoutModel.quantity && !!this.checkoutFinishModel.userId && !!checkoutModel.cardType && !!checkoutModel.paymentMethod;
+    return !!checkoutModel && !!checkoutModel.quantity && !!this.checkoutFinishModel.userId
+      && !!checkoutModel.cardType && !!checkoutModel.paymentMethod && !!checkoutModel.selectedRoute;
   }
 }

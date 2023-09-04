@@ -16,4 +16,10 @@ public sealed class CheckoutDto
     [Required]
     [Range(1, int.MaxValue)]
     public int Quantity { get; set; }
+
+    [Required]
+    public Guid RouteId { get; set; }
+    
+    [Required]
+    public DateTime Date { get; set; }
 }

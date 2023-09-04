@@ -271,17 +271,17 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
 
         gfx.DrawString(destinationText, _fontBold, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
         initalSecondColumnYPosition += headerRowIncrement;
-        gfx.DrawString("Otoka", _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
+        gfx.DrawString(issuedTicket.Route.EndStation.Name, _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
         initalSecondColumnYPosition += rowIncrement;
 
         gfx.DrawString(dateText, _fontBold, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
         initalSecondColumnYPosition += headerRowIncrement;
-        gfx.DrawString(issuedTicket.ValidFrom.ToString("dd.MM.yyyy"), _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
+        gfx.DrawString(issuedTicket.ValidTo.ToString("dd.MM.yyyy"), _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
         initalSecondColumnYPosition += rowIncrement;
 
         gfx.DrawString(timeOfArivalText, _fontBold, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
         initalSecondColumnYPosition += headerRowIncrement;
-        gfx.DrawString("15:30", _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
+        gfx.DrawString(issuedTicket.Route.TimeOfArival.ToString("c"), _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
     }
 
     private void DrawFirstColumn(XGraphics gfx, IssuedTicket issuedTicket, PdfGraphicsData pdfGraphicsData)
@@ -303,7 +303,7 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
 
         gfx.DrawString(startText, _fontBold, XBrushes.Black, columnXPosition, initalColumnYPosition);
         initalColumnYPosition += headerRowIncrement;
-        gfx.DrawString("Otoka", _fontRegular, XBrushes.Black, columnXPosition, initalColumnYPosition);
+        gfx.DrawString(issuedTicket.Route.StartStation.Name, _fontRegular, XBrushes.Black, columnXPosition, initalColumnYPosition);
         initalColumnYPosition += rowIncrement;
 
         gfx.DrawString(dateText, _fontBold, XBrushes.Black, columnXPosition, initalColumnYPosition);
@@ -313,7 +313,7 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
 
         gfx.DrawString(timeOfDepartureText, _fontBold, XBrushes.Black, columnXPosition, initalColumnYPosition);
         initalColumnYPosition += headerRowIncrement;
-        gfx.DrawString("15:00", _fontRegular, XBrushes.Black, columnXPosition, initalColumnYPosition);
+        gfx.DrawString(issuedTicket.Route.TimeOfDeparture.ToString("c"), _fontRegular, XBrushes.Black, columnXPosition, initalColumnYPosition);
     }
 
     private static void DrawSidebar(XGraphics gfx, PdfGraphicsData pdfGraphicsData, IssuedTicket issuedTicket)
@@ -373,7 +373,9 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
         int counter = 1;
         foreach (IssuedTicket issuedTicket in issuedTickets)
         {
-            string[] contents = new[] { issuedTicket.Ticket.Name, "neka relacija", issuedTicket.Ticket.Price.ToString("F2", CultureInfo.GetCultureInfo("de-DE")), issuedTicket.IssuedDate.ToString("dd.MM.yyyy") };
+            string[] contents = new[] { issuedTicket.Ticket.Name, $"{issuedTicket.Route.StartStation.Name} - {issuedTicket.Route.EndStation.Name}", 
+                issuedTicket.Ticket.Price.ToString("F2", CultureInfo.GetCultureInfo("bs-BA")), issuedTicket.IssuedDate.ToString("dd.MM.yyyy") };
+
             DrawTableEntry(gfx, pdfGraphicsData, contents);
             
             ++counter;

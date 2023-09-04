@@ -1,4 +1,5 @@
 ﻿using Domain.Abstractions.Classes;
+using Domain.Entities.Routes;
 using Domain.Entities.Users;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +16,6 @@ public sealed class IssuedTicket : Entity
     public DateTime IssuedDate { get; set; }
     [NotMapped]
     public int Amount { get; set; }
-    //public Guid RelationId { get; set; } // todo: implement later
-
+    public Guid RouteId { get; set; }
+    public Route Route { get; set; } = null!;
 }

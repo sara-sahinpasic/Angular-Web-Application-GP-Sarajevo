@@ -14,25 +14,25 @@
         <strong>
           {{ localizationService.localize("checkout_finish_route_label") }}
         </strong>
-        neka
+        {{ checkoutModel.selectedRoute.startStation.name }} - {{ checkoutModel.selectedRoute.endStation.name }}
       </div>
       <div>
         <strong>
           {{ localizationService.localize("checkout_finish_ticket_type_label") }}
         </strong>
-        {{ checkoutModel?.cardType!.name }}
+        {{ checkoutModel.cardType!.name }}
       </div>
       <div>
         <strong>
           {{ localizationService.localize("checkout_finish_qty_label") }}
         </strong>
-        {{ checkoutModel?.quantity }}
+        {{ checkoutModel.quantity }}
       </div>
       <div>
         <strong>
           {{ localizationService.localize("checkout_finish_payment_method_label") }}
         </strong>
-        {{ checkoutModel?.paymentMethod!.name }}
+        {{ checkoutModel.paymentMethod!.name }}
       </div>
     </div>
     <div id="footer">

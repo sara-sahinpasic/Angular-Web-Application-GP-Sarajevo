@@ -1,12 +1,15 @@
 ﻿using Application.Services.Abstractions.Interfaces.Checkout;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
+using Application.Services.Abstractions.Interfaces.Repositories.Routes;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Invoices;
+using Domain.Entities.Routes;
 using Domain.Entities.Tickets;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.Checkout;
 
@@ -21,13 +24,20 @@ public sealed class CheckoutController : ControllerBase
     private readonly IPaymentMethodRepository _paymentMethodRepository;
     private readonly ITicketRepository _ticketRepository;
     private readonly ICheckoutService _checkoutService;
+    private readonly IRouteRepository _routeRepository;
 
-    public CheckoutController(IUserRepository userRepository, ICheckoutService checkoutService, IPaymentMethodRepository paymentMethodRepository, ITicketRepository ticketRepository)
+    public CheckoutController(
+        IUserRepository userRepository, 
+        ICheckoutService checkoutService, 
+        IPaymentMethodRepository paymentMethodRepository, 
+        ITicketRepository ticketRepository, 
+        IRouteRepository routeRepository)
     {
         _userRepository = userRepository;
         _checkoutService = checkoutService;
         _paymentMethodRepository = paymentMethodRepository;
         _ticketRepository = ticketRepository;
+        _routeRepository = routeRepository;
     }
 
     [HttpPost("Finish")]
@@ -58,6 +68,22 @@ public sealed class CheckoutController : ControllerBase
             return BadRequest(badResponse);
         }
 
+        Route? route = await _routeRepository.GetAll()
+            .Include(route => route.StartStation)
+            .Include(route => route.EndStation)
+            .Where(route => route.Id == checkoutDto.RouteId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (route is null)
+        {
+            Response badResponse = new()
+            {
+                Message = "checkout_controller_checkout_faulty_route"
+            };
+
+            return BadRequest(badResponse);
+        }
+
         List<IssuedTicket> issuedTickets = new();
 
         for (int i = 0; i < checkoutDto.Quantity; ++i)
@@ -65,17 +91,18 @@ public sealed class CheckoutController : ControllerBase
             issuedTickets.Add(new()
             {
                 Amount = 1,
-                IssuedDate = DateTime.UtcNow,
+                IssuedDate = DateTime.UtcNow.ToLocalTime(),
                 TicketId = checkoutDto.TicketId,
                 User = user,
-                ValidFrom = DateTime.UtcNow,
-                ValidTo = DateTime.UtcNow
+                ValidFrom = checkoutDto.Date.ToLocalTime(),
+                ValidTo = checkoutDto.Date.ToLocalTime(),
+                Route = route
             });
         }
 
         Invoice invoice = new()
         {
-            InvoicingDate = DateTime.UtcNow,
+            InvoicingDate = DateTime.UtcNow.ToLocalTime(),
             IssuedTickets = issuedTickets,
             PaymentOptionId = checkoutDto.PaymentMethodId,
             User = user

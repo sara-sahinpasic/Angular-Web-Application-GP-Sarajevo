@@ -32,10 +32,9 @@ import { ReviewComponent } from './components/review/review.component';
 import { ReviewModalComponent } from './modals/review-modal/review-modal.component';
 import { NewsComponent } from './components/news/news.component';
 import { NewsModalComponent } from './modals/news-modal/news-modal.component';
+import { RoutesComponent } from './components/routes/routes.component';
 import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
 import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
-import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
-import { AdminReportPageComponent } from './components/admin/admin-report-page/admin-report-page.component';
 import { AdminNavPageComponent } from './components/admin/admin-nav-page/admin-nav-page.component';
 import { AdminNewsModalComponent } from './modals/admin/admin-news-modal/admin-news-modal.component';
 import { AdminTicketModalComponent } from './modals/admin/admin-ticket-modal/admin-ticket-modal.component';
@@ -43,6 +42,7 @@ import { AdminVehicleModalComponent } from './modals/admin/admin-vehicle-modal/a
 import { AdminStationModalComponent } from './modals/admin/admin-station-modal/admin-station-modal.component';
 import { AdminUserModalComponent } from './modals/admin/admin-user-modal/admin-user-modal.component';
 import { AdminNewStationModalComponent } from './modals/admin/admin-new-station-modal/admin-new-station-modal.component';
+import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
 
 @NgModule({
   declarations: [
@@ -68,11 +68,11 @@ import { AdminNewStationModalComponent } from './modals/admin/admin-new-station-
     ReviewModalComponent,
     NewsComponent,
     NewsModalComponent,
+    RoutesComponent,
     AdminHomePageComponent,
     AdminUsersPageComponent,
-    AdminCompanyPageComponent,
-    AdminReportPageComponent,
     AdminNavPageComponent,
+    AdminCompanyPageComponent,
     AdminNewsModalComponent,
     AdminTicketModalComponent,
     AdminVehicleModalComponent,

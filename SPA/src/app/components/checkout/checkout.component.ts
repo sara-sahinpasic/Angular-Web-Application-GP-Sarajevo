@@ -6,9 +6,11 @@ import { DataResponse } from 'src/app/models/DataResponse';
 import { TicketModel } from 'src/app/models/card-type/CardTypeModel';
 import { CheckoutModel } from 'src/app/models/checkout/CheckoutModel';
 import { PaymentMethodModel } from 'src/app/models/payment-method/PaymentMethodModel';
+import { SelectedRoute } from 'src/app/models/routes/SelectedRoute';
 import { CheckoutService } from 'src/app/services/checkout/checkout.service';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { PaymentMethodService } from 'src/app/services/payment/payment-method.service';
+import { RouteService } from 'src/app/services/routes/route.service';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
 
 @Component({
@@ -18,17 +20,17 @@ import { TicketService } from 'src/app/services/ticket/ticket.service';
 })
 export class CheckoutComponent implements OnInit {
 
-  protected checkoutModel: CheckoutModel = {
-    quantity: 1
-  };
+  protected checkoutModel?: CheckoutModel;
   protected formGroup!: FormGroup;
   protected cardTypes: TicketModel[] = [];
   protected paymentMethods: PaymentMethodModel[] = [];
+  protected selectedRoute!: SelectedRoute;
 
   constructor(
     private checkoutService: CheckoutService,
     private paymentMethodService: PaymentMethodService,
     private ticketService: TicketService,
+    private routeService: RouteService,
     private formBuilder: FormBuilder,
     private router: Router,
     protected localizationService: LocalizationService) {
@@ -40,6 +42,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeFormValidators();
+    this.selectedRoute = this.routeService.getSelectedRoute()!;
 
     this.ticketService.getAllTickets().pipe(
       tap((response: DataResponse<TicketModel[]>) => this.cardTypes = response.data)
@@ -60,7 +63,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.populateModel();
-    this.checkoutService.setCheckoutModel(this.checkoutModel);
+    this.checkoutService.setCheckoutModel(this.checkoutModel!);
     this.router.navigateByUrl("/checkout/confirmation");
   }
 
@@ -76,16 +79,19 @@ export class CheckoutComponent implements OnInit {
 
   private initializeFormValidators() {
     this.formGroup = this.formBuilder.group({
-      quantity: [this.checkoutModel.quantity, this.validateQuantity],
-      cardTypeId: [this.checkoutModel.cardType?.id, Validators.required],
-      paymentMethodId: [this.checkoutModel.paymentMethod?.id, Validators.required]
+      quantity: [1, this.validateQuantity],
+      cardTypeId: ["", Validators.required],
+      paymentMethodId: ["", Validators.required]
     });
   }
 
   private populateModel() {
-    this.checkoutModel.quantity = this.formGroup.get("quantity")?.value;
-    this.checkoutModel.cardType = this.cardTypes.find((cardType: TicketModel) => cardType.id == this.formGroup.get("cardTypeId")?.value);
-    this.checkoutModel.paymentMethod = this.paymentMethods
-                                        .find((paymentMethod: PaymentMethodModel) => paymentMethod.id == this.formGroup.get("paymentMethodId")?.value);
+    this.checkoutModel = {
+      quantity: this.formGroup.get("quantity")?.value,
+      selectedRoute: this.selectedRoute,
+      cardType: this.cardTypes.find((cardType: TicketModel) => cardType.id == this.formGroup.get("cardTypeId")?.value),
+      paymentMethod: this.paymentMethods
+        .find((paymentMethod: PaymentMethodModel) => paymentMethod.id == this.formGroup.get("paymentMethodId")?.value)
+    };
   }
 }

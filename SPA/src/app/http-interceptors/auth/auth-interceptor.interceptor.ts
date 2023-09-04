@@ -39,13 +39,13 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
     const response: HttpErrorResponse = event as HttpErrorResponse;
 
     if (response.status == HttpStatusCode.Unauthorized && this.userService.getUserJwtToken()) {
-      this.handleUnauthorizedAccess();
+      this.handleUnauthorizedAccess(); // todo: should be handled differently when we get the admin and driver roles up and running
     }
   }
 
   private handleUnauthorizedAccess() {
     this.userService.logout();
-    this.router.navigateByUrl("/prijava");
+    this.router.navigateByUrl("/login");
 
     this.toastMessageService.pushErrorMessage('Session expired.');
   }

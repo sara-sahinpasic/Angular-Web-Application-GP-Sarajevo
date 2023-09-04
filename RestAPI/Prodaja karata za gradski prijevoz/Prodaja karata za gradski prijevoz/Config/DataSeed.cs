@@ -4,17 +4,23 @@ using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
 using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
+using Application.Services.Abstractions.Interfaces.Repositories.Routes;
+using Application.Services.Abstractions.Interfaces.Repositories.Stations;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
+using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
 using Domain.Entities.Invoices;
 using Domain.Entities.News;
 using Domain.Entities.Payment;
 using Domain.Entities.Reviews;
+using Domain.Entities.Stations;
 using Domain.Entities.Tickets;
 using Domain.Entities.Users;
+using Domain.Entities.Vehicles;
 using Domain.Enums.PaymentOption;
 using Domain.Enums.Ticket;
 using Domain.Enums.User;
+using Route = Domain.Entities.Routes.Route;
 
 namespace Prodaja_karata_za_gradski_prijevoz.Config;
 
@@ -25,6 +31,9 @@ public static class DataSeed
     private const int InvoicesCount = 100;
     private const int NewsCount = 20;
     private const int ReviewsCount = 15;
+    private const int StationsCount = 15;
+    private const int VehiclesCount = 10;
+    private const int RoutesCount = 100;
 
     public static async Task SeedData(this WebApplication app)
     {
@@ -40,11 +49,17 @@ public static class DataSeed
             return;
         }
 
-        ICollection<IssuedTicket> issuedTickets = await SeedIssuedTickets(unitOfWork, userIds, serviceProvider);
-
-        await SeedInvoices(unitOfWork, issuedTickets, serviceProvider);
         await SeedNews(unitOfWork, serviceProvider);
         await SeedReviews(unitOfWork, serviceProvider);
+
+        IEnumerable<Station> stations = await SeedStations(unitOfWork, serviceProvider);
+        IEnumerable<Manufacturer> manufacturers = await SeedManufacturers(unitOfWork, serviceProvider);
+        IEnumerable<VehicleType> vehicleTypes = await SeedVehicleTypes(unitOfWork, serviceProvider);
+        IEnumerable<Vehicle> vehicles = await SeedVehicles(vehicleTypes, manufacturers, unitOfWork, serviceProvider);
+
+        IEnumerable<Guid> routeIds = await SeedRoutes(stations, vehicles, unitOfWork, serviceProvider);
+        ICollection<IssuedTicket> issuedTickets = await SeedIssuedTickets(unitOfWork, userIds, routeIds, serviceProvider);
+        await SeedInvoices(unitOfWork, issuedTickets, serviceProvider);
     }
     private static async Task SeedReviews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
@@ -77,7 +92,7 @@ public static class DataSeed
         await unitOfWork.CommitAsync(default);
     }
 
-    private static async Task<ICollection<IssuedTicket>> SeedIssuedTickets(IUnitOfWork unitOfWork, ICollection<Guid> userIds, IServiceProvider serviceProvider)
+    private static async Task<ICollection<IssuedTicket>> SeedIssuedTickets(IUnitOfWork unitOfWork, ICollection<Guid> userIds, IEnumerable<Guid> routeIds, IServiceProvider serviceProvider)
     {
         IIssuedTicketRepository issuedTicketRepository = serviceProvider.GetRequiredService<IIssuedTicketRepository>();
         ITicketRepository ticketRepository = serviceProvider.GetRequiredService<ITicketRepository>();
@@ -97,6 +112,7 @@ public static class DataSeed
                 ValidFrom = DateTime.Now,
                 ValidTo = DateTime.Now.AddMinutes(60),
                 IssuedDate = DateTime.Now,
+                RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count())),
             };
 
             issuedTicketRepository.Create(issuedTicket);
@@ -186,5 +202,128 @@ public static class DataSeed
         await unitOfWork.CommitAsync(default);
 
         return userIds;
+    }
+
+    public static async Task<IEnumerable<Station>> SeedStations(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        IStationRepository stationRepository = serviceProvider.GetRequiredService<IStationRepository>();
+
+        ICollection<Station> stationIds = new List<Station>();
+
+        for (int i = 0; i < StationsCount; ++i)
+        {
+            Station station = new()
+            {
+                Name = Faker.Country.Name(),
+            };
+            
+            stationRepository.Create(station);
+            stationIds.Add(station);
+        }
+        await unitOfWork.CommitAsync(default);
+
+        return stationIds;
+    }
+
+    public static async Task<IEnumerable<VehicleType>> SeedVehicleTypes(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        IVehicleTypeRepository vehicleTypeRepository = serviceProvider.GetRequiredService<IVehicleTypeRepository>();
+
+        ICollection<VehicleType> vehicleTypes = new List<VehicleType>();
+        string[] types = new[] { "Bus", "Tram" };
+
+        for (int i = 0; i < 2; ++i)
+        {
+            VehicleType vehicleType = new()
+            {
+                Name = types[i]
+            };
+
+            vehicleTypeRepository.Create(vehicleType);
+            vehicleTypes.Add(vehicleType);
+        }
+        await unitOfWork.CommitAsync(default);
+
+        return vehicleTypes;
+    }
+
+    public static async Task<IEnumerable<Vehicle>> SeedVehicles(IEnumerable<VehicleType> vehicleTypes, IEnumerable<Manufacturer> manufacturers, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        IVehicleRepository vehicleRepository = serviceProvider.GetRequiredService<IVehicleRepository>();
+
+        ICollection<Vehicle> vehicles = new List<Vehicle>();
+        string[] colors = new[] { "Blue", "Red", "Yellow", "Green", "Orange" };
+
+        for (int i = 0; i < VehiclesCount; ++i)
+        {
+            Vehicle vehicle = new()
+            {
+                BuildYear = Random.Shared.Next(1995, 2023),
+                Color = colors[Random.Shared.Next(0, colors.Length)],
+                Manufacturer = manufacturers.ElementAt(Random.Shared.Next(0, manufacturers.Count())),
+                VehicleType = vehicleTypes.ElementAt(Random.Shared.Next(0, vehicleTypes.Count())),
+                Number = Random.Shared.Next(1, 30),
+                RegistrationNumber = Faker.Identification.SocialSecurityNumber(),
+            };
+
+            vehicleRepository.Create(vehicle);
+            vehicles.Add(vehicle);
+        }
+
+        await unitOfWork.CommitAsync(default);
+
+        return vehicles;
+    }
+
+    public static async Task<IEnumerable<Manufacturer>> SeedManufacturers(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        IManufacturerRepository manufacturerRepository = serviceProvider.GetRequiredService<IManufacturerRepository>();
+
+        ICollection<Manufacturer> manufacturers = new List<Manufacturer>();
+
+        for (int i = 0; i < 2; ++i)
+        {
+            Manufacturer manufacturer = new()
+            {
+                Name = Faker.Name.First(),
+            };
+
+            manufacturerRepository.Create(manufacturer);
+            manufacturers.Add(manufacturer);
+        }
+        await unitOfWork.CommitAsync(default);
+
+        return manufacturers;
+    }
+
+    public static async Task<IEnumerable<Guid>> SeedRoutes(IEnumerable<Station> stations, IEnumerable<Vehicle> vehicles, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    {
+        IRouteRepository routeRepository = serviceProvider.GetRequiredService<IRouteRepository>();
+
+        List<Guid> routeIds = new();
+
+        for (int i = 0; i < RoutesCount; ++i)
+        {
+            TimeSpan timeOfDeparture = TimeSpan.FromHours(Random.Shared.Next(0, 24));
+            Guid startStationId = stations.ElementAt(Random.Shared.Next(0, stations.Count())).Id;
+            Route route = new()
+            {
+              Vehicle = vehicles.ElementAt(Random.Shared.Next(0, vehicles.Count())),
+              TimeOfArival = timeOfDeparture.Add(TimeSpan.FromMinutes(30)),
+              TimeOfDeparture = timeOfDeparture,
+              Active = true,
+              ActiveOnHolidays = true,
+              ActiveOnWeekends = true,
+              StartStationId = startStationId,
+              EndStationId = stations.Where(station => station.Id != startStationId).ElementAt(Random.Shared.Next(0, stations.Count() - 1)).Id
+            };
+
+            routeRepository.Create(route);
+            routeIds.Add(route.Id);
+        }
+
+        await unitOfWork.CommitAsync(default);
+
+        return routeIds;
     }
 }

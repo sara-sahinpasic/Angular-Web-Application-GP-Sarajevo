@@ -1,5 +1,5 @@
-import { Injectable, OnInit } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserProfileModel } from '../models/User/UserProfileModel';
 import { UserService } from '../services/user/user.service';
@@ -11,7 +11,7 @@ export class NotLoggedInGuard implements CanActivate {
 
   isLoggedIn: any;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
     this.userService.user$.pipe(
       tap((user: UserProfileModel | undefined) => this.isLoggedIn = user))
     .subscribe();
@@ -22,7 +22,8 @@ export class NotLoggedInGuard implements CanActivate {
       return true;
     }
     else {
-       return false;
+      this.router.navigateByUrl("");
+      return false;
     }
   }
 }

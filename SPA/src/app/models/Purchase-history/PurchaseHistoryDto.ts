@@ -3,4 +3,6 @@ export interface PurchaseHistoryDto {
   relationId: string;
   price: number;
   issuedDate: string;
+  startStationName: string;
+  endStationName: string;
 }

@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="form-container">
+    <div *ngFor="let route of routeList" class="route-card d-flex justify-content-between mb-2">
+      <div class="route-information d-flex flex-column mb-4">
+        <strong>{{ route.startingLocation }} - {{ route.endingLocation }}</strong>
+        <span>{{ route.date | date }}</span>
+        <span>{{ route.time }}</span>
+      </div>
+      <div class="btn-container d-flex flex-column-reverse">
+        <button class="primary ps-1 pe-1" (click)="chooseRouteTime(route)">{{ localizationService.localize("routes_choose_btn_label") }}</button>
+      </div>
+    </div>
+  </div>
+</div>

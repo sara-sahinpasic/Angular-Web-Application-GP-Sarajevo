@@ -1,6 +1,5 @@
 ﻿using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Domain.Entities.Payment;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
@@ -8,7 +7,6 @@ using Presentation.DTO;
 namespace Presentation.Controllers.Payment;
 
 [ApiController]
-[Authorize]
 [Route("[controller]")]
 public sealed class PaymentMethodController : ControllerBase
 {

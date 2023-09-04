@@ -17,18 +17,17 @@ import { CheckoutConfirmationComponent } from './components/checkout-confirmatio
 import { CheckoutConfirmGuard } from './guards/checkout/checkout-confirm.guard';
 import { ReviewComponent } from './components/review/review.component';
 import { NewsComponent } from './components/news/news.component';
+import { RoutesComponent } from './components/routes/routes.component';
+import { RouteNotSetGuard } from './guards/routes/route-not-set.guard';
 import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
 import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
-import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
-import { AdminReportPageComponent } from './components/admin/admin-report-page/admin-report-page.component';
 
 const routes: Routes = [
-  { path: 'admin/report', component: AdminReportPageComponent},
-  { path: 'admin/company', component: AdminCompanyPageComponent},
+  { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
   { path: 'admin/users', component: AdminUsersPageComponent},
   { path: 'admin', component: AdminHomePageComponent},
-  { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [LoggedInGuard, CheckoutConfirmGuard] },
-  { path: 'checkout', component: CheckoutComponent, canActivate: [LoggedInGuard] },
+  { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [RouteNotSetGuard, LoggedInGuard, CheckoutConfirmGuard] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [RouteNotSetGuard] },
   { path: 'news', component: NewsComponent},
   { path: 'review', component: ReviewComponent},
   { path: 'request', component: RequestComponent, canActivate:[LoggedInGuard] },
@@ -38,7 +37,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate:[LoggedInGuard] },
   { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard]},
   { path: 'activate/:token', component: ActivateAccountComponent,canActivate:[NotLoggedInGuard] },
-  { path: 'prijava', component: LogInComponent, canActivate:[NotLoggedInGuard] },
+  { path: 'login', component: LogInComponent, canActivate:[NotLoggedInGuard] },
   { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard]  },
   { path: '', component: HomeComponent },
   { path: '**', component: HomeComponent }

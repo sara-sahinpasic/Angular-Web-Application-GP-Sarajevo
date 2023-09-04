@@ -11,7 +11,6 @@ import { JwtService } from '../jwt/jwt.service';
 import { Router } from '@angular/router';
 import { UserLoginResponse } from '../../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
-import { Form } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
