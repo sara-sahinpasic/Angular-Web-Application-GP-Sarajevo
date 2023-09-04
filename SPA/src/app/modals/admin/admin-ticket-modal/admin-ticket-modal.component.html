@@ -1,0 +1,22 @@
+<form>
+  <div class="form-group">
+    <label for="ticketName">Naziv: </label>
+    <div class="input-group">
+      <input id="ticketName" class="form-control-admin" type="text" placeholder="" required name="ticketName" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="price">Cijena: </label>
+      <input id="price" class="form-control-admin" type="text" placeholder="" required name="price"
+        style="width: 140%;" />
+    </div>
+    <div class="col" style="margin-top: 7%; ">
+      <div class="form-check form-switch" style="float: right;">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Aktivna karta</label>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-dark myBtn" (click)="addTicket()">Evidentiraj kartu</button>
+</form>

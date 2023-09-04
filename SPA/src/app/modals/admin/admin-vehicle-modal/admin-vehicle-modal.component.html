@@ -1,0 +1,19 @@
+<form>
+  <div class="form-group">
+    <label for="registrationMark">Registracijska oznaka: </label>
+    <div class="input-group">
+      <input id="registrationMark" class="form-control-admin" type="text" placeholder="" required
+        name="registrationMark" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="yearOfManufacture">Godina proizvodnje: </label>
+    <div class="input-group">
+      <input id="yearOfManufacture" class="form-control-admin" type="number" placeholder="" required
+        name="yearOfManufacture" />
+    </div>
+
+  </div>
+  <button type="button" class="btn btn-dark myBtn" (click)="addVehicle()">Evidentiraj vozilo</button>
+</form>

@@ -1,0 +1,17 @@
+<form>
+  <div class="form-group">
+
+    <label for="exampleFormControlInput1">Naziv stanice:</label>
+    <input type="email" class="form-control-admin"><br />
+  </div>
+
+  <label for="formControlInput1-2" style="word-spacing: 60px;">Br.stanice | Naziv | Lokacija</label><br />
+  <div class="inputDiv">
+    <hr>
+    <input type="text" class="form-control-admin" style="border: none;">
+    <hr>
+  </div>
+  <button type="button" class="btn btn-dark myBtn" (click)="deleteStation()">Obriši stanicu</button>
+</form>
+<button type="button" class="btn btn-light myBtn" data-bs-toggle="modal" data-bs-target="#base-modal"
+  (click)="adminShowNewStationsModal()" style=" border: 1px solid gray; ">Evidentiraj novu stanicu</button>

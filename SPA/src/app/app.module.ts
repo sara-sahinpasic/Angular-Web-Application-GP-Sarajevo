@@ -37,6 +37,12 @@ import { AdminUsersPageComponent } from './components/admin/admin-users-page/adm
 import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
 import { AdminReportPageComponent } from './components/admin/admin-report-page/admin-report-page.component';
 import { AdminNavPageComponent } from './components/admin/admin-nav-page/admin-nav-page.component';
+import { AdminNewsModalComponent } from './modals/admin/admin-news-modal/admin-news-modal.component';
+import { AdminTicketModalComponent } from './modals/admin/admin-ticket-modal/admin-ticket-modal.component';
+import { AdminVehicleModalComponent } from './modals/admin/admin-vehicle-modal/admin-vehicle-modal.component';
+import { AdminStationModalComponent } from './modals/admin/admin-station-modal/admin-station-modal.component';
+import { AdminUserModalComponent } from './modals/admin/admin-user-modal/admin-user-modal.component';
+import { AdminNewStationModalComponent } from './modals/admin/admin-new-station-modal/admin-new-station-modal.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +72,13 @@ import { AdminNavPageComponent } from './components/admin/admin-nav-page/admin-n
     AdminUsersPageComponent,
     AdminCompanyPageComponent,
     AdminReportPageComponent,
-    AdminNavPageComponent
+    AdminNavPageComponent,
+    AdminNewsModalComponent,
+    AdminTicketModalComponent,
+    AdminVehicleModalComponent,
+    AdminStationModalComponent,
+    AdminUserModalComponent,
+    AdminNewStationModalComponent,
   ],
   imports: [
     BrowserModule,
