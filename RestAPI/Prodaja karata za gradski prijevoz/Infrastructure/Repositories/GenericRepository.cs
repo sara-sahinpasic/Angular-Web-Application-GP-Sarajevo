@@ -13,18 +13,27 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     {
         _dataContext = dataContext;
     }
+
     public IQueryable<TEntity> GetAll()
     {
         return _dataContext.Set<TEntity>()
             .AsQueryable();
     }
 
-    public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken, string[]? includes = null)
     {
         ArgumentNullException.ThrowIfNull(id, nameof(id));
-        
-        return _dataContext.Set<TEntity>()
-            .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
+        IQueryable<TEntity> query = _dataContext.Set<TEntity>();
+
+        if (includes is not null)
+        {
+            foreach (string item in includes)
+            {
+                query = query.Include(item);
+            }
+        }
+
+        return query.FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
     }
 
     public virtual Guid? Create(TEntity? entity)

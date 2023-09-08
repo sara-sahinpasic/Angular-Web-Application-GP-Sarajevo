@@ -11,6 +11,8 @@ import { JwtService } from '../jwt/jwt.service';
 import { Router } from '@angular/router';
 import { UserLoginResponse } from '../../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
+import { UserEditProfileModel } from 'src/app/models/User/UserEditProfileModel';
+import { Role } from 'src/app/models/User/Role';
 
 @Injectable({
   providedIn: 'root',
@@ -105,7 +107,15 @@ export class UserService {
             return;
           }
           localStorage.setItem('token', response.data.loginData);
-          this.user.next(this.getUser());
+          const user: UserProfileModel = this.getUser() as UserProfileModel;
+
+          this.user.next(user);
+
+          if (user.role.name.toLowerCase() === "admin") {
+            this.router.navigateByUrl("/admin");
+            return;
+          }
+
           this.router.navigateByUrl(redirectionRoute);
         })
       );
@@ -168,7 +178,7 @@ export class UserService {
   }
 
   public updateUser(
-    userToUpdate: UserProfileModel,
+    userToUpdate: UserEditProfileModel,
     redirectionRoute: string | null = null
   ): Observable<DataResponse<string>> {
     const formData: FormData = this.getFormDataFromObject(userToUpdate);
@@ -237,5 +247,15 @@ export class UserService {
     return this.httpClient.get<DataResponse<string>>(
       `${this.url}Profile/UserImage/${user.id}`
     );
+  }
+
+  public getUserRole(): Role | null {
+    const user: UserProfileModel | undefined = this.getUser();
+
+    if (!user) {
+      return null;
+    }
+
+    return user.role;
   }
 }

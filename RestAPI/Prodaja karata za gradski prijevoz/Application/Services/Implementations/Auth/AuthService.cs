@@ -68,7 +68,7 @@ public sealed class AuthService : IAuthService
     //todo: create factory: try to do in sprint 3
     public async Task<LoginResult?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
+        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken, new string[] { "Role" });
         
         if (user is null || !_passwordService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
         {
@@ -222,17 +222,18 @@ public sealed class AuthService : IAuthService
 
     public string GenerateJwtToken(User user, DateTime? issuedAt = null)
     {
-        var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+        byte[] key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
         object userProfile = new
         {
-            id = user.Id,
-            firstName = user.FirstName,
-            lastName = user.LastName,
-            address = user.Address,
-            email = user.Email,
-            dateOfBirth = user.DateOfBirth,
-            phoneNumber = user.PhoneNumber
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.Address,
+            user.Email,
+            user.DateOfBirth,
+            user.PhoneNumber,
+            user.Role
         };
 
         if (issuedAt is null)
@@ -245,7 +246,7 @@ public sealed class AuthService : IAuthService
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim("Id", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, JsonSerializer.Serialize(userProfile)),
+                new Claim(JwtRegisteredClaimNames.Sub, JsonSerializer.Serialize(userProfile, options: new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })),
                 new Claim(JwtRegisteredClaimNames.Iss, _config["Jwt:Issuer"]),
                 new Claim(JwtRegisteredClaimNames.Aud, _config["Jwt:Audience"]),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -303,7 +304,7 @@ public sealed class AuthService : IAuthService
         string[] tokenParts = token.Split(" ");
         string payload = tokenParts[1];
 
-        JwtSecurityToken tokenPayload = new JwtSecurityToken(payload);
+        JwtSecurityToken tokenPayload = new(payload);
         DateTime issuedAt = tokenPayload.IssuedAt;
 
         return issuedAt;

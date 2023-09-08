@@ -45,7 +45,7 @@ public sealed class DataContext : DbContext
            .IsUnique();
 
         modelBuilder.Entity<User>()
-            .HasOne<Role>()
+            .HasOne(user => user.Role)
             .WithMany()
             .HasForeignKey(r => r.RoleId);
 

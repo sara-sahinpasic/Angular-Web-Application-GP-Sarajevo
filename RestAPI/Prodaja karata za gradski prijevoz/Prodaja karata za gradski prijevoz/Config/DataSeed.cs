@@ -188,7 +188,7 @@ public static class DataSeed
                 PhoneNumber = Faker.Phone.Number(),
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
-                Role = Roles.User,
+                Roles = Roles.User,
                 Status = Statuses.Default,
                 ProfileImagePath = ""
             };

@@ -8,8 +8,10 @@ public sealed class User : Entity
 {
     public Guid RoleId { get; set; } = Guid.Parse(Roles.User.ToString());
 
+    public Role Role { get; set; } = null!;
+
     [NotMapped]
-    public Roles Role
+    public Roles Roles
     {
         get
         {

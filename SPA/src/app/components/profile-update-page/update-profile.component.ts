@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
-import { UserEditPrfileModel } from 'src/app/models/User/UserEditProfileModel';
+import { UserEditProfileModel } from 'src/app/models/User/UserEditProfileModel';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -17,7 +17,7 @@ export class UpdateProfileComponent implements OnInit {
 
   constructor(private _userService: UserService, protected localizationService: LocalizationService, private formBuilder: FormBuilder) {}
 
-  profileModel: UserEditPrfileModel = {};
+  profileModel: UserEditProfileModel = {};
 
   ngOnInit(): void {
     this._userService.user$
@@ -52,7 +52,7 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     this.profileModel.password = null;
-console.log(this.formGroup)
+
     if (this.formGroup.get("password")?.value != "") {
       this.profileModel.password = this.formGroup.get("password")?.value;
     }

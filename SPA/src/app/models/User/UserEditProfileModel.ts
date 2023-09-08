@@ -1,4 +1,4 @@
-export interface UserEditPrfileModel {
+export interface UserEditProfileModel {
   id?: string;
   firstName?: string;
   lastName?: string;

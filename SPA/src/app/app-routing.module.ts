@@ -21,9 +21,16 @@ import { RoutesComponent } from './components/routes/routes.component';
 import { RouteNotSetGuard } from './guards/routes/route-not-set.guard';
 import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
 import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
+import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
+import { AdminGuard } from './guards/admin/admin.guard';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
+  // this is commented out with task #192 because it's easier to debug the admin part of the page this way
+  // { path: 'admin/company', component: AdminCompanyPageComponent, canActivate: [AdminGuard]},
+  // { path: 'admin/users', component: AdminUsersPageComponent, canActivate: [AdminGuard]},
+  // { path: 'admin', component: AdminHomePageComponent, canActivate: [AdminGuard]},
+  { path: 'admin/company', component: AdminCompanyPageComponent},
   { path: 'admin/users', component: AdminUsersPageComponent},
   { path: 'admin', component: AdminHomePageComponent},
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [RouteNotSetGuard, LoggedInGuard, CheckoutConfirmGuard] },

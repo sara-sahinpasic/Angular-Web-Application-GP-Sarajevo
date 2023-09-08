@@ -114,7 +114,6 @@ public sealed class AuthenticationController : ControllerBase
 
         LoginResult? loginResult = await _authService.LoginAsync(loginData.Email, loginData.Password, cancellationToken);
 
-
         if (loginResult is null)
         {
             errorResponse.Message = "auth_controller_login_action_user_not_found";
