@@ -1,25 +1,55 @@
 <div class="d-flex flex-row w-100 admin-container">
-
   <app-admin-nav-page></app-admin-nav-page>
-  <div class="w-100 d-flex justify-content-left align-items-left divForm">
-
-    <div class="backgroundDiv">
-      <div class="form-group">
+  <div class="w-100 d-flex justify-content-center align-items-center flex-column">
+      <div class="form-group w-100 ps-5 pe-4">
         <label for="formControlInput1-1" class="formControlInput1-1">Email:</label>
-        <input type="email" class="form-control"
-          style="margin-left: 23px; margin-right: 3%; margin-top:7px; width: 95%; border: 1px solid rgba(128, 128, 128, 0.713);"><br />
+        <input type="email" class="form-control-admin" [(ngModel)]="userModel.email"
+          [ngModelOptions]="{standalone: true}" (keyup)="findEmail($event)">
+        <hr>
       </div>
 
-      <label for="formControlInput1-2" class="formControlInput1-2">Email | Ime | Prezime |
-        TipKorisnika</label><br />
-      <div class="inputDiv">
-        <hr style="margin-bottom: 30px;">
-        <button type="button" class="btn btn-link btn-operation">Uredi</button>
-        <button type="button" class="btn btn-link btn-operation">Obriši</button>
-        <input type="email" class="form-control"
-          style="float:right; margin-left: 10px; margin-top:5px; width: 55%; border: 1px solid rgba(128, 128, 128, 0.713); border: none;">
-        <hr style="margin-top: 35px;">
+      <div class="form-group">
+        <table class="table table-hover">
+          <tr>
+            <th colspan="2"></th>
+            <th>Email</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Adresa</th>
+            <th>Broj telefona</th>
+            <th>Tip korisnika</th>
+          </tr>
+          <tbody>
+            <tr *ngFor="let u of this.usersData | paginate:{
+                itemsPerPage: paginationModel.pageSize,
+                currentPage: paginationModel.page,
+                totalItems: paginationModel.totalCount
+              }; let i=index">
+              <td>
+                <button type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
+                  data-bs-target="#base-modal" (click)="showUpdateUserModal(u)">Uredi</button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-link btn-operation" (click)="deleteUser(u.id)">Obriši</button>
+              </td>
+              <td>{{u.email}}</td>
+              <td>{{u.firstName}}</td>
+              <td>{{u.lastName}}</td>
+              <td>{{u.address}}</td>
+              <td>{{u.phoneNumber}}</td>
+              <td>{{u.roleName}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+
+      <div class="form-group">
+        <div class="mt-2">
+          <div class="paging d-flex justify-content-left">
+            <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
   </div>
 </div>

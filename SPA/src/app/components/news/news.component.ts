@@ -37,9 +37,8 @@ export class NewsComponent implements OnInit {
     this.getPage();
   }
 
-  showNewsModalButton(n: string) {
-    console.log(n);
-    this.modalService.data = n;
+  showNewsModalButton(id: string) {
+    this.modalService.data = id;
     this.modalService.showNewsModal();
   }
 

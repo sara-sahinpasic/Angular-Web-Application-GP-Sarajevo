@@ -15,6 +15,7 @@ export class ModalService {
   public showAdminVehiclesModalState: boolean = false;
   public showAdminStationsModalState: boolean = false;
   public showAdminNewStationsModalState: boolean = false;
+  public showAdminUpdateUserModalState: boolean = false;
 
   public data: any;
   private modalTitle: string = '';
@@ -26,6 +27,10 @@ export class ModalService {
     this.modalCloseBtn = btn;
   }
   //admin:
+  adminShowUpdateUserModal() {
+    this.showAdminUpdateUserModalState = true;
+    this.modalTitle = 'Izmjena podataka';
+  }
   adminShowNewsModal() {
     this.showAdminNewsModalState = true;
     this.modalTitle = 'Nova obavijest';
@@ -68,6 +73,7 @@ export class ModalService {
 
   closeModal() {
     //admin:
+    this.showAdminUpdateUserModalState=false;
     this.showAdminNewsModalState = false;
     this.showAdminUsersModalState = false;
     this.showAdminTicketsModalState = false;

@@ -22,4 +22,5 @@ public class Roles : StringEnum
 
         return enumValue;
     }
+    
 }

@@ -1,47 +1,77 @@
-<form>
+<form [formGroup]="registrationForm">
   <div class="form-group">
     <label for="firstName">Ime: </label>
     <div class="input-group">
-      <input id="firstName" class="form-control-admin" type="text" placeholder="" required name="firstName" />
+      <input id="firstName" class="form-control-admin" type="text" required name="firstName"
+        [(ngModel)]="userCreateModel.firstName" formControlName="firstName" [class.is-invalid]="
+      registrationForm.get('firstName')?.invalid && (registrationForm.get('firstName')?.dirty
+      || registrationForm.get('firstName')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
   </div>
 
   <div class="form-group">
     <label for="lastName">Prezime: </label>
     <div class="input-group">
-      <input id="lastName" class="form-control-admin" type="text" placeholder="" required name="lastName" />
+      <input id="lastName" class="form-control-admin" type="text" required name="lastName"
+        [(ngModel)]="userCreateModel.lastName" formControlName="lastName" [class.is-invalid]="
+      registrationForm.get('lastName')?.invalid && (registrationForm.get('lastName')?.dirty
+      || registrationForm.get('lastName')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
   </div>
-
 
   <div class="form-group">
     <label for="dateOfBirth">Datum rođenja: </label>
     <div class="input-group">
-      <input id="dateOfBirth" class="form-control-admin" type="date" placeholder="" required name="dateOfBirth" />
+      <input id="dateOfBirth" class="form-control-admin" type="date" placeholder="" required name="dateOfBirth"
+        [(ngModel)]="userCreateModel.dateOfBirth" formControlName="dateOfBirth" [class.is-invalid]="
+        registrationForm.get('dateOfBirth')?.invalid && (registrationForm.get('dateOfBirth')?.dirty
+      || registrationForm.get('dateOfBirth')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
   </div>
 
   <div class="form-group">
     <label for="email">Email:</label>
     <div class="input-group">
-      <input id="email" class="form-control-admin" type="email" placeholder="" required name="email" />
+      <input id="email" class="form-control-admin" type="email" required name="email"
+        [(ngModel)]="userCreateModel.email" formControlName="email" [class.is-invalid]="
+      registrationForm.get('email')?.invalid && (registrationForm.get('email')?.dirty
+      || registrationForm.get('email')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
   </div>
 
   <div class="form-group">
     <label for="password">Lozinka: </label>
     <div class="input-group">
-      <input id="password" class="form-control-admin" type="password" placeholder="" required name="password" />
+      <input id="password" class="form-control-admin" type="password" required name="password"
+        [(ngModel)]="userCreateModel.password" formControlName="password" [class.is-invalid]="
+       registrationForm.get('password')?.invalid && (registrationForm.get('password')?.dirty
+      || registrationForm.get('password')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
   </div>
 
   <div class="form-group mt-2 mb-2">
     <label>Tip korisnika: </label>
-    <select class="form-control-admin">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
+    <select class="form-control-admin" [(ngModel)]="userCreateModel.roleId" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let role of roles; let i=index" [value]="role.id">
+        {{role.name}}
+      </option>
     </select>
   </div>
+
   <button type="button" class="btn btn-dark myBtn" (click)="addUser()">Evidentiraj korisnika</button>
 </form>

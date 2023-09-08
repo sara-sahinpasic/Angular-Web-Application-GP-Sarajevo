@@ -12,7 +12,8 @@
         <app-request *ngIf="modalService.showRequestModalState"></app-request>
         <app-review-modal *ngIf="modalService.showReviewModalState"></app-review-modal>
         <app-news-modal *ngIf="modalService.showNewsModalState" [newsId]="modalService.data"></app-news-modal>
-
+        <app-admin-update-user-modal *ngIf="modalService.showAdminUpdateUserModalState"
+          [userId]="modalService.data"></app-admin-update-user-modal>
         <app-admin-news-modal *ngIf="modalService.showAdminNewsModalState"></app-admin-news-modal>
         <app-admin-ticket-modal *ngIf="modalService.showAdminTicketsModalState"></app-admin-ticket-modal>
         <app-admin-vehicle-modal *ngIf="modalService.showAdminVehiclesModalState"></app-admin-vehicle-modal>

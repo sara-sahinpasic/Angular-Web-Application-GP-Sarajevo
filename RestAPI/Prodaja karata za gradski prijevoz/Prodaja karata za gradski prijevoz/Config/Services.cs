@@ -13,6 +13,7 @@ using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
+using Application.Services.Abstractions.Interfaces.Repositories.Roles;
 using Application.Services.Abstractions.Interfaces.Repositories.Routes;
 using Application.Services.Abstractions.Interfaces.Repositories.Stations;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
@@ -29,6 +30,7 @@ using Infrastructure.Repositories.News;
 using Infrastructure.Repositories.Payment;
 using Infrastructure.Repositories.Requests;
 using Infrastructure.Repositories.Reviews;
+using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.Routes;
 using Infrastructure.Repositories.Stations;
 using Infrastructure.Repositories.Tickets;
@@ -87,6 +89,8 @@ public static partial class Services
         builder.Services.TryAddScoped<IRouteRepository, RouteRepository>();
         builder.Services.TryAddScoped<IHolidayRepository, HolidayRepository>();
         builder.Services.TryAddScoped<IStationRepository, StationRepository>();
+        builder.Services.TryAddScoped<IRoleRepository, RoleRepository>();
+
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)

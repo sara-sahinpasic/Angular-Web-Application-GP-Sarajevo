@@ -211,7 +211,7 @@ export class UserService {
 
   public deleteUser(
     id: string,
-    redirectRoute: string = '/delete'
+    redirectRoute: string | null = '/delete'
   ): Observable<DataResponse<string>> {
     return this.httpClient
       .delete<DataResponse<string>>(`${this.url}Profile?id=${id}`)
