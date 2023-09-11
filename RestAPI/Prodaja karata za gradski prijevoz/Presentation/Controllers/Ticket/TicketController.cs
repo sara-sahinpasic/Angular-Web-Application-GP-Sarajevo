@@ -20,15 +20,16 @@ public sealed class TicketController : ControllerBase
     public async Task<IActionResult> GetAllCardTypes(CancellationToken cancellationToken)
     {
         Ticket[] tickets = await _ticketRepository.GetAll()
-            .AsNoTracking()
-            .ToArrayAsync(cancellationToken);
+                .Where(t=>t.Active==true)
+                .AsNoTracking()
+                .ToArrayAsync(cancellationToken);
 
         Response response = new()
         {
             Data = tickets
         };
-        
+
         return Ok(response);
-         // todo: we will need a repository for card type creation and read which means we will need to remove the enum
+        // todo: we will need a repository for card type creation and read which means we will need to remove the enum
     }
 }
