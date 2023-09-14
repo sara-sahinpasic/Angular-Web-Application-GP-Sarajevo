@@ -25,7 +25,6 @@ import { AdminCompanyPageComponent } from './components/admin/admin-company-page
 import { AdminGuard } from './guards/admin/admin.guard';
 
 const routes: Routes = [
-  { path: 'admin/company', component: AdminCompanyPageComponent},
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
   // this is commented out with task #192 because it's easier to debug the admin part of the page this way
   // { path: 'admin/company', component: AdminCompanyPageComponent, canActivate: [AdminGuard]},
