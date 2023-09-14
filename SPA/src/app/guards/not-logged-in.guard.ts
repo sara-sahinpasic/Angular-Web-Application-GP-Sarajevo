@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { UserProfileModel } from '../models/User/UserProfileModel';
 import { UserService } from '../services/user/user.service';
 
 @Injectable({
@@ -11,14 +9,10 @@ export class NotLoggedInGuard implements CanActivate {
 
   isLoggedIn: any;
 
-  constructor(private userService: UserService, private router: Router) {
-    this.userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => this.isLoggedIn = user))
-    .subscribe();
-  }
+  constructor(private userService: UserService, private router: Router) {}
 
   canActivate() {
-    if (this.isLoggedIn == undefined) {
+    if (!this.userService.isLoggedIn()) {
       return true;
     }
     else {

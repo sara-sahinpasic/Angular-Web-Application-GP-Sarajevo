@@ -22,16 +22,10 @@ export class UserService {
   private redirectionTime: number = 2 * 1000;
 
   private userId?: string;
-  private hasUserSentVerifyRequest: Subject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  private isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  private isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  private isResetPasswordRequestSent: Subject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  private hasUserSentVerifyRequest: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private isResetPasswordRequestSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isDeleteRequestSent: Subject<any> = new Subject();
   private user: BehaviorSubject<UserProfileModel | undefined>;
   public user$: Observable<UserProfileModel | undefined>;
@@ -41,27 +35,19 @@ export class UserService {
   public hasUserSentVerifyRequest$: Observable<boolean>;
   public isDeleteRequestSent$: Observable<any>;
 
-  constructor(
-    private httpClient: HttpClient,
-    private jwtService: JwtService,
-    private router: Router
-  ) {
-    this.user = new BehaviorSubject(
-      this.getUser() as UserProfileModel | undefined
-    );
+  constructor(private httpClient: HttpClient, private jwtService: JwtService, private router: Router) {
+    this.user = new BehaviorSubject(this.getUser() as UserProfileModel | undefined);
     this.user$ = this.user.asObservable();
     this.isActivated$ = this.isUserActivated.asObservable();
     this.isRegistrationSent$ = this.isRegistrationSent.asObservable();
-    this.isResetPasswordRequestSent$ =
-      this.isResetPasswordRequestSent.asObservable();
-    this.hasUserSentVerifyRequest$ =
-      this.hasUserSentVerifyRequest.asObservable();
+    this.isResetPasswordRequestSent$ = this.isResetPasswordRequestSent.asObservable();
+    this.hasUserSentVerifyRequest$ = this.hasUserSentVerifyRequest.asObservable();
     this.isDeleteRequestSent$ = this.isDeleteRequestSent.asObservable();
   }
 
   public register(
     registerRequest: UserRegisterRequest,
-    redirectionRoute: string = '/login'
+    redirectionRoute: string | null = '/login'
   ): Observable<DataResponse<UserRegisterResponse>> {
     return this.httpClient
       .post<DataResponse<UserRegisterResponse>>(
@@ -70,11 +56,12 @@ export class UserService {
       )
       .pipe(
         tap((resp: DataResponse<UserRegisterResponse>) => {
-          const response: DataResponse<UserRegisterResponse> =
-            resp as DataResponse<UserRegisterResponse>;
+          const response: DataResponse<UserRegisterResponse> = resp as DataResponse<UserRegisterResponse>;
 
           if (!response.data.isAccountActivationRequired) {
-            this.router.navigateByUrl(redirectionRoute);
+            if (redirectionRoute) {
+              this.router.navigateByUrl(redirectionRoute);
+            }
             return;
           }
 
@@ -95,7 +82,7 @@ export class UserService {
 
   public login(
     loginData: UserLoginRequest,
-    redirectionRoute: string = ''
+    redirectionRoute: string | null = ''
   ): Observable<DataResponse<UserLoginResponse>> {
     return this.httpClient
       .post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
@@ -116,7 +103,9 @@ export class UserService {
             return;
           }
 
-          this.router.navigateByUrl(redirectionRoute);
+          if (redirectionRoute) {
+            this.router.navigateByUrl(redirectionRoute);
+          }
         })
       );
   }
@@ -135,20 +124,16 @@ export class UserService {
     }
 
     return this.httpClient
-      .post<DataResponse<string>>(
-        this.url + 'verifyLogin',
-        userVerifyLoginRequest
-      )
+      .post<DataResponse<string>>(this.url + 'verifyLogin', userVerifyLoginRequest)
       .pipe(
         tap((response: DataResponse<string>) => {
           localStorage.setItem('token', response.data);
 
           this.user.next(this.getUser());
-          if (!redirectionRoute) {
-            return;
-          }
 
-          this.router.navigateByUrl(redirectionRoute);
+          if (redirectionRoute) {
+            this.router.navigateByUrl(redirectionRoute);
+          }
         })
       );
   }
@@ -257,5 +242,9 @@ export class UserService {
     }
 
     return user.role;
+  }
+
+  public isLoggedIn(): boolean {
+    return !!this.getUser();
   }
 }

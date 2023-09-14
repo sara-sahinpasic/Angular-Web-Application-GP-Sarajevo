@@ -44,9 +44,7 @@ export class ReviewComponent implements OnInit {
   }
 
   isUserLoggedIn() {
-    this.userService.user$.subscribe((user: any) => {
-      this.shouldShowReviewButton = !!user;
-    });
+    this.shouldShowReviewButton = this.userService.isLoggedIn();
   }
 
   showReviewModalButton() {

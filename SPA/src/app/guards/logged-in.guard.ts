@@ -1,7 +1,5 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { UserProfileModel } from '../models/User/UserProfileModel';
-import { tap } from 'rxjs';
 import { UserService } from '../services/user/user.service';
 import { CacheService } from '../services/cache/cache.service';
 import { ToastMessageService } from '../services/toast/toast-message.service';
@@ -12,21 +10,15 @@ import { LocalizationService } from '../services/localization/localization.servi
 })
 export class LoggedInGuard implements CanActivate {
 
-  isLoggedIn: any;
-
   constructor(
     private userService: UserService,
     private router: Router,
     private cacheService: CacheService,
     private toastService: ToastMessageService,
-    private localizationService: LocalizationService) {
-    this.userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => this.isLoggedIn = user))
-    .subscribe();
-  }
+    private localizationService: LocalizationService) {}
 
   canActivate(activatedRoute: ActivatedRouteSnapshot) {
-    if (this.isLoggedIn != undefined) {
+    if (this.userService.isLoggedIn()) {
       return true;
     }
     else {

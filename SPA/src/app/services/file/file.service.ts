@@ -12,21 +12,20 @@ import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 export class FileService {
 
   private baseApiUrl = environment.apiUrl;
+  private userId?: string;
 
-  constructor(private httpClient: HttpClient, private userService: UserService) {}
-
-  download(url: string): Observable<HttpResponse<Blob>> {
-    let userId: string | undefined= "";
+  constructor(private httpClient: HttpClient, private userService: UserService) {
     this.userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => userId = user?.id)
+      tap((user: UserProfileModel | undefined) => this.userId = user?.id)
     )
     .subscribe();
+  }
 
-    return this.httpClient.get(`${this.baseApiUrl}${url}?userId=${userId}`, { responseType: 'blob', observe: 'response' })
+  download(url: string): Observable<HttpResponse<Blob>> {
+    return this.httpClient.get(`${this.baseApiUrl}${url}?userId=${this.userId}`, { responseType: 'blob', observe: 'response' })
       .pipe(
         tap((response: HttpResponse<Blob>) => {
           const fileContents: Blob = response.body as Blob;
-          console.log(response)
           const fileName: string = this.getFileNameFromResponseHeader(response);
 
           this.saveFile(fileName, fileContents);
@@ -36,10 +35,14 @@ export class FileService {
 
   private saveFile(fileName: string, fileContents: Blob) {
     const link = document.createElement('a');
+
     link.href = window.URL.createObjectURL(fileContents);
     link.download = fileName;
+
     document.body.appendChild(link);
+
     link.click();
+
     document.body.removeChild(link);
   }
 
