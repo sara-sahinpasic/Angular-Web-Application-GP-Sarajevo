@@ -1,19 +1,71 @@
-<form>
+<form [formGroup]="registrationForm">
   <div class="form-group">
-    <label for="registrationMark">Registracijska oznaka: </label>
+    <label for="vehicleNumber">Broj vozila: </label>
     <div class="input-group">
-      <input id="registrationMark" class="form-control-admin" type="text" placeholder="" required
-        name="registrationMark" />
+      <input id="vehicleNumber" class="form-control-admin" type="text" required name="vehicleNumber"
+        [(ngModel)]="vehicleModel.number" formControlName="vehicleNumber" [class.is-invalid]="
+      registrationForm.get('vehicleNumber')?.invalid && (registrationForm.get('vehicleNumber')?.dirty
+      || registrationForm.get('vehicleNumber')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
   </div>
 
   <div class="form-group">
-    <label for="yearOfManufacture">Godina proizvodnje: </label>
+    <label for="registrationNumber">Registracijska oznaka: </label>
     <div class="input-group">
-      <input id="yearOfManufacture" class="form-control-admin" type="number" placeholder="" required
-        name="yearOfManufacture" />
+      <input id="registrationNumber" class="form-control-admin" type="text" required name="registrationNumber"
+        [(ngModel)]="vehicleModel.registrationNumber" formControlName="registrationNumber" [class.is-invalid]="
+      registrationForm.get('registrationNumber')?.invalid && (registrationForm.get('registrationNumber')?.dirty
+      || registrationForm.get('registrationNumber')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
     </div>
-
   </div>
-  <button type="button" class="btn btn-dark myBtn" (click)="addVehicle()">Evidentiraj vozilo</button>
+
+  <div class="form-group">
+    <label for="buildYear">Godina proizvodnje: </label>
+    <div class="input-group">
+      <input id="buildYear" type="number" min="1980" max="2099" step="1" value="2016" class="form-control-admin"
+        placeholder="" required name="buildYear" [(ngModel)]="vehicleModel.buildYear" formControlName="buildYear"
+        [class.is-invalid]="
+      registrationForm.get('buildYear')?.invalid && (registrationForm.get('buildYear')?.dirty
+    || registrationForm.get('buildYear')?.touched)" />
+      <div class="invalid-feedback">
+        {{ "Obavezan unos!" }}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group mt-2 mb-2">
+    <label for="color">Boja:</label>
+    <select class="form-control-admin" [(ngModel)]="vehicleModel.color" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let color of colors; let i=index">
+        {{color}}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group mt-2 mb-2">
+    <label>Proizvodžač: </label>
+    <select class="form-control-admin" [(ngModel)]="vehicleModel.manufacturerId" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let manufacturer of manufacturers; let i=index" [value]="manufacturer.id">
+        {{manufacturer.name}}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group mt-2 mb-2">
+    <label>Tip vozila: </label>
+    <select class="form-control-admin" [(ngModel)]="vehicleModel.vehicleTypeId" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let vehicleType of vehicleTypes; let i=index" [value]="vehicleType.id">
+        {{vehicleType.name}}
+      </option>
+    </select>
+  </div>
+
+  <button type="button" class="btn btn-dark myBtn" (click)="addVehicle()">
+    Evidentiraj vozilo</button>
 </form>

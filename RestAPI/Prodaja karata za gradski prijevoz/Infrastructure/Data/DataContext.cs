@@ -40,6 +40,10 @@ public sealed class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Vehicle>()
+            .HasIndex(v => v.RegistrationNumber)
+            .IsUnique();
+
         modelBuilder.Entity<User>()
            .HasIndex(u => u.Email)
            .IsUnique();
