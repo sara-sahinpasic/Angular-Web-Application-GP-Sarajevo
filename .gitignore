@@ -6,4 +6,4 @@ bin/
 obj/
 log_exceptions.log
 RestAPI/Prodaja karata za gradski prijevoz/Prodaja karata za gradski prijevoz/Uploads
-RestAPI/Prodaja karata za gradski prijevoz/Prodaja karata za gradski prijevoz/appsettings.Development.json
+RestAPI/Prodaja karata za gradski prijevoz/IdentityServer/tempkey.jwk

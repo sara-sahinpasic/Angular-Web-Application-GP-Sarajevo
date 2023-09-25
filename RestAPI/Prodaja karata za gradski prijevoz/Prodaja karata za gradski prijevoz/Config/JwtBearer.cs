@@ -8,24 +8,11 @@ public static partial class JwtBearer
 {
     public static void AddAuthenticationAndAuthorization(this WebApplicationBuilder builder)
     {
-        builder.Services.AddAuthentication(options =>
+        builder.Services.AddAuthentication("Bearer")
+        .AddJwtBearer("Bearer", o =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(o =>
-        {
-            o.TokenValidationParameters = new()
-            {
-                ValidAudience = builder.Configuration["Jwt:Audience"],
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true
-            };
+            o.Authority = builder.Configuration["Jwt:Authority"];
+            o.Audience = builder.Configuration["Jwt:Audience"];
         });
 
         builder.Services.AddAuthorization();

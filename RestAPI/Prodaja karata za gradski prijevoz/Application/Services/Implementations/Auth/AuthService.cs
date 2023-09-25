@@ -5,12 +5,9 @@ using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.Entities.Users;
+using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Prodaja_karata_za_gradski_prijevoz.Config;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
 
 namespace Application.Services.Implementations.Auth;
@@ -24,6 +21,7 @@ public sealed class AuthService : IAuthService
     private readonly IVerificationCodeRepository _verificationCodeRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _config;
+    private readonly HttpClient _httpClient;
     private readonly AuthConfirmationConfig _authConfirmationConfig;
 
     public AuthService(
@@ -34,6 +32,7 @@ public sealed class AuthService : IAuthService
         IVerificationCodeRepository verificationCodeRepository,
         IUnitOfWork unitOfWork,
         IConfiguration config,
+        HttpClient httpClient,
         AuthConfirmationConfig authConfirmationConfig)
     {
         _userRepository = userRepository;
@@ -44,6 +43,7 @@ public sealed class AuthService : IAuthService
         _config = config;
         _unitOfWork = unitOfWork;
         _authConfirmationConfig = authConfirmationConfig;
+        _httpClient = httpClient;
     }
 
     public bool HasAuthCodeExpired(VerificationCode verificationCode, CancellationToken cancellationToken)
@@ -53,16 +53,20 @@ public sealed class AuthService : IAuthService
         return DateTime.Now.Millisecond - verificationCode?.DateExpiring.Millisecond > 1000 * 60 * 5 || verificationCode.Activated;
     }
 
-    public async Task<string> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
+    public async Task<LoginResult?> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
     {
         verificationCode.Activated = true;
         _verificationCodeRepository.Update(verificationCode);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        string jwtToken = GenerateJwtToken(verificationCode.User);
+        JsonElement authToken = await GetAuthTokenAsync(verificationCode.User, cancellationToken);
 
-        return jwtToken;
+        return new LoginResult
+        {
+            LoginData = authToken,
+            IsTwoWayAuth = _authConfirmationConfig.ShouldUseTwoWayAuth
+        };
     }
 
     //todo: create factory: try to do in sprint 3
@@ -77,10 +81,11 @@ public sealed class AuthService : IAuthService
 
         if (!_authConfirmationConfig.ShouldUseTwoWayAuth)
         {
-            string jwtToken = GenerateJwtToken(user);
+            JsonElement authToken = await GetAuthTokenAsync(user, cancellationToken);
+
             return new LoginResult
             {
-                LoginData = jwtToken,
+                LoginData = authToken,
                 IsTwoWayAuth = _authConfirmationConfig.ShouldUseTwoWayAuth
             };
         }
@@ -110,6 +115,39 @@ public sealed class AuthService : IAuthService
             LoginData = user.Id.ToString(),
             IsTwoWayAuth = _authConfirmationConfig.ShouldUseTwoWayAuth
         };
+    }
+
+    private async Task<TokenResponse?> GetIdentityFromIdentityServer(string userClaims, CancellationToken cancellationToken = default)
+    {
+        string identityServerUrl = _config["Jwt:Authority"];
+        DiscoveryDocumentResponse discoveryDocument = await _httpClient.GetDiscoveryDocumentAsync(identityServerUrl, cancellationToken);
+
+        TokenResponse? tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+        {
+            Address = discoveryDocument.TokenEndpoint,
+            ClientId = "api",
+            ClientSecret = _config["Jwt:Secret"],
+            Scope = "api.all",
+            Parameters = new Parameters()
+            {
+                new KeyValuePair<string, string>("UserClaims", userClaims)
+            }
+        }, cancellationToken);
+
+        return tokenResponse;
+    }
+
+    public async Task<JsonElement> GetAuthTokenAsync(User user, CancellationToken cancellationToken = default)
+    {
+        string userClaims = GetUserClaimsData(user);
+        TokenResponse? tokenResponse = await GetIdentityFromIdentityServer(userClaims, cancellationToken);
+
+        if (tokenResponse is null || tokenResponse.IsError)
+        {
+            throw new HttpRequestException(tokenResponse?.Error);
+        }
+
+        return tokenResponse.Json!;
     }
 
     public async Task<RegisterResult> RegisterAsync(User user, string password, CancellationToken cancellationToken)
@@ -180,11 +218,6 @@ public sealed class AuthService : IAuthService
         return _unitOfWork.CommitAsync(cancellationToken);
     }
 
-    public Task LogoutAsync(User user, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException(); //todo: figure out in sprint 3
-    }
-
     public async Task<bool> IsUserActivatedAsync(string email, CancellationToken cancellationToken)
     {
         User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
@@ -220,10 +253,8 @@ public sealed class AuthService : IAuthService
         return Random.Shared.Next(1000, 9999);
     }
 
-    public string GenerateJwtToken(User user, DateTime? issuedAt = null)
+    private string GetUserClaimsData(User user)
     {
-        byte[] key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
-
         object userProfile = new
         {
             user.Id,
@@ -236,33 +267,9 @@ public sealed class AuthService : IAuthService
             user.Role
         };
 
-        if (issuedAt is null)
-        {
-            issuedAt = DateTime.UtcNow;
-        }
+        string userClaims = JsonSerializer.Serialize(userProfile, options: new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
-        SecurityTokenDescriptor tokenDescriptor = new()
-        {
-            Subject = new ClaimsIdentity(new[]
-            {
-                new Claim("Id", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, JsonSerializer.Serialize(userProfile, options: new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })),
-                new Claim(JwtRegisteredClaimNames.Iss, _config["Jwt:Issuer"]),
-                new Claim(JwtRegisteredClaimNames.Aud, _config["Jwt:Audience"]),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
-            IssuedAt = issuedAt.Value,
-            Expires = issuedAt.Value.AddMinutes(30),
-            Issuer = _config["Jwt:Issuer"],
-            Audience = _config["Jwt:Audience"],
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        JwtSecurityTokenHandler tokenHandler = new();
-        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-        string jwtToken = tokenHandler.WriteToken(token);
-
-        return jwtToken;
+        return userClaims;
     }
 
     private string GenerateRegistrationToken()
@@ -297,16 +304,5 @@ public sealed class AuthService : IAuthService
         string content = $"Your new password is {newPassword}. Please, change your password the next time you log in.";
 
         await _emailService.SendNoReplyMailAsync(user, subject, content, cancellationToken);
-    }
-
-    public DateTime GetJwtIssuedDateFromToken(string token)
-    {
-        string[] tokenParts = token.Split(" ");
-        string payload = tokenParts[1];
-
-        JwtSecurityToken tokenPayload = new(payload);
-        DateTime issuedAt = tokenPayload.IssuedAt;
-
-        return issuedAt;
     }
 }

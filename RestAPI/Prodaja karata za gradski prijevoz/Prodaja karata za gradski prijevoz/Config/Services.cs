@@ -62,6 +62,11 @@ public static partial class Services
         builder.Services.TryAddSingleton<Messages>();
     }
 
+    public static void AddHttpClientToSelectedServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHttpClient<IAuthService, AuthService>();
+    }
+
     public static void AddTransientServices(this WebApplicationBuilder builder)
     {
         builder.Services.TryAddTransient<IEmailService, EmailService>();

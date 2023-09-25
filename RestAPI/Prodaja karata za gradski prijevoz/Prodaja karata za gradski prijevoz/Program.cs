@@ -44,6 +44,7 @@ builder.AddSingletonServices();
 builder.AddRepositories();
 builder.AddScopedServices();
 builder.AddTransientServices();
+builder.AddHttpClientToSelectedServices();
 
 WebApplication? app = builder.Build();
 

@@ -1,4 +1,6 @@
+import { UserTokenData } from "./UserToken";
+
 export interface UserLoginResponse {
-  loginData: string,
+  loginData: UserTokenData | string,
   isTwoWayAuth: boolean
 }

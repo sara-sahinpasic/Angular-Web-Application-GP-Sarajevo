@@ -13,6 +13,7 @@ import { UserLoginResponse } from '../../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
 import { UserEditProfileModel } from 'src/app/models/User/UserEditProfileModel';
 import { Role } from 'src/app/models/User/Role';
+import { UserTokenData } from 'src/app/models/User/UserToken';
 
 @Injectable({
   providedIn: 'root',
@@ -89,11 +90,13 @@ export class UserService {
       .pipe(
         tap((response: DataResponse<UserLoginResponse>) => {
           if (response.data.isTwoWayAuth) {
-            this.userId = response.data.loginData;
+            this.userId = response.data.loginData as string;
             this.hasUserSentVerifyRequest.next(true);
             return;
           }
-          localStorage.setItem('token', response.data.loginData);
+          const userTokenData: UserTokenData = (response.data.loginData) as UserTokenData;
+          localStorage.setItem('token', userTokenData.access_token);
+
           const user: UserProfileModel = this.getUser() as UserProfileModel;
 
           this.user.next(user);
@@ -113,7 +116,7 @@ export class UserService {
   public verifyLogin(
     code: number,
     redirectionRoute: string | null = null
-  ): Observable<DataResponse<string>> {
+  ): Observable<DataResponse<UserLoginResponse>> {
     const userVerifyLoginRequest: UserVerifyLoginRequest = {
       userId: this.userId as string,
       code: code,
@@ -124,10 +127,10 @@ export class UserService {
     }
 
     return this.httpClient
-      .post<DataResponse<string>>(this.url + 'verifyLogin', userVerifyLoginRequest)
+      .post<DataResponse<UserLoginResponse>>(this.url + 'verifyLogin', userVerifyLoginRequest)
       .pipe(
-        tap((response: DataResponse<string>) => {
-          localStorage.setItem('token', response.data);
+        tap((response: DataResponse<UserLoginResponse>) => {
+          localStorage.setItem('token', (response.data.loginData as UserTokenData).access_token);
 
           this.user.next(this.getUser());
 
@@ -152,7 +155,7 @@ export class UserService {
     const decodedToken: string = this.jwtService.decode(token);
     const payload: any = JSON.parse(decodedToken);
 
-    return JSON.parse(payload.sub) as UserProfileModel;
+    return JSON.parse(payload.userData) as UserProfileModel;
   }
 
   private getFormDataFromObject(object: any): FormData {
@@ -165,14 +168,14 @@ export class UserService {
   public updateUser(
     userToUpdate: UserEditProfileModel,
     redirectionRoute: string | null = null
-  ): Observable<DataResponse<string>> {
+  ): Observable<DataResponse<UserTokenData>> {
     const formData: FormData = this.getFormDataFromObject(userToUpdate);
     console.log(userToUpdate);
     return this.httpClient
-      .put<DataResponse<string>>(`${this.url}Profile`, formData)
+      .put<DataResponse<UserTokenData>>(`${this.url}Profile`, formData)
       .pipe(
-        tap((response: DataResponse<string>) => {
-          localStorage.setItem("token", response.data);
+        tap((response: DataResponse<UserTokenData>) => {
+          localStorage.setItem("token", response.data.access_token);
           this.user.next(this.getUser());
 
           if (!redirectionRoute) {

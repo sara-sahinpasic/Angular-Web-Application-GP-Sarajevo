@@ -6,11 +6,11 @@ using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.User;
+using System.Text.Json;
 
 namespace Presentation.Controllers.Account;
 
@@ -74,9 +74,7 @@ public sealed class ProfileController : ControllerBase
         _userRepository.Update(data);
         await unitOfWork.CommitAsync(cancellationToken);
 
-        string token = HttpContext.Request.Headers["Authorization"];
-        DateTime tokenIssuedAtDate = authService.GetJwtIssuedDateFromToken(token);
-        string jwtToken = authService.GenerateJwtToken(data, tokenIssuedAtDate);
+        JsonElement jwtToken = await authService.GetAuthTokenAsync(data, cancellationToken);
 
         Response responseOk = new()
         {

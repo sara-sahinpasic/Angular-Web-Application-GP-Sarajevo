@@ -16,7 +16,7 @@ public sealed class LocalizationService : ILocalizationService
     {
         locale = locale?.ToLower();
 
-        if ((locale == "null" || locale == "bs") && _messages.Bs.TryGetValue(message, out string? bsTranslation))
+        if ((locale is null || locale == "null" || locale == "bs") && _messages.Bs.TryGetValue(message, out string? bsTranslation))
         {
             return bsTranslation;
         }

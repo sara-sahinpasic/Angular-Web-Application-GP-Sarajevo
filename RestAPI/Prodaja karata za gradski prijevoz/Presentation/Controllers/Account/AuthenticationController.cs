@@ -123,7 +123,7 @@ public sealed class AuthenticationController : ControllerBase
         if (!await _authService.IsUserActivatedAsync(loginData.Email, cancellationToken))
         {
             errorResponse.Message = "auth_controller_login_action_account_not_active";
-            return BadRequest(errorResponse); // todo: create also if user exists in service
+            return BadRequest(errorResponse);
         }
 
         string message = loginResult.IsTwoWayAuth ? "auth_controller_login_action_two_way_auth" : "auth_controller_login_action_login_success";
@@ -157,10 +157,10 @@ public sealed class AuthenticationController : ControllerBase
             return BadRequest(response);
         }
 
-        string token = await _authService.AuthenticateLoginAsync(verificationCode, cancellationToken);
+        LoginResult? loginResult = await _authService.AuthenticateLoginAsync(verificationCode, cancellationToken);
 
         response.Message = "auth_controller_login_action_login_success";
-        response.Data = token;
+        response.Data = loginResult;
 
         return Ok(response);
     }

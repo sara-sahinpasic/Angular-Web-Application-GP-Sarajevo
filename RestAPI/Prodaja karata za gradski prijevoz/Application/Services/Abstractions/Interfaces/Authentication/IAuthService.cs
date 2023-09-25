@@ -1,5 +1,6 @@
 ﻿using Application.DataClasses.User;
 using Domain.Entities.Users;
+using System.Text.Json;
 
 namespace Application.Services.Abstractions.Interfaces.Authentication;
 
@@ -11,7 +12,7 @@ public interface IAuthService
     /// <param name="loginCode">Verification code</param>
     /// <param name="userId">User Id</param>
     /// <returns>Jwt token when task is done</returns>
-    Task<string> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken);
+    Task<LoginResult?> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken);
     bool HasAuthCodeExpired(VerificationCode verificationCode, CancellationToken cancellationToken);
     /// <summary>
     /// Verifies the password and email and sends verification code to user
@@ -30,11 +31,9 @@ public interface IAuthService
     Task<RegisterResult> RegisterAsync(User user, string password, CancellationToken cancellationToken);
     Task<bool> HasRegistrationTokenExpiredAsync(RegistrationToken registrationToken, CancellationToken cancellationToken);
     Task ActivateUserAccountAsync(User user, RegistrationToken registrationToken, CancellationToken cancellationToken);
-    Task LogoutAsync(User user, CancellationToken cancellationToken);
     Task<bool> IsUserActivatedAsync(string emai, CancellationToken cancellationToken);
     Task ResendVerificationCodeAsync(User user, CancellationToken cancellationToken);
     Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken);
     Task ResetPasswordAsync(string email, CancellationToken cancellationToken);
-    string GenerateJwtToken(User user, DateTime? issuedAt = null);
-    DateTime GetJwtIssuedDateFromToken(string token);
+    Task<JsonElement> GetAuthTokenAsync(User user, CancellationToken cancellationToken = default);
 }
