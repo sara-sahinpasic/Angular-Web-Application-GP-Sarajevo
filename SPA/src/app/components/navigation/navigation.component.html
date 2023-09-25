@@ -22,13 +22,6 @@
             <a class="d-none d-lg-block" [routerLink]="['/profile']">{{ localizationService.localize("navigation_profile") }}</a>
           </li>
 
-          <li class="nav-item pe-3 ps-3 pt-2 pb-2"  routerLinkActive="selected">
-            <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
-              <a href="#relacije">{{ localizationService.localize("navigation_routes") }}</a>
-            </span>
-            <a class="d-none d-lg-block" href="#relacije">{{ localizationService.localize("navigation_routes") }}</a>
-          </li>
-
           <li class="nav-item pe-3 ps-3 pt-2 pb-2" routerLinkActive="selected">
             <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
               <a [routerLink]="['/review']">{{ localizationService.localize("navigation_impressions") }}</a>
