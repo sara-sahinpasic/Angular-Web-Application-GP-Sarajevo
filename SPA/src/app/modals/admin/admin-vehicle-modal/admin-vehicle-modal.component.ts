@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { ManufacturerDto } from 'src/app/models/Admin/Vehicle/ManufacturerDto';
 import { VehicleDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
 import { VehicleTypeDto } from 'src/app/models/Admin/Vehicle/VehicleTypeDto';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
   selector: 'app-admin-vehicle-modal',
@@ -15,7 +17,9 @@ import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicl
 export class AdminVehicleModalComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
-    protected vehicleService: AdminVehicleService
+    protected vehicleService: AdminVehicleService,
+    protected router: Router,
+    protected modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +67,12 @@ export class AdminVehicleModalComponent implements OnInit {
         }, 3000);
       });
     }
+  }
+
+  showManufacturerModal() {
+    this.router
+      .navigateByUrl(`/admin/company/vehicle/manufacturer`)
+      .then(() => this.modalService.closeModal());
   }
 
   initForm() {

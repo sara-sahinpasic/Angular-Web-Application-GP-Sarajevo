@@ -25,12 +25,18 @@ export class AdminVehicleService {
       this.apiUrl + 'VehicleType'
     );
   }
-  addNewVehicle(
-    vehicle: VehicleDto
-  ): Observable<DataResponse<VehicleDto[]>> {
+  addNewVehicle(vehicle: VehicleDto): Observable<DataResponse<VehicleDto[]>> {
     return this.httpClient.post<DataResponse<VehicleDto[]>>(
       this.apiUrl + 'Vehicle',
       vehicle
+    );
+  }
+  addNewManufacturer(
+    manufacturer: ManufacturerDto
+  ): Observable<DataResponse<ManufacturerDto[]>> {
+    return this.httpClient.post<DataResponse<ManufacturerDto[]>>(
+      this.apiUrl + 'Manufacturer',
+      manufacturer
     );
   }
 }

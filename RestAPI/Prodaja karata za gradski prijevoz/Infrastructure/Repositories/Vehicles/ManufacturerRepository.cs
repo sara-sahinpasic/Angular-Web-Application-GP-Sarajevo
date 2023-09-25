@@ -1,10 +1,16 @@
 ﻿using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
 using Domain.Entities.Vehicles;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Vehicles;
 
 public sealed class ManufacturerRepository : GenericRepository<Manufacturer>, IManufacturerRepository
 {
-    public ManufacturerRepository(DataContext dataContext) : base(dataContext) {}
+    public ManufacturerRepository(DataContext dataContext) : base(dataContext) { }
+
+    public Task<bool> IsManufacturerRegisteredAsync(string name, CancellationToken cancellationToken = default)
+    {
+        return GetAll().AnyAsync(manufacturer => manufacturer.Name.Trim().ToLower() == name.Trim().ToLower());
+    }
 }
