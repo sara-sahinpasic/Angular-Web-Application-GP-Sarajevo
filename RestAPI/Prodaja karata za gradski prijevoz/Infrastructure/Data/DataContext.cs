@@ -9,6 +9,7 @@ using Domain.Entities.News;
 using Domain.Entities.Stations;
 using Domain.Entities.Vehicles;
 using Domain.Entities.Routes;
+using Domain.Entities.System;
 
 namespace Infrastructure.Data;
 
@@ -32,7 +33,7 @@ public sealed class DataContext : DbContext
     public DbSet<Manufacturer> Manufacturers { get; set; } = null!;
     public DbSet<Route> Routes { get; set; } = null!;
     public DbSet<Holiday> Holidays { get; set; } = null!;
-
+    public DbSet<Log> Logs { get; set; } = null!;
 
     public DataContext(DbContextOptions options) : base(options) { }
 

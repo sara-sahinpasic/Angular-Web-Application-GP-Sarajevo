@@ -16,9 +16,11 @@ using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
 using Application.Services.Abstractions.Interfaces.Repositories.Roles;
 using Application.Services.Abstractions.Interfaces.Repositories.Routes;
 using Application.Services.Abstractions.Interfaces.Repositories.Stations;
+using Application.Services.Abstractions.Interfaces.Repositories.System;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
+using Application.Services.Abstractions.Interfaces.System;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Checkout;
 using Application.Services.Implementations.Hashing;
@@ -33,11 +35,13 @@ using Infrastructure.Repositories.Reviews;
 using Infrastructure.Repositories.Roles;
 using Infrastructure.Repositories.Routes;
 using Infrastructure.Repositories.Stations;
+using Infrastructure.Repositories.System;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.Users;
 using Infrastructure.Repositories.Vehicles;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.File;
+using Infrastructure.Services.System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Prodaja_karata_za_gradski_prijevoz.Config;
@@ -90,12 +94,13 @@ public static partial class Services
         builder.Services.TryAddScoped<IHolidayRepository, HolidayRepository>();
         builder.Services.TryAddScoped<IStationRepository, StationRepository>();
         builder.Services.TryAddScoped<IRoleRepository, RoleRepository>();
-
+        builder.Services.TryAddScoped<ILogRepository, LogRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)
     {
         builder.Services.TryAddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.TryAddScoped<ILocalizationService, LocalizationService>();
+        builder.Services.TryAddScoped<ILogService, LogService>();
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using PdfSharp.Pdf;
 using System.Text;
+using IOFile = System.IO.File;
 
 namespace Infrastructure.Services.File;
 
@@ -98,7 +99,7 @@ public sealed class FileService : IFileService
             Directory.CreateDirectory("PDFs");
         }
 
-        System.IO.File.WriteAllBytes($"PDFs/{pdfName}", pdfBytes);
+        IOFile.WriteAllBytes($"PDFs/{pdfName}", pdfBytes);
     }
 
     public byte[] GenerateIssuedTicketPDF(Invoice invoice, bool shouldGenerateLocalFile = false)

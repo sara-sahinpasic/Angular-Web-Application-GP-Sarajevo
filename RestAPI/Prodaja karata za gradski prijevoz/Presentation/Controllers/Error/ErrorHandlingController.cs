@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Application.Services.Abstractions.Interfaces.System;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,28 +11,25 @@ namespace Presentation.Controllers.Error;
 public sealed class ErrorHandlingController : ControllerBase
 {
     public ILogger<ErrorHandlingController> _logger { get; }
+    private readonly ILogService _logService;
 
-    public ErrorHandlingController(ILogger<ErrorHandlingController> logger)
+    public ErrorHandlingController(ILogger<ErrorHandlingController> logger, ILogService logService)
     {
         _logger = logger;
+        _logService = logService;
     }
 
-    public IActionResult ErrorHandler()
+    public async Task<IActionResult> ErrorHandlerAsync()
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
-        return HandleException(exceptionFeature.Error);
+        return await HandleException(exceptionFeature.Error);
     }
 
-    private IActionResult HandleException(Exception exception)
+    private async Task<IActionResult> HandleException(Exception? exception)
     {
         ArgumentNullException.ThrowIfNull(exception, nameof(exception));
 
-        return Problem(exception);
-    }
-
-    private IActionResult Problem(Exception exception)
-    {
         ProblemDetails problem = new()
         {
             Title = "Error",
@@ -39,9 +37,9 @@ public sealed class ErrorHandlingController : ControllerBase
             Status = 500
         };
         var exceptionMessage = exception.InnerException?.Message ?? exception.Message;
-        // todo: see how to do with logger: sprint 3
-        //  System.IO.File.AppendAllText("Logs/log_exceptions.log", $"{DateTime.Now}: {exceptionMessage}\n");
+
         _logger.LogError(exceptionMessage);
+        await _logService.LogAsync(exceptionMessage, LogLevel.Error);
 
         return StatusCode((int)problem.Status, problem);
     }
