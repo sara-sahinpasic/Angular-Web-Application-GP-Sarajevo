@@ -19,10 +19,11 @@ import { ReviewComponent } from './components/review/review.component';
 import { NewsComponent } from './components/news/news.component';
 import { RoutesComponent } from './components/routes/routes.component';
 import { RouteNotSetGuard } from './guards/routes/route-not-set.guard';
-import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
-import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
-import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
+import { AdminHomePageComponent } from './components/admin/children/admin-home-page/admin-home-page.component';
+import { AdminUsersPageComponent } from './components/admin/children/admin-users-page/admin-users-page.component';
+import { AdminCompanyPageComponent } from './components/admin/children/admin-company-page/admin-company-page.component';
 import { AdminGuard } from './guards/admin/admin.guard';
+import { AdminComponent } from './components/admin/admin.component';
 import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 
@@ -32,25 +33,27 @@ const routes: Routes = [
   // { path: 'admin/company', component: AdminCompanyPageComponent, canActivate: [AdminGuard]},
   // { path: 'admin/users', component: AdminUsersPageComponent, canActivate: [AdminGuard]},
   // { path: 'admin', component: AdminHomePageComponent, canActivate: [AdminGuard]},
+  { path: 'admin', component: AdminComponent, children: [
+    { path: 'home', component: AdminHomePageComponent, outlet: "admin"},
+    { path: 'users', component: AdminUsersPageComponent, outlet: "admin"},
+    { path: 'company', component: AdminCompanyPageComponent, outlet: "admin" }
+  ]},
   { path: 'admin/company/vehicle/manufacturer', component: AdminManufacturerModalComponent},
   { path: 'admin/company/vehicle/type', component: AdminVehicleTypeModalComponent},
-  { path: 'admin/company', component: AdminCompanyPageComponent},
-  { path: 'admin/users', component: AdminUsersPageComponent},
-  { path: 'admin', component: AdminHomePageComponent},
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [RouteNotSetGuard, LoggedInGuard, CheckoutConfirmGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [RouteNotSetGuard] },
-  { path: 'news', component: NewsComponent},
-  { path: 'review', component: ReviewComponent},
+  { path: 'news', component: NewsComponent },
+  { path: 'review', component: ReviewComponent },
   { path: 'request', component: RequestComponent, canActivate:[LoggedInGuard] },
   { path: 'purchaseHistory', component: PurchaseHistoryComponent, canActivate:[LoggedInGuard] },
   { path: 'delete', component: ProfileDeletedPageComponent, canActivate:[LoggedInGuard] },
   { path: 'update', component: UpdateProfileComponent, canActivate:[LoggedInGuard] },
   { path: 'profile', component: ProfileComponent, canActivate:[LoggedInGuard] },
-  { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard]},
+  { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard] },
   { path: 'activate/:token', component: ActivateAccountComponent,canActivate:[NotLoggedInGuard] },
   { path: 'login', component: LogInComponent, canActivate:[NotLoggedInGuard] },
-  { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard]  },
-  { path: '', component: HomeComponent },
+  { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard] },
+  { path: '', component: HomeComponent},
   { path: '**', component: HomeComponent }
 ];
 

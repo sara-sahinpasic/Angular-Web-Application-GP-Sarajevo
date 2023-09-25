@@ -33,8 +33,8 @@ import { ReviewModalComponent } from './modals/review-modal/review-modal.compone
 import { NewsComponent } from './components/news/news.component';
 import { NewsModalComponent } from './modals/news-modal/news-modal.component';
 import { RoutesComponent } from './components/routes/routes.component';
-import { AdminHomePageComponent } from './components/admin/admin-home-page/admin-home-page.component';
-import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
+import { AdminHomePageComponent } from './components/admin/children/admin-home-page/admin-home-page.component';
+import { AdminUsersPageComponent } from './components/admin/children/admin-users-page/admin-users-page.component';
 import { AdminNavPageComponent } from './components/admin/admin-nav-page/admin-nav-page.component';
 import { AdminNewsModalComponent } from './modals/admin/admin-news-modal/admin-news-modal.component';
 import { AdminTicketModalComponent } from './modals/admin/admin-ticket-modal/admin-ticket-modal.component';
@@ -42,8 +42,9 @@ import { AdminVehicleModalComponent } from './modals/admin/admin-vehicle-modal/a
 import { AdminStationModalComponent } from './modals/admin/admin-station-modal/admin-station-modal.component';
 import { AdminUserModalComponent } from './modals/admin/admin-user-modal/admin-user-modal.component';
 import { AdminNewStationModalComponent } from './modals/admin/admin-new-station-modal/admin-new-station-modal.component';
-import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
+import { AdminCompanyPageComponent } from './components/admin/children/admin-company-page/admin-company-page.component';
 import { AdminUpdateUserModalComponent } from './modals/admin/admin-update-user-modal/admin-update-user-modal.component';
+import { AdminComponent } from './components/admin/admin.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
 
@@ -83,6 +84,7 @@ import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-typ
     AdminUserModalComponent,
     AdminNewStationModalComponent,
     AdminUpdateUserModalComponent,
+    AdminComponent,
     AdminManufacturerModalComponent,
     AdminVehicleTypeModalComponent
   ],
