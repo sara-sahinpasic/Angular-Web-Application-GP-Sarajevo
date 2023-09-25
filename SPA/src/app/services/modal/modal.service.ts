@@ -54,6 +54,7 @@ export class ModalService {
   adminShowNewStationsModal() {
     this.showAdminNewStationsModalState = true;
   }
+
   //user:
   showRequestModal() {
     this.showRequestModalState = true;
@@ -73,7 +74,7 @@ export class ModalService {
 
   closeModal() {
     //admin:
-    this.showAdminUpdateUserModalState=false;
+    this.showAdminUpdateUserModalState = false;
     this.showAdminNewsModalState = false;
     this.showAdminUsersModalState = false;
     this.showAdminTicketsModalState = false;

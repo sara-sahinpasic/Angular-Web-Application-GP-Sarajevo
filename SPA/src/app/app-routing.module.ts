@@ -23,6 +23,7 @@ import { AdminHomePageComponent } from './components/admin/admin-home-page/admin
 import { AdminUsersPageComponent } from './components/admin/admin-users-page/admin-users-page.component';
 import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
 import { AdminGuard } from './guards/admin/admin.guard';
+import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 
 const routes: Routes = [
@@ -32,6 +33,7 @@ const routes: Routes = [
   // { path: 'admin/users', component: AdminUsersPageComponent, canActivate: [AdminGuard]},
   // { path: 'admin', component: AdminHomePageComponent, canActivate: [AdminGuard]},
   { path: 'admin/company/vehicle/manufacturer', component: AdminManufacturerModalComponent},
+  { path: 'admin/company/vehicle/type', component: AdminVehicleTypeModalComponent},
   { path: 'admin/company', component: AdminCompanyPageComponent},
   { path: 'admin/users', component: AdminUsersPageComponent},
   { path: 'admin', component: AdminHomePageComponent},

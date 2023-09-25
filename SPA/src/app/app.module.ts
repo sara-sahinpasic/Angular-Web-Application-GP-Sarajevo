@@ -45,6 +45,7 @@ import { AdminNewStationModalComponent } from './modals/admin/admin-new-station-
 import { AdminCompanyPageComponent } from './components/admin/admin-company-page/admin-company-page.component';
 import { AdminUpdateUserModalComponent } from './modals/admin/admin-update-user-modal/admin-update-user-modal.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
+import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { AdminManufacturerModalComponent } from './modals/admin/admin-manufactur
     AdminNewStationModalComponent,
     AdminUpdateUserModalComponent,
     AdminManufacturerModalComponent,
+    AdminVehicleTypeModalComponent
   ],
   imports: [
     BrowserModule,

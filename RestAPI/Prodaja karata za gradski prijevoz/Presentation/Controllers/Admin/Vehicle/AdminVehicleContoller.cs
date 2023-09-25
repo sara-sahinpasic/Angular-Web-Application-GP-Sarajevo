@@ -86,6 +86,33 @@ namespace Presentation.Controllers.Admin.Vehicles
             };
             return CreatedAtAction(nameof(CreateVehicle), response);
         }
+
+        [HttpPost("/VehicleType")]
+        public async Task<IActionResult> CreateVehicleType(VehicleTypeDto vehicleTypeDto, CancellationToken cancellationToken)
+        {
+            if (await vehicleTypeRepository.IsVehicleTypeRegisteredAsync(vehicleTypeDto.Name))
+            {
+                Response errorResponse = new()
+                {
+                    Message = "Tip vozila već postoji u bazi podataka.",
+                    Data = vehicleTypeDto.Name
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            VehicleType newVehicleType = new();
+            mapperService.Map(vehicleTypeDto, newVehicleType);
+
+            vehicleTypeRepository.Create(newVehicleType);
+            await unitOfWork.CommitAsync(cancellationToken);
+
+            Response response = new()
+            {
+                Message = "Novi tip vozila registrovan.",
+            };
+            return CreatedAtAction(nameof(CreateVehicleType), response);
+        }
         [HttpPost("/Manufacturer")]
         public async Task<IActionResult> CreateManufacturer(ManufacturerDto manufacturerDto, CancellationToken cancellationToken)
         {

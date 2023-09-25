@@ -69,6 +69,12 @@ export class AdminVehicleModalComponent implements OnInit {
     }
   }
 
+  showVehicleTypeModal() {
+    this.router
+      .navigateByUrl(`/admin/company/vehicle/type`)
+      .then(() => this.modalService.closeModal());
+  }
+
   showManufacturerModal() {
     this.router
       .navigateByUrl(`/admin/company/vehicle/manufacturer`)
