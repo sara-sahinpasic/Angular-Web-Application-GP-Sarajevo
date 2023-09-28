@@ -106,7 +106,7 @@ export class UserService {
             return;
           }
 
-          if (redirectionRoute) {
+          if (redirectionRoute != null) {
             this.router.navigateByUrl(redirectionRoute);
           }
         })
@@ -155,7 +155,11 @@ export class UserService {
     const decodedToken: string = this.jwtService.decode(token);
     const payload: any = JSON.parse(decodedToken);
 
-    return payload as UserProfileModel;
+    try {
+      return payload as UserProfileModel;
+    } catch (error) {
+      return undefined;
+    }
   }
 
   private getFormDataFromObject(object: any): FormData {
