@@ -48,7 +48,7 @@ export class RouteService {
       date += ` ${this.routeInformation.dateStamp.time}`;
     }
 
-    return new Date(date).toUTCString();
+    return new Date(date).toDateString();
   }
 
   public setSelectedRoute(selectedRoute: SelectedRoute) {

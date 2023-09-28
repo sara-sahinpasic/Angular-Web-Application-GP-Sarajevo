@@ -7,6 +7,7 @@ using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Localization;
 using Application.Services.Abstractions.Interfaces.Mapper;
+using Application.Services.Abstractions.Interfaces.Report;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
 using Application.Services.Abstractions.Interfaces.Repositories.News;
@@ -41,6 +42,7 @@ using Infrastructure.Repositories.Users;
 using Infrastructure.Repositories.Vehicles;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.File;
+using Infrastructure.Services.Report;
 using Infrastructure.Services.System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -69,10 +71,6 @@ public static partial class Services
 
     public static void AddTransientServices(this WebApplicationBuilder builder)
     {
-        builder.Services.TryAddTransient<IEmailService, EmailService>();
-        builder.Services.TryAddTransient<IAuthService, AuthService>();
-        builder.Services.TryAddTransient<IFileService, FileService>();
-        builder.Services.TryAddTransient<ICheckoutService, CheckoutService>();
         builder.Services.TryAddTransient<IObjectMapperService, ObjectMapperService>();
         builder.Services.TryAddTransient<IPasswordService, PasswordService>();
         builder.Services.TryAddTransient<IPDFGeneratorService, PDFGeneratorService>();
@@ -104,6 +102,11 @@ public static partial class Services
 
     public static void AddScopedServices(this WebApplicationBuilder builder)
     {
+        builder.Services.TryAddScoped<IEmailService, EmailService>();
+        builder.Services.TryAddScoped<IAuthService, AuthService>();
+        builder.Services.TryAddScoped<IFileService, FileService>();
+        builder.Services.TryAddScoped<ICheckoutService, CheckoutService>();
+        builder.Services.TryAddScoped<IReportService, ReportService>();
         builder.Services.TryAddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.TryAddScoped<ILocalizationService, LocalizationService>();
         builder.Services.TryAddScoped<ILogService, LogService>();

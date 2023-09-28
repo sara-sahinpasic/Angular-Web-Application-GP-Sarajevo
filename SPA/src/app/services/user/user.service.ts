@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
 import { UserLoginResponse } from '../../models/User/UserLoginResponse';
 import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
 import { UserEditProfileModel } from 'src/app/models/User/UserEditProfileModel';
-import { Role } from 'src/app/models/User/Role';
 import { UserTokenData } from 'src/app/models/User/UserToken';
+import { Role } from 'src/app/models/roles/role';
 
 @Injectable({
   providedIn: 'root',
@@ -101,7 +101,7 @@ export class UserService {
 
           this.user.next(user);
 
-          if (user.role.name.toLowerCase() === "admin") {
+          if (user.role.toLowerCase() === "admin") {
             this.router.navigateByUrl("/admin");
             return;
           }
@@ -155,7 +155,7 @@ export class UserService {
     const decodedToken: string = this.jwtService.decode(token);
     const payload: any = JSON.parse(decodedToken);
 
-    return JSON.parse(payload.userData) as UserProfileModel;
+    return payload as UserProfileModel;
   }
 
   private getFormDataFromObject(object: any): FormData {
@@ -165,18 +165,16 @@ export class UserService {
     return formData;
   }
 
-  public updateUser(
-    userToUpdate: UserEditProfileModel,
-    redirectionRoute: string | null = null
-  ): Observable<DataResponse<UserTokenData>> {
+  public updateUser(userToUpdate: UserEditProfileModel, redirectionRoute: string | null = null): Observable<DataResponse<UserTokenData>> {
     const formData: FormData = this.getFormDataFromObject(userToUpdate);
-    console.log(userToUpdate);
     return this.httpClient
       .put<DataResponse<UserTokenData>>(`${this.url}Profile`, formData)
       .pipe(
         tap((response: DataResponse<UserTokenData>) => {
-          localStorage.setItem("token", response.data.access_token);
-          this.user.next(this.getUser());
+          if (response.data) {
+            localStorage.setItem("token", response.data.access_token);
+            this.user.next(this.getUser());
+          }
 
           if (!redirectionRoute) {
             return;
@@ -237,7 +235,7 @@ export class UserService {
     );
   }
 
-  public getUserRole(): Role | null {
+  public getUserRole(): string | null {
     const user: UserProfileModel | undefined = this.getUser();
 
     if (!user) {
@@ -249,5 +247,9 @@ export class UserService {
 
   public isLoggedIn(): boolean {
     return !!this.getUser();
+  }
+
+  public isUserInRole(role: Role): boolean {
+    return !!this.getUserRole() && role.name.toLocaleLowerCase() === this.getUserRole()?.toLocaleLowerCase();
   }
 }

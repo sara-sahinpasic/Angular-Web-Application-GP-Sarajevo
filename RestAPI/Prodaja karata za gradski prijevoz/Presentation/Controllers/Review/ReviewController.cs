@@ -6,6 +6,8 @@ using Presentation.DTO;
 using Presentation.DTO.Review;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Application.Config;
 
 namespace Presentation.Controllers.Review;
 
@@ -25,6 +27,7 @@ public sealed class ReviewController : ControllerBase
         this._issuedTicket = issuedTicket;
     }
 
+    [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
     [HttpPost("AddReview")]
     public async Task<IActionResult> AddReview([FromServices] IObjectMapperService objectMapperService,
          ReviewDto reviewDto, CancellationToken cancellationToken)

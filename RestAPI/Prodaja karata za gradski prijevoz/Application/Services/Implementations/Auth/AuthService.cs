@@ -69,7 +69,6 @@ public sealed class AuthService : IAuthService
         };
     }
 
-    //todo: create factory: try to do in sprint 3
     public async Task<LoginResult?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
         User? user = await _userRepository.GetByEmailAsync(email, cancellationToken, new string[] { "Role" });
@@ -117,10 +116,12 @@ public sealed class AuthService : IAuthService
         };
     }
 
-    private async Task<TokenResponse?> GetIdentityFromIdentityServer(string userClaims, CancellationToken cancellationToken = default)
+    private async Task<TokenResponse?> GetIdentityFromIdentityServer(UserClaims userClaims, CancellationToken cancellationToken = default)
     {
         string identityServerUrl = _config["Jwt:Authority"];
         DiscoveryDocumentResponse discoveryDocument = await _httpClient.GetDiscoveryDocumentAsync(identityServerUrl, cancellationToken);
+
+        string userData = JsonSerializer.Serialize(userClaims, options: new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
         TokenResponse? tokenResponse = await _httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
         {
@@ -130,7 +131,7 @@ public sealed class AuthService : IAuthService
             Scope = "api.all",
             Parameters = new Parameters()
             {
-                new KeyValuePair<string, string>("UserClaims", userClaims)
+                new KeyValuePair<string, string>("UserClaims", userData)
             }
         }, cancellationToken);
 
@@ -139,7 +140,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<JsonElement> GetAuthTokenAsync(User user, CancellationToken cancellationToken = default)
     {
-        string userClaims = GetUserClaimsData(user);
+        UserClaims userClaims = GetUserClaimsData(user);
         TokenResponse? tokenResponse = await GetIdentityFromIdentityServer(userClaims, cancellationToken);
 
         if (tokenResponse is null || tokenResponse.IsError)
@@ -253,21 +254,19 @@ public sealed class AuthService : IAuthService
         return Random.Shared.Next(1000, 9999);
     }
 
-    private string GetUserClaimsData(User user)
+    private UserClaims GetUserClaimsData(User user)
     {
-        object userProfile = new
+        UserClaims userClaims = new()
         {
-            user.Id,
-            user.FirstName,
-            user.LastName,
-            user.Address,
-            user.Email,
-            user.DateOfBirth,
-            user.PhoneNumber,
-            user.Role
+            Id = user.Id,
+            Role = user.Role.Name,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Address = user.Address,
+            Email = user.Email,
+            DateOfBirth = user.DateOfBirth,
+            PhoneNumber = user.PhoneNumber
         };
-
-        string userClaims = JsonSerializer.Serialize(userProfile, options: new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
         return userClaims;
     }

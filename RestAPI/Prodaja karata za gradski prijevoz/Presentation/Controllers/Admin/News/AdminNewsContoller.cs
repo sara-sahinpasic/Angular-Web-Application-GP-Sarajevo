@@ -1,4 +1,5 @@
-﻿using Application.Services.Abstractions.Interfaces.Mapper;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,7 @@ using Presentation.DTO.Admin.News;
 
 namespace Presentation.Controllers.Admin.News
 {
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [ApiController]
     [Route("[controller]")]
     public sealed class AdminNewsContoller : ControllerBase

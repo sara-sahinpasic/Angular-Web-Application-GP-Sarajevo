@@ -1,5 +1,4 @@
 ﻿using Domain.Entities.Invoices;
-using Domain.Entities.Tickets;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Services.Abstractions.Interfaces.File;

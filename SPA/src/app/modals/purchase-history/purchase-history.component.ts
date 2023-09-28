@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { PurchaseHistoryDto } from 'src/app/models/Purchase-history/PurchaseHistoryDto';
 import { environment } from 'src/environments/environment';
-import { FileService } from 'src/app/services/file/file.service';
 import { tap } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
+import { ReportService } from 'src/app/services/report/report.service';
 
 @Component({
   selector: 'app-purchase-history',
@@ -22,7 +22,7 @@ export class PurchaseHistoryComponent implements OnInit {
 
   constructor(
     private httpClient: HttpClient,
-    private fileService: FileService,
+    private reportService: ReportService,
     private userService: UserService,
     protected localizationService: LocalizationService
   ) {}
@@ -50,7 +50,7 @@ export class PurchaseHistoryComponent implements OnInit {
   }
 
   purchaseHistoryPrintButton() {
-    this.fileService.download('File/DownloadPurchaseHistory').subscribe();
+    this.reportService.downloadPurchaseHistoryReport();
   }
 
   onPageChange(event) {

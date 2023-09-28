@@ -1,4 +1,5 @@
-﻿using Application.Services.Abstractions.Interfaces.Checkout;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Checkout;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
 using Application.Services.Abstractions.Interfaces.Repositories.Routes;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
@@ -16,7 +17,7 @@ using Presentation.DTO.Checkout;
 namespace Presentation.Controllers.Checkout;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
 [Route("[controller]")]
 public sealed class CheckoutController : ControllerBase
 {
@@ -91,18 +92,18 @@ public sealed class CheckoutController : ControllerBase
             issuedTickets.Add(new()
             {
                 Amount = 1,
-                IssuedDate = DateTime.UtcNow.ToLocalTime(),
+                IssuedDate = DateTime.Now,
                 TicketId = checkoutDto.TicketId,
                 User = user,
-                ValidFrom = checkoutDto.Date.ToLocalTime(),
-                ValidTo = checkoutDto.Date.ToLocalTime(),
+                ValidFrom = checkoutDto.Date,
+                ValidTo = checkoutDto.Date,
                 Route = route
             });
         }
 
         Invoice invoice = new()
         {
-            InvoicingDate = DateTime.UtcNow.ToLocalTime(),
+            InvoicingDate = DateTime.Now,
             IssuedTickets = issuedTickets,
             PaymentOptionId = checkoutDto.PaymentMethodId,
             User = user

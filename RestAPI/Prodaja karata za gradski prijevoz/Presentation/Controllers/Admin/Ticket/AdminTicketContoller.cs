@@ -5,10 +5,11 @@ using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Presentation.DTO.Admin.Ticket;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Application.Config;
 
 namespace Presentation.Controllers.Admin.Ticket
 {
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [ApiController]
     [Route("[controller]")]
     public sealed class AdminTicketContoller : ControllerBase

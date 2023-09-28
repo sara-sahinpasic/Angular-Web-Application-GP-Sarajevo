@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { faDeleteLeft, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { tap } from 'rxjs';
 import { UserGetDto } from 'src/app/models/Admin/User/UserGetDto';
 import { UserUpdateDto } from 'src/app/models/Admin/User/UserUpdateDto';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { AdminUserCreateService } from 'src/app/services/admin/user/admin-user-create.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -13,10 +16,15 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./admin-users-page.component.scss'],
 })
 export class AdminUsersPageComponent implements OnInit {
+
+  protected userId: string = "";
+  protected editIcon = faEdit;
+  protected deleteIcon = faTrash;
+
   constructor(
-    protected _adminUserService: AdminUserCreateService,
-    protected _userService: UserService,
-    protected _modalService: ModalService
+    private _adminUserService: AdminUserCreateService,
+    private _userService: UserService,
+    private _modalService: ModalService,
   ) {}
 
   ngOnInit(): void {
@@ -24,11 +32,15 @@ export class AdminUsersPageComponent implements OnInit {
       this.usersData = x.data;
       this.usersDataTemp = this.usersData;
     });
+
+    this._userService.user$.pipe(
+      tap((user?: UserProfileModel) => this.userId = user!.id!)
+    )
+    .subscribe();
   }
 
   usersData: Array<UserGetDto> = [];
   usersDataTemp: Array<UserGetDto> = [];
-  updateUserModel: UserUpdateDto = {};
   protected userModel: UserGetDto = {};
 
   resetData() {

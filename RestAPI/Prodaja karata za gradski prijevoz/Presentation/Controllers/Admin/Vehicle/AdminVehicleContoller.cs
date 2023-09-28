@@ -1,4 +1,5 @@
-﻿using Application.Services.Abstractions.Interfaces.Mapper;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
 using Domain.Entities.Vehicles;
@@ -10,10 +11,9 @@ using Presentation.DTO.Admin.Vehicles;
 
 namespace Presentation.Controllers.Admin.Vehicles
 {
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [ApiController]
     [Route("[controller]")]
-
     public sealed class AdminVehicleContoller : ControllerBase
     {
         private readonly IManufacturerRepository manufacturerRepository;

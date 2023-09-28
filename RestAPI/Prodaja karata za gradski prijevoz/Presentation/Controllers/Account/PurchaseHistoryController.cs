@@ -1,4 +1,5 @@
-﻿using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Domain.Entities.Tickets;
 using Domain.Enums.OrderBy;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace Presentation.Controllers.Account
 {
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
     [ApiController]
     [Route("[controller]/[action]")]
     public sealed class PurchaseHistoryController : ControllerBase

@@ -1,20 +1,24 @@
-﻿using Application.Services.Abstractions.Interfaces.Authentication;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
+using Application.Validators.User;
+using Domain.Entities.Users;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.User;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 
 namespace Presentation.Controllers.Account;
 
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminUserPolicyName)]
 [ApiController]
 [Route("[controller]")]
 
@@ -33,7 +37,18 @@ public sealed class ProfileController : ControllerBase
         [FromServices] IAuthService authService, [FromServices] IFileService fileService,
         [FromServices] IPasswordService passwordService)
     {
-        var data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken);
+        string authorizationHeaderValue = Request.Headers["Authorization"];
+        string token = authorizationHeaderValue.Split(" ")[1];
+
+        JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        if (!IdentityValidator.IsSameUser(vM.Id, jwtSecurityToken) && !IdentityValidator.IsUserRole("admin", jwtSecurityToken))
+        {
+            return Forbid();
+        }
+
+        string[] includes = new[] { "Role" };
+        User? data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken, includes);
 
         if (data == null)
         {
@@ -74,7 +89,12 @@ public sealed class ProfileController : ControllerBase
         _userRepository.Update(data);
         await unitOfWork.CommitAsync(cancellationToken);
 
-        JsonElement jwtToken = await authService.GetAuthTokenAsync(data, cancellationToken);
+        JsonElement? jwtToken = null;
+
+        if (IdentityValidator.IsSameUser(vM.Id, jwtSecurityToken))
+        {
+            jwtToken = await authService.GetAuthTokenAsync(data, cancellationToken);
+        }
 
         Response responseOk = new()
         {
@@ -88,6 +108,16 @@ public sealed class ProfileController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
     {
+        string authorizationHeaderValue = Request.Headers["Authorization"];
+        string token = authorizationHeaderValue.Split(" ")[1];
+
+        JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        if (!IdentityValidator.IsSameUser(id, jwtSecurityToken) && !IdentityValidator.IsUserRole("admin", jwtSecurityToken))
+        {
+            return Forbid();
+        }
+
         var data = await _userRepository.GetByIdAsync(id, cancellationToken);
 
         if (data == null)

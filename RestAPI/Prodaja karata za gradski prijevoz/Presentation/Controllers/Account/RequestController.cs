@@ -1,4 +1,5 @@
-﻿using Application.Services.Abstractions.Interfaces.File;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Domain.Entities.Requests;
@@ -11,7 +12,7 @@ using Presentation.DTO.Request;
 
 namespace Presentation.Controllers.Account
 {
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
     [ApiController]
     [Route("[controller]")]
     public sealed class RequestController : ControllerBase

@@ -21,15 +21,11 @@ public sealed class RoutesController : ControllerBase
     [HttpGet("GetByDate")]
     public async Task<IActionResult> GetAllRoutesAction(Guid startStationId, Guid endStationId, DateTime date, CancellationToken cancellationToken)
     {
-        DateTime currentDate = DateTime.UtcNow;
+        DateTime currentDate = DateTime.Now;
 
         if (date < currentDate)
         {
-            date = currentDate.ToLocalTime();
-        }
-        else
-        {
-            date = date.ToLocalTime();
+            date = currentDate;
         }
 
         Expression<Func<Route, RouteResponseDto>> selector = (route) => new RouteResponseDto

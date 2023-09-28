@@ -10,29 +10,26 @@ using Application.Services.Abstractions.Interfaces.Authentication;
 using Presentation.DTO.Admin.User;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Application.Config;
 
 namespace Presentation.Controllers.Admin.AdminUsers
 {
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [ApiController]
     [Route("[controller]")]
     public sealed class AdminUserContoller : ControllerBase
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IAuthService _authService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AdminUserContoller(IUserRepository userRepository,
-            IRoleRepository roleRepository, IAuthService authService,
-            IUnitOfWork unitOfWork
-            )
+        public AdminUserContoller(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _authService = authService;
             _unitOfWork = unitOfWork;
         }
+
         [HttpGet("/Roles")]
         public async Task<IActionResult> GetAllRoles(CancellationToken cancellationToken)
         {
@@ -46,6 +43,7 @@ namespace Presentation.Controllers.Admin.AdminUsers
 
             return Ok(response);
         }
+
         [HttpPost("/CreateUser")]
         public async Task<IActionResult> CreateUser(CreateUserDto createDto, [FromServices] IPasswordService passwordService,
             CancellationToken cancellationToken)
@@ -68,8 +66,8 @@ namespace Presentation.Controllers.Admin.AdminUsers
                 Email = createDto.Email,
                 PasswordHash = passwordHashAndSalt.Item2,
                 PasswordSalt = passwordHashAndSalt.Item1,
-                DateOfBirth = (DateTime)createDto.DateOfBirth,
-                RoleId = (Guid)createDto.RoleId,
+                DateOfBirth = createDto.DateOfBirth,
+                RoleId = createDto.RoleId,
                 RegistrationDate = DateTime.UtcNow
             };
 

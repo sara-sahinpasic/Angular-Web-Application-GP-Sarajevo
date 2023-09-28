@@ -9,4 +9,5 @@ public interface IIssuedTicketRepository : IGenericRepository<IssuedTicket>
     Task<List<T>> GetByUserIdAsync<T>(Guid userId, Expression<Func<IssuedTicket, T>> selector, Expression<Func<IssuedTicket, object>>? orderBy = null, OrderBy order = OrderBy.Ascending, CancellationToken cancellationToken = default);
     Task<IssuedTicket[]> GetUserIssuedTicketsForPurchaseHistoryReportAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<bool> HasUserPurchasedAnyTicketAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<IssuedTicket>> GetIssuedTicketsForDateAsync(DateTime date, CancellationToken cancellationToken = default);
 }

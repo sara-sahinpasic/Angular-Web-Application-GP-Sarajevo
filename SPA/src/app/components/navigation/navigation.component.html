@@ -6,8 +6,8 @@
       <button class="navbar-toggler" type="button collapsed" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" [class.justify-content-end]="!shouldShowNavigatioMenu()">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="shouldShowNavigatioMenu()">
           <li class="nav-item pe-3 ps-3 pt-2 pb-2">
             <span class="d-lg-none" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
               <a [routerLink]="['/']">Home</a>

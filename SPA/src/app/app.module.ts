@@ -47,6 +47,7 @@ import { AdminUpdateUserModalComponent } from './modals/admin/admin-update-user-
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-typ
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    GoogleChartsModule
   ],
   providers: [
     {

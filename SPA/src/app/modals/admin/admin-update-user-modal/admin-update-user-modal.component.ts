@@ -26,7 +26,7 @@ export class AdminUpdateUserModalComponent implements OnInit {
   }
 
   save() {
-    this.userService.updateUser(this.updateUserModel, null).subscribe(() => {
+    this.userService.updateUser(this.updateUserModel).subscribe(() => {
       setTimeout(function () {
         window.location.reload();
       }, 3000);
