@@ -38,7 +38,7 @@
         </ul>
 
         <div class="d-flex login-container pe-3 ps-3 pt-2 pb-2 flex-column flex-lg-row">
-          <div class="locale-container me-5">
+          <div class="locale-container me-5" *ngIf="shouldShowNavigatioMenu()">
             <a (click)="setLocale('bs')" class="pe-2" [class]="{'locale-selected': localizationService.getLocale() != 'en', 'locale': true}">BS</a>
             <a (click)="setLocale('en')" class="ms-2"
               [class]="{'locale-selected': localizationService.getLocale() == 'en', 'locale': true}">EN</a>
