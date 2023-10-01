@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NewsDto } from 'src/app/models/Admin/News/NewsDto';
-import { AdminNewsService } from 'src/app/services/admin/news/admin-news.service';
+import { NewsRequestDto } from 'src/app/models/News/NewsDto';
+import { ModalService } from 'src/app/services/modal/modal.service';
+import { NewsService } from 'src/app/services/news/news.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -10,17 +11,24 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./admin-news-modal.component.scss'],
 })
 export class AdminNewsModalComponent implements OnInit {
+
+  @Input() news?: NewsRequestDto;
+  protected registrationForm!: FormGroup;
+  protected newsModel: NewsRequestDto = {};
+
   constructor(
     protected formBuilder: FormBuilder,
-    protected newsService: AdminNewsService,
-    private userService: UserService
+    protected newsService: NewsService,
+    private userService: UserService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
     this.inizializeValidators();
+    if (this.news) {
+      this.newsModel = this.news;
+    }
   }
-  protected registrationForm!: FormGroup;
-  protected newsModel: NewsDto = {};
 
   publish() {
     this.registrationForm.markAllAsTouched();
@@ -30,12 +38,25 @@ export class AdminNewsModalComponent implements OnInit {
         this.newsModel.userId = user?.id;
       });
 
-      this.newsService.publishNews(this.newsModel).subscribe(() => {
-        setTimeout(function () {
-          window.location.reload();
-        }, 3000);
-      });
+      this.newsService.publishNews(this.newsModel).subscribe(this.reloadPage);
     }
+  }
+
+  edit() {
+    this.registrationForm.markAllAsTouched();
+
+    if (this.registrationForm.invalid) {
+      return;
+    }
+
+    this.newsService.updateNews(this.newsModel)
+      .subscribe(this.modalService.closeModal.bind(this.modalService));
+  }
+
+  reloadPage() {
+    setTimeout(function () {
+      window.location.reload();
+    }, 3000);
   }
 
   inizializeValidators() {

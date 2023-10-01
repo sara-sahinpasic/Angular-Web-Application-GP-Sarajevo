@@ -34,9 +34,9 @@ export class ModalService {
     this.modalTitle = 'Izmjena podataka';
   }
 
-  adminShowNewsModal() {
+  adminShowNewsModal(title: string = 'Nova obavijest') {
+    this.modalTitle = title;
     this.showAdminNewsModalState = true;
-    this.modalTitle = 'Nova obavijest';
   }
 
   adminShowUsersModal() {

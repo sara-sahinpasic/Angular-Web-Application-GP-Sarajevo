@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { InvalidArgumentException } from 'src/app/exceptions/InvalidArgumentException';
 import { DataResponse } from 'src/app/models/DataResponse';
-import { NewsDto } from 'src/app/models/News/NewsDto';
+import { NewsResponseDto } from 'src/app/models/News/NewsDto';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
@@ -20,7 +21,7 @@ export class NewsComponent implements OnInit {
     protected localizationService: LocalizationService
   ) {}
 
-  newsTable: Array<NewsDto> = [];
+  newsTable: Array<NewsResponseDto> = [];
 
   public paginationModel: Pagination = {
     pageSize: 7,
@@ -37,7 +38,11 @@ export class NewsComponent implements OnInit {
     this.getPage();
   }
 
-  showNewsModalButton(id: string) {
+  showNewsModalButton(id?: string) {
+    if (!id) {
+      throw new InvalidArgumentException(['id']);
+    }
+
     this.modalService.data = id;
     this.modalService.showNewsModal();
   }

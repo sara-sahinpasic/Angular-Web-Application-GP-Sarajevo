@@ -18,5 +18,6 @@
       {{ "Obavezan unos!" }}
     </div>
   </div>
-  <button type="button" class="btn btn-dark myBtn" (click)="publish()">Objavi</button>
+  <button *ngIf="!news" type="button" class="btn btn-dark myBtn" (click)="publish()">Objavi</button>
+  <button *ngIf="news" type="button" class="btn btn-dark myBtn" (click)="edit()">Izmjeni</button>
 </form>

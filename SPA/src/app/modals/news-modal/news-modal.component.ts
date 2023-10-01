@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NewsDto } from 'src/app/models/News/NewsDto';
+import { NewsResponseDto } from 'src/app/models/News/NewsDto';
 import { NewsService } from 'src/app/services/news/news.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class NewsModalComponent implements OnInit {
 
   @Input() newsId?: string;
 
-  newsModel: NewsDto = {
+  newsModel: NewsResponseDto = {
     title: '',
     content: '',
     id: '',

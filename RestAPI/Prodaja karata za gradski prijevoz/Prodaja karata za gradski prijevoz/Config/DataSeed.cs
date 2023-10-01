@@ -34,7 +34,7 @@ public static class DataSeed
     private const int StationsCount = 15;
     private const int VehiclesCount = 10;
     private const int RoutesCount = 100;
-
+    private const string AdminEmail = "alexilaiho467@gmail.com";
     public static async Task SeedData(this WebApplication app)
     {
         using IServiceScope serviceScope = app.Services.CreateScope();
@@ -49,7 +49,7 @@ public static class DataSeed
             return;
         }
 
-        await SeedNews(unitOfWork, serviceProvider);
+        await SeedNews(userIds ,unitOfWork, serviceProvider);
         await SeedReviews(unitOfWork, serviceProvider);
 
         IEnumerable<Station> stations = await SeedStations(unitOfWork, serviceProvider);
@@ -76,7 +76,7 @@ public static class DataSeed
         }
         await unitOfWork.CommitAsync(default);
     }
-    private static async Task SeedNews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task SeedNews(IEnumerable<Guid> userIds, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         INewsRepository newsRepository = serviceProvider.GetRequiredService<INewsRepository>();
         for (int i = 0; i < NewsCount; i++)
@@ -85,7 +85,8 @@ public static class DataSeed
             {
                 Title = Faker.Company.Name(),
                 Content = Faker.Lorem.Paragraph(),
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                UserId = userIds.First(),
             };
             newsRepository.Create(news);
         }
@@ -180,7 +181,7 @@ public static class DataSeed
         {
             User user = new()
             {
-                Email = Faker.Internet.Email(),
+                Email = i == 0 ? AdminEmail : Faker.Internet.Email(),
                 FirstName = Faker.Name.First(),
                 LastName = Faker.Name.Last(),
                 Active = true,
@@ -188,7 +189,7 @@ public static class DataSeed
                 PhoneNumber = Faker.Phone.Number(),
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
-                Roles = Roles.User,
+                Roles = i == 0 ? Roles.Admin : Roles.User,
                 Status = Statuses.Default,
                 ProfileImagePath = ""
             };
