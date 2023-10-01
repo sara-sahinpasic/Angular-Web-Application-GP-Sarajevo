@@ -16,6 +16,8 @@ export class ModalService {
   public showAdminStationsModalState: boolean = false;
   public showAdminNewStationsModalState: boolean = false;
   public showAdminUpdateUserModalState: boolean = false;
+  public showAdminManufacturerModalState: boolean = false;
+  public showAdminVehicleTypeModalState: boolean = false;
 
   public data: any;
   private modalTitle: string = '';
@@ -31,28 +33,42 @@ export class ModalService {
     this.showAdminUpdateUserModalState = true;
     this.modalTitle = 'Izmjena podataka';
   }
+
   adminShowNewsModal() {
     this.showAdminNewsModalState = true;
     this.modalTitle = 'Nova obavijest';
   }
+
   adminShowUsersModal() {
     this.modalTitle = 'Novi korisnik';
     this.showAdminUsersModalState = true;
   }
+
   adminShowTicketsModal() {
     this.modalTitle = 'Nova karta';
     this.showAdminTicketsModalState = true;
   }
+
   adminShowVehiclesModal() {
     this.modalTitle = 'Novo vozilo';
     this.showAdminVehiclesModalState = true;
   }
+
   adminShowStationsModal() {
     this.modalTitle = 'Stanica';
     this.showAdminStationsModalState = true;
   }
+
   adminShowNewStationsModal() {
     this.showAdminNewStationsModalState = true;
+  }
+
+  adminShowCreateManufacturerModal() {
+    this.showAdminManufacturerModalState = true;
+  }
+
+  adminShowCreateVehicleTypeModal() {
+    this.showAdminVehicleTypeModalState = true;
   }
 
   //user:
@@ -73,6 +89,11 @@ export class ModalService {
   }
 
   closeModal() {
+    this.clearModalContent();
+    this.modalCloseBtn?.click();
+  }
+
+  clearModalContent() {
     //admin:
     this.showAdminUpdateUserModalState = false;
     this.showAdminNewsModalState = false;
@@ -81,6 +102,8 @@ export class ModalService {
     this.showAdminVehiclesModalState = false;
     this.showAdminStationsModalState = false;
     this.showAdminNewStationsModalState = false;
+    this.showAdminManufacturerModalState = false;
+    this.showAdminVehicleTypeModalState = false;
 
     //user:
     this.showRequestModalState = false;
@@ -89,7 +112,6 @@ export class ModalService {
 
     this.modalTitle = '';
     this.data = null;
-    this.modalCloseBtn?.click();
   }
 
   getModalTitle(): string {

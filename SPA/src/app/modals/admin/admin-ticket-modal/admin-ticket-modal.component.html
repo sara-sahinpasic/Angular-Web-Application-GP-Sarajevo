@@ -1,22 +1,20 @@
 <form [formGroup]="registrationForm">
-  <div class="form-group">
+  <div class="form-group mb-3">
     <label for="ticketName">Naziv: </label>
-    <div class="input-group">
-      <input id="ticketName" class="form-control-admin" type="text" placeholder="" formControlName="ticketName"
-        [(ngModel)]="ticketModel.name" [class.is-invalid]="registrationForm.get('ticketName')?.invalid && (registrationForm.get('ticketName')?.dirty
-        || registrationForm.get('ticketName')?.touched)" />
-      <div class="invalid-feedback">
-        {{ "Obavezan unos!" }}
-      </div>
+    <input id="ticketName" class="form-control-admin mt-1" type="text" placeholder="" formControlName="ticketName"
+      [(ngModel)]="ticketModel.name" [class.is-invalid]="registrationForm.get('ticketName')?.invalid && (registrationForm.get('ticketName')?.dirty
+      || registrationForm.get('ticketName')?.touched)" />
+    <div class="invalid-feedback">
+      {{ "Obavezan unos!" }}
     </div>
   </div>
 
   <div class="row">
     <div class="col">
       <label for="price">Cijena: </label>
-      <input id="price" class="form-control-admin" type="number" placeholder="" formControlName="price"
+      <input id="price" class="form-control-admin mt-1" type="number" placeholder="" formControlName="price"
         [(ngModel)]="ticketModel.price" [class.is-invalid]="registrationForm.get('price')?.invalid && (registrationForm.get('price')?.dirty
-      || registrationForm.get('price')?.touched)" />
+        || registrationForm.get('price')?.touched)" />
       <div class="invalid-feedback">
         {{ "Obavezan unos!" }}
       </div>

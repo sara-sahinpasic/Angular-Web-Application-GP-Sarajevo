@@ -1,51 +1,40 @@
-<div class="d-flex flex-row w-100 admin-container">
-  <app-admin-nav-page></app-admin-nav-page>
-  <div class="w-100 d-flex justify-content-center align-items-center divForm">
-    <div class="container">
-      <div class="form-container" style="border: 1px solid black;">
-
-        <form [formGroup]="registrationForm">
-          <div class="form-group">
-            <label for="name">Naziv novog tipa vozila:</label>
-            <input type="text" class="form-control-admin" id="name" formControlName="name" required name="name"
-            [(ngModel)]="vehicleTypeModel.name" formControlName="name"
-            [class.is-invalid]="registrationForm.get('name')?.invalid && (registrationForm.get('name')?.dirty
-              || registrationForm.get('name')?.touched)" />
-            <div class="invalid-feedback">
-              {{ "Obavezan unos!" }}
-            </div>
-          </div>
-          <button type="button" class="btn btn-dark btn-sm" (click)="addNewVehicleType()"
-            style="font-weight: bolder;">Evidentiraj novi tip
-            vozila</button>
-          <hr />
-
-          <div class="form-group">
-            <table class="table table-striped" >
-              <tr>
-                <th>Postojeći tipovi vozila:</th>
-              </tr>
-              <tbody>
-                <tr *ngFor="let v of this.vehicleTypes | paginate:{
-                      itemsPerPage: paginationModel.pageSize,
-                      currentPage: paginationModel.page,
-                      totalItems: paginationModel.totalCount
-                    }; let i=index">
-                  <td >{{v.name}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="form-group">
-            <div class="mt-2">
-              <div class="paging d-flex justify-content-left">
-                <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
-                </pagination-controls>
-              </div>
-            </div>
-          </div>
-        </form>
+<div class="d-flex flex-column w-100 admin-container">
+  <div class="vehicle-type-form-container mb-3">
+    <form [formGroup]="registrationForm">
+      <div class="form-group">
+        <label for="name">Naziv novog tipa vozila:</label>
+        <input type="text" class="form-control-admin mt-1" id="name" formControlName="name" required name="name"
+        [(ngModel)]="vehicleTypeModel.name" formControlName="name"
+        [class.is-invalid]="registrationForm.get('name')?.invalid && (registrationForm.get('name')?.dirty
+          || registrationForm.get('name')?.touched)" />
+        <div class="invalid-feedback">
+          {{ "Obavezan unos!" }}
+        </div>
       </div>
-    </div>
+    </form>
   </div>
+  <div class="table-container mb-3">
+    <table class="table table-striped" >
+      <tr>
+        <th>Postojeći tipovi vozila:</th>
+      </tr>
+      <tbody>
+        <tr *ngFor="let v of this.vehicleTypes | paginate:{
+          itemsPerPage: paginationModel.pageSize,
+          currentPage: paginationModel.page,
+          totalItems: paginationModel.totalCount
+        }; let i=index">
+        <td >{{v.name}}</td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
+  <div class="paging d-flex justify-content-center">
+    <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+    </pagination-controls>
+  </div>
+  <hr />
+  <button type="button" class="btn btn-dark btn-sm" (click)="addNewVehicleType()"
+    style="font-weight: bolder;">Evidentiraj novi tip
+    vozila</button>
+</div>

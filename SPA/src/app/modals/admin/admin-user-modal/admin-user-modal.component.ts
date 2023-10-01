@@ -27,7 +27,7 @@ export class AdminUserModalComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
-    dateOfBirth: new Date(),
+    dateOfBirth: undefined,
     password: '',
     roleId: '',
   };

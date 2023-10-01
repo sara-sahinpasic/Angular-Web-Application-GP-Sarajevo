@@ -1,26 +1,24 @@
 <div class="row">
-
   <div class="col">
-    <label for="firstName" class="mt-2">Ime: </label>
-    <input id="firstName" class="form-control-admin" type="text" placeholder="" [(ngModel)]="updateUserModel.firstName"
+    <label for="firstName">Ime: </label>
+    <input id="firstName" class="form-control-admin mt-1" type="text" placeholder="" [(ngModel)]="updateUserModel.firstName"
       [ngModelOptions]="{standalone: true}">
 
-    <label for="lastName" class="mt-2">Prezime: </label>
-    <input id="lastName" class="form-control-admin" type="text" placeholder="" [(ngModel)]="updateUserModel.lastName"
+    <label for="lastName" class="mt-3">Prezime: </label>
+    <input id="lastName" class="form-control-admin mt-1" type="text" placeholder="" [(ngModel)]="updateUserModel.lastName"
       [ngModelOptions]="{standalone: true}">
 
-    <label for="phoneNumber" class="mt-2">Broj telefona: </label>
-    <input id="phoneNumber" class="form-control-admin" type="text" placeholder="" [(ngModel)]="updateUserModel.phoneNumber"
+    <label for="phoneNumber" class="mt-3">Broj telefona: </label>
+    <input id="phoneNumber" class="form-control-admin mt-1" type="text" placeholder="" [(ngModel)]="updateUserModel.phoneNumber"
       [ngModelOptions]="{standalone: true}">
 
-    <label for="address" class="mt-2">Adresa: </label>
-    <input id="address" class="form-control-admin" type="text" placeholder="" [(ngModel)]="updateUserModel.address"
+    <label for="address" class="mt-3">Adresa: </label>
+    <input id="address" class="form-control-admin mt-1" type="text" placeholder="" [(ngModel)]="updateUserModel.address"
       [ngModelOptions]="{standalone: true}">
 
-    <label for="email" class="mt-2">Email: </label>
-    <input id="email" class="form-control-admin" type="text" placeholder="" [(ngModel)]="updateUserModel.email"
+    <label for="email" class="mt-3">Email: </label>
+    <input id="email" class="form-control-admin mt-1" type="text" placeholder="" [(ngModel)]="updateUserModel.email"
       [ngModelOptions]="{standalone: true}">
-
   </div>
 </div>
-<button class="primary mt-2" (click)="save()">Spasi izmjene</button>
+<button class="primary mt-3" (click)="save()">Spasi izmjene</button>

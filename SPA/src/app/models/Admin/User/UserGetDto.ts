@@ -5,5 +5,4 @@ export interface UserGetDto {
   email?: string;
   roleName?: string;
   phoneNumber?: string;
-  address?: string;
 }

@@ -70,15 +70,13 @@ export class AdminVehicleModalComponent implements OnInit {
   }
 
   showVehicleTypeModal() {
-    this.router
-      .navigateByUrl(`/admin/company/vehicle/type`)
-      .then(() => this.modalService.closeModal());
+    this.modalService.clearModalContent();
+    this.modalService.adminShowCreateVehicleTypeModal();
   }
 
   showManufacturerModal() {
-    this.router
-      .navigateByUrl(`/admin/company/vehicle/manufacturer`)
-      .then(() => this.modalService.closeModal());
+    this.modalService.clearModalContent();
+    this.modalService.adminShowCreateManufacturerModal();
   }
 
   initForm() {

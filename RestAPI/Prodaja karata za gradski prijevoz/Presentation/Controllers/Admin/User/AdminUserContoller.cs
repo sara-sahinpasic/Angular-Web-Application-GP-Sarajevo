@@ -94,7 +94,6 @@ namespace Presentation.Controllers.Admin.AdminUsers
                 RoleName = user.Role.Name,
                 Id = user.Id,
                 PhoneNumber = user.PhoneNumber,
-                Address = user.Address,
             })
            .ToArrayAsync();
 

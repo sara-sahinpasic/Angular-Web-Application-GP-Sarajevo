@@ -77,7 +77,7 @@ export class AdminUsersPageComponent implements OnInit {
 
   //Pagination
   public paginationModel: Pagination = {
-    pageSize: 5,
+    pageSize: 10,
     page: 1,
     totalCount: 0,
   };

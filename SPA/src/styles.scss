@@ -120,7 +120,6 @@ h1 {
 
 .form-control-admin {
   width: 100%;
-  margin-bottom: 15px;
   padding: 10px;
 }
 
@@ -134,4 +133,8 @@ h1 {
 
 .background-color-gray {
   background: rgb(248 249 250) !important;
+}
+
+ul.ngx-pagination {
+  padding-left: 0;
 }
