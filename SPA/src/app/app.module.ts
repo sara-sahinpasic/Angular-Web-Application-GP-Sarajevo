@@ -48,6 +48,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { AdminTicketsPageComponent } from './components/admin/children/admin-tickets-page/admin-tickets-page.component';
 import { AdminNewsPageComponent } from './components/admin/children/admin-news-page/admin-news-page.component';
 
 @NgModule({
@@ -89,6 +90,7 @@ import { AdminNewsPageComponent } from './components/admin/children/admin-news-p
     AdminComponent,
     AdminManufacturerModalComponent,
     AdminVehicleTypeModalComponent,
+    AdminTicketsPageComponent,
     AdminNewsPageComponent
   ],
   imports: [

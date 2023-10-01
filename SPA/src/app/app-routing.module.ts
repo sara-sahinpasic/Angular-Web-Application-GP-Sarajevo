@@ -26,6 +26,7 @@ import { AdminGuard } from './guards/admin/admin.guard';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
+import { AdminTicketsPageComponent } from './components/admin/children/admin-tickets-page/admin-tickets-page.component';
 import { AdminNewsPageComponent } from './components/admin/children/admin-news-page/admin-news-page.component';
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent, children: [
     { path: 'home', component: AdminHomePageComponent, outlet: "admin"},
     { path: 'users', component: AdminUsersPageComponent, outlet: "admin"},
+    { path: 'tickets', component: AdminTicketsPageComponent, outlet: "admin"},
     { path: 'company', component: AdminCompanyPageComponent, outlet: "admin" },
     { path: 'news', component: AdminNewsPageComponent, outlet: "admin" }
   ]},

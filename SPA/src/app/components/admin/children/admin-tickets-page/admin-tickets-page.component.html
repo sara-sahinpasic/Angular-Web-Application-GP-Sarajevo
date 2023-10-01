@@ -1,0 +1,45 @@
+<div class="d-flex flex-column w-100 admin-container">
+  <div class="form-group w-100 ps-5 pe-4">
+    <label>Naziv karte:</label>
+    <input type="text" class="form-control-admin" (keyup)="findByTicketName($event)" />
+    <hr>
+  </div>
+
+  <div class="w-100 ps-3 pe-3 d-flex flex-column align-items-center">
+    <table class="table table-hover table-with-controls w-100">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Naziv</th>
+          <th>Cijena</th>
+          <th>Aktivna</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of filteredTickets | paginate:{
+            itemsPerPage: paginationModel.pageSize,
+            currentPage: paginationModel.page,
+            totalItems: paginationModel.totalCount
+          }; let i=index"
+        >
+          <td class="controls">
+            <button type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
+              data-bs-target="#base-modal" (click)="showTicketEditModal(ticket)">
+              <fa-icon [icon]="editIcon"></fa-icon>
+            </button>
+            <button type="button" class="btn btn-link btn-operation" (click)="deleteTicket(ticket)">
+              <fa-icon [icon]="deleteIcon"></fa-icon>
+            </button>
+          </td>
+          <td>{{ ticket.name }}</td>
+          <td>{{ ticket.price | number:"1.2-2" }}KM</td>
+          <td>{{ ticket.active ? "Aktivna" : "Neaktivna" }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="paging d-flex justify-content-left">
+      <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+      </pagination-controls>
+    </div>
+  </div>
+</div>

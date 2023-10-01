@@ -13,6 +13,7 @@ export class AdminNavPageComponent implements OnInit {
     ["company", false],
     ["report", false],
     ["home", false],
+    ["tickets", false],
     ["news", false]
   ]);
 

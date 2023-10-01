@@ -13,8 +13,13 @@
         <app-news-modal *ngIf="modalService.showNewsModalState" [newsId]="modalService.data"></app-news-modal>
         <app-admin-update-user-modal *ngIf="modalService.showAdminUpdateUserModalState"
           [userId]="modalService.data"></app-admin-update-user-modal>
+<<<<<<< HEAD
+        <app-admin-news-modal *ngIf="modalService.showAdminNewsModalState"></app-admin-news-modal>
+        <app-admin-ticket-modal [ticket]="modalService.data" *ngIf="modalService.showAdminTicketsModalState"></app-admin-ticket-modal>
+=======
         <app-admin-news-modal [news]="modalService.data" *ngIf="modalService.showAdminNewsModalState"></app-admin-news-modal>
         <app-admin-ticket-modal *ngIf="modalService.showAdminTicketsModalState"></app-admin-ticket-modal>
+>>>>>>> 75e963bfa5b164292618ba1bb7b174d4313a3aff
         <app-admin-vehicle-modal *ngIf="modalService.showAdminVehiclesModalState"></app-admin-vehicle-modal>
         <app-admin-station-modal *ngIf="modalService.showAdminStationsModalState"></app-admin-station-modal>
         <app-admin-new-station-modal *ngIf="modalService.showAdminNewStationsModalState"></app-admin-new-station-modal>

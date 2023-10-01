@@ -135,6 +135,16 @@ h1 {
   background: rgb(248 249 250) !important;
 }
 
+.table-with-controls {
+  .controls {
+    display: flex;
+  }
+
+  button {
+    width: fit-content;
+  }
+}
+
 ul.ngx-pagination {
   padding-left: 0;
 }

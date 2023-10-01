@@ -28,5 +28,6 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-dark myBtn" (click)="addTicket()">Evidentiraj kartu</button>
+  <button *ngIf="!ticket" type="button" class="btn btn-dark myBtn" (click)="addTicket()">Kreiraj kartu</button>
+  <button *ngIf="ticket" type="button" class="btn btn-dark myBtn" (click)="editTicket(ticketModel)">Edituj kartu</button>
 </form>
