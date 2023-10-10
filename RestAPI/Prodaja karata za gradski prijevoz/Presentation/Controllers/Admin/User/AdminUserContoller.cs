@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Users;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Hashing;
-using Application.Services.Abstractions.Interfaces.Authentication;
 using Presentation.DTO.Admin.User;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;

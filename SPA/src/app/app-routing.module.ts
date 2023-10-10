@@ -28,6 +28,9 @@ import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-typ
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminTicketsPageComponent } from './components/admin/children/admin-tickets-page/admin-tickets-page.component';
 import { AdminNewsPageComponent } from './components/admin/children/admin-news-page/admin-news-page.component';
+import { DriverComponent } from './components/driver/driver.component';
+import { DriverDelayPageComponent } from './components/driver/children/driver-delay-page/driver-delay-page.component';
+import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
@@ -35,6 +38,10 @@ const routes: Routes = [
   // { path: 'admin/company', component: AdminCompanyPageComponent, canActivate: [AdminGuard]},
   // { path: 'admin/users', component: AdminUsersPageComponent, canActivate: [AdminGuard]},
   // { path: 'admin', component: AdminHomePageComponent, canActivate: [AdminGuard]},
+  { path: 'driver', component: DriverComponent, children: [
+    { path: 'delay', component: DriverDelayPageComponent, outlet: "driver"},
+    { path: 'malfunction', component: DriverMalfunctionPageComponent, outlet: "driver"},
+  ]},
   { path: 'admin', component: AdminComponent, children: [
     { path: 'home', component: AdminHomePageComponent, outlet: "admin"},
     { path: 'users', component: AdminUsersPageComponent, outlet: "admin"},

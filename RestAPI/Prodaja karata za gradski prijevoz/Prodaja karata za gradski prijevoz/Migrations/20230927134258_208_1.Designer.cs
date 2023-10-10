@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230927134258_208_1")]
+    partial class _208_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Domain.Entities.Driver.Delay", b =>
+            modelBuilder.Entity("Domain.Entities.Driver.Delay.Delay", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,32 +45,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.HasIndex("RouteId");
 
                     b.ToTable("Delays");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Driver.Malfunction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateOfMalufunction")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Fixed")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("Malfunctions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>
@@ -121,12 +97,10 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("News");
                 });
@@ -708,7 +682,7 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                     b.ToTable("VehicleTypes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Driver.Delay", b =>
+            modelBuilder.Entity("Domain.Entities.Driver.Delay.Delay", b =>
                 {
                     b.HasOne("Domain.Entities.Routes.Route", "Route")
                         .WithMany()
@@ -717,17 +691,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("Route");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Driver.Malfunction", b =>
-                {
-                    b.HasOne("Domain.Entities.Vehicles.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoices.Invoice", b =>
@@ -745,17 +708,6 @@ namespace Prodaja_karata_za_gradski_prijevoz.Migrations
                         .IsRequired();
 
                     b.Navigation("Tax");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.News.News", b =>
-                {
-                    b.HasOne("Domain.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

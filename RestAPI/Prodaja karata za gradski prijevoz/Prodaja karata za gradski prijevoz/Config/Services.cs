@@ -9,6 +9,7 @@ using Application.Services.Abstractions.Interfaces.Localization;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Report;
 using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Driver;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
 using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
@@ -28,6 +29,8 @@ using Application.Services.Implementations.Hashing;
 using Application.Services.Implementations.Localization;
 using Application.Services.Implementations.Mapper;
 using Infrastructure.Repositories;
+using Infrastructure.Repositories.Driver.Delay;
+using Infrastructure.Repositories.Driver.Malfunction;
 using Infrastructure.Repositories.Invoices;
 using Infrastructure.Repositories.News;
 using Infrastructure.Repositories.Payment;
@@ -98,6 +101,8 @@ public static partial class Services
         builder.Services.TryAddScoped<IStationRepository, StationRepository>();
         builder.Services.TryAddScoped<IRoleRepository, RoleRepository>();
         builder.Services.TryAddScoped<ILogRepository, LogRepository>();
+        builder.Services.TryAddScoped<IDelayRepository, DelayRepository>();
+        builder.Services.TryAddScoped<IMalfunctionRepository, MalfunctionRepository>();
     }
 
     public static void AddScopedServices(this WebApplicationBuilder builder)

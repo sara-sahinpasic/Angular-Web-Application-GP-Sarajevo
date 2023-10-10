@@ -1,5 +1,6 @@
 ﻿using Application.Services.Abstractions.Interfaces.Hashing;
 using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Driver;
 using Application.Services.Abstractions.Interfaces.Repositories.Invoices;
 using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Application.Services.Abstractions.Interfaces.Repositories.Payment;
@@ -9,6 +10,7 @@ using Application.Services.Abstractions.Interfaces.Repositories.Stations;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
+using Domain.Entities.Driver;
 using Domain.Entities.Invoices;
 using Domain.Entities.News;
 using Domain.Entities.Payment;
@@ -34,7 +36,12 @@ public static class DataSeed
     private const int StationsCount = 15;
     private const int VehiclesCount = 10;
     private const int RoutesCount = 100;
-    private const string AdminEmail = "alexilaiho467@gmail.com";
+    private const string AdminEmail = "sara.sahinpasic@hotmail.com";
+    private const string DriverEmail = "driver@mail.com";
+    private const int DelaysCount = 5;
+    private const int MalfunctionCount = 3;
+
+
     public static async Task SeedData(this WebApplication app)
     {
         using IServiceScope serviceScope = app.Services.CreateScope();
@@ -49,7 +56,7 @@ public static class DataSeed
             return;
         }
 
-        await SeedNews(userIds ,unitOfWork, serviceProvider);
+        await SeedNews(userIds, unitOfWork, serviceProvider);
         await SeedReviews(unitOfWork, serviceProvider);
 
         IEnumerable<Station> stations = await SeedStations(unitOfWork, serviceProvider);
@@ -60,6 +67,54 @@ public static class DataSeed
         IEnumerable<Guid> routeIds = await SeedRoutes(stations, vehicles, unitOfWork, serviceProvider);
         ICollection<IssuedTicket> issuedTickets = await SeedIssuedTickets(unitOfWork, userIds, routeIds, serviceProvider);
         await SeedInvoices(unitOfWork, issuedTickets, serviceProvider);
+
+        ICollection<Delay> delays = await SeedDelays(unitOfWork, routeIds, serviceProvider);
+        ICollection<Malfunction> malfunctions = await SeedMalfunction(unitOfWork, serviceProvider, vehicles);
+
+    }
+    private static async Task<ICollection<Malfunction>> SeedMalfunction(IUnitOfWork unitOfWork,
+       IServiceProvider serviceProvider, IEnumerable<Vehicle> vehicles)
+    {
+        IMalfunctionRepository malfunctionRepository = serviceProvider.GetRequiredService<IMalfunctionRepository>();
+        ICollection<Malfunction> malfunctions = new List<Malfunction>();
+
+        for (int i = 0; i < MalfunctionCount; ++i)
+        {
+            Malfunction malfunction = new()
+            {
+                Description = Faker.Lorem.Sentence(4),
+                DateOfMalufunction = DateTime.Now,
+                Fixed = new Random().NextDouble() >= 0.5,
+                Vehicle = vehicles.ElementAt(Random.Shared.Next(0, vehicles.Count())),
+            };
+
+            malfunctionRepository.Create(malfunction);
+            malfunctions.Add(malfunction);
+        }
+        await unitOfWork.CommitAsync(default);
+        return malfunctions;
+    }
+    private static async Task<ICollection<Delay>> SeedDelays(IUnitOfWork unitOfWork,
+    IEnumerable<Guid> routeIds, IServiceProvider serviceProvider)
+    {
+        IDelayRepository delayRepository = serviceProvider.GetRequiredService<IDelayRepository>();
+
+        ICollection<Delay> delays = new List<Delay>();
+
+        for (int i = 0; i < DelaysCount; ++i)
+        {
+            Delay delay = new()
+            {
+                DelayAmount = new Random().Next(1, 60),
+                Reason = Faker.Lorem.Sentence(4),
+                RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count())),
+            };
+
+            delayRepository.Create(delay);
+            delays.Add(delay);
+        }
+        await unitOfWork.CommitAsync(default);
+        return delays;
     }
     private static async Task SeedReviews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
@@ -179,9 +234,23 @@ public static class DataSeed
 
         for (int i = 0; i < UserCount; ++i)
         {
+            string email = Faker.Internet.Email();
+            Roles role = Roles.User;
+
+            if (i == 0)
+            {
+                email = AdminEmail;
+                role = Roles.Admin;
+            }
+            else if (i == 1)
+            {
+                email = DriverEmail;
+                role = Roles.Driver;
+            }
+
             User user = new()
             {
-                Email = i == 0 ? AdminEmail : Faker.Internet.Email(),
+                Email = email,
                 FirstName = Faker.Name.First(),
                 LastName = Faker.Name.Last(),
                 Active = true,
@@ -189,7 +258,7 @@ public static class DataSeed
                 PhoneNumber = Faker.Phone.Number(),
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
-                Roles = i == 0 ? Roles.Admin : Roles.User,
+                Roles = role,
                 Status = Statuses.Default,
                 ProfileImagePath = ""
             };
@@ -217,7 +286,7 @@ public static class DataSeed
             {
                 Name = Faker.Country.Name(),
             };
-            
+
             stationRepository.Create(station);
             stationIds.Add(station);
         }
@@ -309,14 +378,14 @@ public static class DataSeed
             Guid startStationId = stations.ElementAt(Random.Shared.Next(0, stations.Count())).Id;
             Route route = new()
             {
-              Vehicle = vehicles.ElementAt(Random.Shared.Next(0, vehicles.Count())),
-              TimeOfArival = timeOfDeparture.Add(TimeSpan.FromMinutes(30)),
-              TimeOfDeparture = timeOfDeparture,
-              Active = true,
-              ActiveOnHolidays = true,
-              ActiveOnWeekends = true,
-              StartStationId = startStationId,
-              EndStationId = stations.Where(station => station.Id != startStationId).ElementAt(Random.Shared.Next(0, stations.Count() - 1)).Id
+                Vehicle = vehicles.ElementAt(Random.Shared.Next(0, vehicles.Count())),
+                TimeOfArival = timeOfDeparture.Add(TimeSpan.FromMinutes(30)),
+                TimeOfDeparture = timeOfDeparture,
+                Active = true,
+                ActiveOnHolidays = true,
+                ActiveOnWeekends = true,
+                StartStationId = startStationId,
+                EndStationId = stations.Where(station => station.Id != startStationId).ElementAt(Random.Shared.Next(0, stations.Count() - 1)).Id
             };
 
             routeRepository.Create(route);

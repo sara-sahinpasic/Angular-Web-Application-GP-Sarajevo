@@ -8,5 +8,9 @@
         public Guid ManufacturerId { get; set; }
         public Guid VehicleTypeId { get; set; }
         public int BuildYear { get; set; }
+        public Guid VehicleId { get; set; }
+        public Guid Id { get; set; }
+
+
     }
 }

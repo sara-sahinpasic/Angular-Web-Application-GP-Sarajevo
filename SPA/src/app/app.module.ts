@@ -47,9 +47,13 @@ import { AdminUpdateUserModalComponent } from './modals/admin/admin-update-user-
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
+import { DriverNavPageComponent } from './components/driver/driver-nav-page/driver-nav-page.component';
+import { DriverComponent } from './components/driver/driver.component';
+import { DriverDelayPageComponent } from './components/driver/children/driver-delay-page/driver-delay-page.component';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { AdminTicketsPageComponent } from './components/admin/children/admin-tickets-page/admin-tickets-page.component';
 import { AdminNewsPageComponent } from './components/admin/children/admin-news-page/admin-news-page.component';
+import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +94,10 @@ import { AdminNewsPageComponent } from './components/admin/children/admin-news-p
     AdminComponent,
     AdminManufacturerModalComponent,
     AdminVehicleTypeModalComponent,
+    DriverNavPageComponent,
+    DriverComponent,
+    DriverDelayPageComponent,
+    DriverMalfunctionPageComponent,
     AdminTicketsPageComponent,
     AdminNewsPageComponent
   ],
@@ -112,7 +120,7 @@ import { AdminNewsPageComponent } from './components/admin/children/admin-news-p
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,

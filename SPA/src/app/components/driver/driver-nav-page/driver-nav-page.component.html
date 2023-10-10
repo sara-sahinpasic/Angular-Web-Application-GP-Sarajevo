@@ -1,0 +1,16 @@
+<div class="d-flex flex-column flex-shrink-0 black-nav">
+  <ul class="d-flex nav flex-column nav-pills mt-4">
+
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('delay' )"
+        [class.selected]="routeHighlights['delay']">Kašnjenje</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('malfunction')"
+        [class.selected]="routeHighlights['malfunction']">Kvar</a>
+    </li>
+  </ul>
+
+
+</div>

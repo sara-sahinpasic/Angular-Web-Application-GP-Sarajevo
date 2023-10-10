@@ -10,6 +10,7 @@ using Domain.Entities.Stations;
 using Domain.Entities.Vehicles;
 using Domain.Entities.Routes;
 using Domain.Entities.System;
+using Domain.Entities.Driver;
 
 namespace Infrastructure.Data;
 
@@ -34,6 +35,10 @@ public sealed class DataContext : DbContext
     public DbSet<Route> Routes { get; set; } = null!;
     public DbSet<Holiday> Holidays { get; set; } = null!;
     public DbSet<Log> Logs { get; set; } = null!;
+    public DbSet<Delay> Delays { get; set; } = null!;
+    public DbSet<Malfunction> Malfunctions { get; set; } = null!;
+
+
 
     public DataContext(DbContextOptions options) : base(options) { }
 

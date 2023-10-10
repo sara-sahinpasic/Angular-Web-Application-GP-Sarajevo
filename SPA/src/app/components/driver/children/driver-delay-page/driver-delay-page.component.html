@@ -1,0 +1,45 @@
+<div class="d-flex flex-row w-100 admin-container">
+  <div class="w-100 d-flex justify-content-center align-items-center flex-column">
+
+    <form [formGroup]="registrationForm">
+      <div class="form-group mt-2 mb-2">
+        <label>Ruta: </label>
+        <select class="form-control-admin" [(ngModel)]="delayModel.routeId" [ngModelOptions]="{standalone: true}">
+          <option *ngFor="let route of routes; let i=index" [value]="route.id">
+            {{route.startingLocation}} - {{route.endingLocation}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="formControlTextarea1">Razlog kašnjenja:</label>
+        <textarea class="form-control-admin" id="formControlTextarea1" rows="3" style="margin-bottom: 15px;"
+          formControlName="reason" [(ngModel)]="delayModel.reason" [class.is-invalid]="registrationForm.get('reason')?.invalid &&
+      (registrationForm.get('reason')?.dirty
+        || registrationForm.get('reason')?.touched)">
+      </textarea>
+        <div class="invalid-feedback">
+          {{ "Obavezan unos!" }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="delayAmount">Očekivano vrijeme kašnjenja (u minutama): </label>
+        <div class="input-group">
+          <input id="delayAmount" class="form-control-admin" type="number"
+          min="1" max="60" step="5"
+          required name="delayAmount"
+            [(ngModel)]="delayModel.delayAmount" formControlName="delayAmount" [class.is-invalid]="
+      registrationForm.get('delayAmount')?.invalid
+      && (registrationForm.get('delayAmount')?.dirty
+      || registrationForm.get('delayAmount')?.touched)" />
+          <div class="invalid-feedback">
+            {{ "Obavezan unos!" }}
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-dark myBtn" (click)="addDelay()">Prijavi kašnjenje</button>
+    </form>
+  </div>
+</div>

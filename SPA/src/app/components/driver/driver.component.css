@@ -1,0 +1,11 @@
+.black-nav {
+  height: 87%;
+  background-color: black;
+}
+
+.active-class {
+  background-color: rgb(248 249 250) !important;
+  color: black !important;
+  font-weight: bold !important;
+  font-size: larger;
+}
