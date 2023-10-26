@@ -116,6 +116,10 @@ h1 {
 
 .admin-container {
   height: calc(100% - 138px);
+
+  .table {
+    table-layout: fixed;
+  }
 }
 
 .form-control-admin {
