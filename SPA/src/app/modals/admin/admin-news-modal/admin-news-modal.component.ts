@@ -26,7 +26,7 @@ export class AdminNewsModalComponent implements OnInit {
   ngOnInit(): void {
     this.inizializeValidators();
     if (this.news) {
-      this.newsModel = this.news;
+      this.newsModel = JSON.parse(JSON.stringify(this.news)); // deep copying object to prevent real time editing
     }
   }
 
@@ -38,7 +38,7 @@ export class AdminNewsModalComponent implements OnInit {
         this.newsModel.userId = user?.id;
       });
 
-      this.newsService.publishNews(this.newsModel).subscribe(this.reloadPage);
+      this.newsService.publishNews(this.newsModel).subscribe(this.modalService.closeModal.bind(this.modalService));
     }
   }
 
@@ -50,7 +50,7 @@ export class AdminNewsModalComponent implements OnInit {
     }
 
     this.newsService.updateNews(this.newsModel)
-      .subscribe(this.modalService.closeModal.bind(this.modalService));
+      .subscribe(this.reloadPage);
   }
 
   reloadPage() {

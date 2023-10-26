@@ -56,25 +56,13 @@ export class AdminNewsPageComponent implements OnInit {
     }
 
     this.newsService.deleteNews(news.id)
-      .subscribe(() => {
-        this.removeNewsItem(news);
-      });
+      .subscribe(this.reloadPage);
   }
 
   reloadPage() {
     setTimeout(() => {
       location.reload();
     }, 3000);
-  }
-
-  removeNewsItem(news: NewsResponseDto) {
-    this.newsList = this.newsList.filter(n => n.id?.toLowerCase() !== news.id?.toLowerCase());
-    this.filteredNewsList = this.filteredNewsList.filter(n => n.id?.toLowerCase() !== news.id?.toLowerCase());
-
-    if (this.filteredNewsList.length % this.paginationModel.pageSize! === 0
-      && this.filteredNewsList.length > this.paginationModel.pageSize!) {
-      --this.paginationModel.page!;
-    }
   }
 
   findByNewsTitle(event: KeyboardEvent) {
