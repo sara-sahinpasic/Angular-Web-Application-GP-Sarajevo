@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TicketDto } from 'src/app/models/Admin/Ticket/TicketDto';
 import { TicketModel } from 'src/app/models/Admin/Ticket/TicketModel';
+import { ModalService } from 'src/app/services/modal/modal.service';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
 
 @Component({
@@ -10,14 +11,14 @@ import { TicketService } from 'src/app/services/ticket/ticket.service';
   styleUrls: ['./admin-ticket-modal.component.scss'],
 })
 export class AdminTicketModalComponent implements OnInit {
-
   @Input() ticket?: TicketModel;
   protected ticketModel: TicketDto = {};
   protected registrationForm!: FormGroup;
 
   constructor(
     protected ticketService: TicketService,
-    protected formBuilder: FormBuilder
+    protected formBuilder: FormBuilder,
+    protected modalService: ModalService
   ) {}
 
   ngOnInit() {
@@ -39,14 +40,14 @@ export class AdminTicketModalComponent implements OnInit {
     this.registrationForm.markAllAsTouched();
 
     if (this.registrationForm.valid) {
-      this.ticketService.postNewTicket(this.ticketModel).subscribe(this.reloadPage);
+      this.ticketService.postNewTicket(this.ticketModel).subscribe(this.modalService.closeModal.bind(this.modalService));
     }
   }
 
   private reloadPage() {
-    setTimeout(function () {
-      window.location.reload();
-    }, 3000);
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
   }
 
   editTicket(ticket: TicketDto) {
@@ -56,7 +57,8 @@ export class AdminTicketModalComponent implements OnInit {
       return;
     }
 
-    this.ticketService.editTicket(ticket as TicketModel)
+    this.ticketService
+      .editTicket(ticket as TicketModel)
       .subscribe(this.reloadPage);
   }
 

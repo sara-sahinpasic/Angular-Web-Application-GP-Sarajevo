@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { faDeleteLeft, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEdit,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
 import { UserGetDto } from 'src/app/models/Admin/User/UserGetDto';
-import { UserUpdateDto } from 'src/app/models/Admin/User/UserUpdateDto';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { AdminUserCreateService } from 'src/app/services/admin/user/admin-user-create.service';
@@ -16,15 +17,14 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./admin-users-page.component.scss'],
 })
 export class AdminUsersPageComponent implements OnInit {
-
-  protected userId: string = "";
+  protected userId: string = '';
   protected editIcon = faEdit;
   protected deleteIcon = faTrash;
 
   constructor(
     private _adminUserService: AdminUserCreateService,
     private _userService: UserService,
-    private _modalService: ModalService,
+    private _modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -33,10 +33,9 @@ export class AdminUsersPageComponent implements OnInit {
       this.usersDataTemp = this.usersData;
     });
 
-    this._userService.user$.pipe(
-      tap((user?: UserProfileModel) => this.userId = user!.id!)
-    )
-    .subscribe();
+    this._userService.user$
+      .pipe(tap((user?: UserProfileModel) => (this.userId = user!.id!)))
+      .subscribe();
   }
 
   usersData: Array<UserGetDto> = [];
@@ -67,12 +66,14 @@ export class AdminUsersPageComponent implements OnInit {
     const answer: boolean = confirm('Da li želite obrisati račun?');
 
     if (answer == true) {
-      this._userService.deleteUser(id, null).subscribe(() => {
-        setTimeout(function () {
-          window.location.reload();
-        }, 3000);
-      });
+      this._userService.deleteUser(id, null).subscribe(this.reloadPage);
     }
+  }
+
+  private reloadPage() {
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
   }
 
   //Pagination

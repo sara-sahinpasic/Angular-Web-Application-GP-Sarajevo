@@ -53,10 +53,10 @@ export class AdminNewsModalComponent implements OnInit {
       .subscribe(this.reloadPage);
   }
 
-  reloadPage() {
-    setTimeout(function () {
-      window.location.reload();
-    }, 3000);
+ private reloadPage() {
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
   }
 
   inizializeValidators() {

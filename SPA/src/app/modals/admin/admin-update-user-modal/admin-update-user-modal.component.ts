@@ -26,10 +26,14 @@ export class AdminUpdateUserModalComponent implements OnInit {
   }
 
   save() {
-    this.userService.updateUser(this.updateUserModel).subscribe(() => {
-      setTimeout(function () {
-        window.location.reload();
-      }, 3000);
-    });
+    this.userService
+      .updateUser(this.updateUserModel)
+      .subscribe(this.reloadPage);
+  }
+
+  private reloadPage() {
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
   }
 }

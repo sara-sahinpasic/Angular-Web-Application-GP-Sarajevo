@@ -61,11 +61,7 @@ export class AdminVehicleModalComponent implements OnInit {
     this.registrationForm.markAllAsTouched();
 
     if (this.registrationForm.valid) {
-      this.vehicleService.addNewVehicle(this.vehicleModel).subscribe(() => {
-        setTimeout(function () {
-          window.location.reload();
-        }, 3000);
-      });
+      this.vehicleService.addNewVehicle(this.vehicleModel).subscribe(this.modalService.closeModal.bind(this.modalService));
     }
   }
 

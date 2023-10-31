@@ -5,6 +5,7 @@ import { VehicleTypeDto } from 'src/app/models/Admin/Vehicle/VehicleTypeDto';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { Pagination } from 'src/app/models/Pagination/Pagination';
 import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
   selector: 'app-admin-vehicle-type-modal',
@@ -14,7 +15,8 @@ import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicl
 export class AdminVehicleTypeModalComponent implements OnInit {
   constructor(
     protected formBuilder: FormBuilder,
-    protected vehicleService: AdminVehicleService
+    protected vehicleService: AdminVehicleService,
+    protected modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -45,11 +47,7 @@ export class AdminVehicleTypeModalComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.vehicleService
         .addNewVehicleType(this.vehicleTypeModel)
-        .subscribe(() => {
-          setTimeout(function () {
-            window.location.reload();
-          }, 3000);
-        });
+        .subscribe(this.modalService.closeModal.bind(this.modalService));
     }
   }
 

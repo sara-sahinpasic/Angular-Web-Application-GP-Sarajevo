@@ -55,10 +55,10 @@ export class AdminTicketsPageComponent implements OnInit{
       .subscribe(this.reloadPage);
   }
 
-  reloadPage() {
+  private reloadPage() {
     setTimeout(() => {
       location.reload();
-    }, 3000);
+    }, 1500);
   }
 
   findByTicketName(event: KeyboardEvent) {

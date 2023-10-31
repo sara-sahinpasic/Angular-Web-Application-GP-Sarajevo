@@ -5,6 +5,7 @@ import { DataResponse } from 'src/app/models/DataResponse';
 import { UserCreateModel } from 'src/app/models/Admin/User/UserCreateModel';
 import { UserRoleDto } from 'src/app/models/Admin/User/UserRoleDto';
 import { AdminUserCreateService } from 'src/app/services/admin/user/admin-user-create.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
   selector: 'app-admin-user-modal',
@@ -14,7 +15,8 @@ import { AdminUserCreateService } from 'src/app/services/admin/user/admin-user-c
 export class AdminUserModalComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
-    private adminUserService: AdminUserCreateService
+    private adminUserService: AdminUserCreateService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -48,11 +50,7 @@ export class AdminUserModalComponent implements OnInit {
   addUser() {
     this.registrationForm.markAllAsTouched();
     if (this.registrationForm.valid) {
-      this.adminUserService.createUser(this.userCreateModel).subscribe(() => {
-        setTimeout(function () {
-          window.location.reload();
-        }, 3000);
-      });
+      this.adminUserService.createUser(this.userCreateModel).subscribe(this.modalService.closeModal.bind(this.modalService));
     }
   }
 
