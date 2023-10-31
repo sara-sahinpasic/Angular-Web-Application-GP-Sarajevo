@@ -1,7 +1,7 @@
-﻿namespace Presentation.DTO.Admin.Vehicles
+﻿namespace Presentation.DTO.Admin.Vehicles;
+
+public sealed class ManufacturerDto
 {
-    public class ManufacturerDto
-    {
-        public string Name { get; set; }
-    }
+    public Guid? Id { get; set; }
+    public string Name { get; set; }
 }

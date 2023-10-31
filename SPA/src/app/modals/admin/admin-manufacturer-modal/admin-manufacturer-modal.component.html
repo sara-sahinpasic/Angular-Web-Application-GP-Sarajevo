@@ -23,6 +23,11 @@
                 totalItems: paginationModel.totalCount
               }; let i=index">
             <td>{{m.name}}</td>
+            <td>
+              <button type="button" class="btn btn-link btn-operation" (click)="deleteManufacturer(m)">
+                <fa-icon [icon]="deleteIcon"></fa-icon>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

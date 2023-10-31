@@ -24,7 +24,12 @@
           currentPage: paginationModel.page,
           totalItems: paginationModel.totalCount
         }; let i=index">
-        <td >{{v.name}}</td>
+        <td>{{v.name}}</td>
+        <td>
+          <button type="button" class="btn btn-link btn-operation" (click)="deleteVehicleType(v)">
+            <fa-icon [icon]="deleteIcon"></fa-icon>
+          </button>
+        </td>
       </tr>
     </tbody>
     </table>

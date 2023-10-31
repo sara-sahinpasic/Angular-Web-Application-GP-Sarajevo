@@ -12,7 +12,10 @@ export class AdminNavPageComponent implements OnInit {
     ["users", false],
     ["company", false],
     ["report", false],
-    ["home", false]
+    ["home", false],
+    ["tickets", false],
+    ["news", false],
+    ["vehicles", false]
   ]);
 
   constructor(private router: Router, private route: ActivatedRoute) {}

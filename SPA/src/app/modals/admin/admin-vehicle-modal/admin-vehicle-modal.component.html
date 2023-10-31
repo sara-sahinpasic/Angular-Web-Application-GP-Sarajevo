@@ -59,8 +59,11 @@
     </select>
   </div>
 
-  <button type="button" class="btn btn-dark myBtn" (click)="addVehicle()">
-    Evidentiraj vozilo
+  <button *ngIf="!vehicle" type="button" class="btn btn-dark myBtn" (click)="addVehicle()">
+    Kreiraj vozilo
+  </button>
+  <button *ngIf="vehicle" type="button" class="btn btn-dark myBtn" (click)="editVehicle()">
+    Edituj vozilo
   </button>
   <hr />
 

@@ -49,8 +49,8 @@ export class ModalService {
     this.showAdminTicketsModalState = true;
   }
 
-  adminShowVehiclesModal() {
-    this.modalTitle = 'Novo vozilo';
+  adminShowVehiclesModal(title: string = 'Novo vozilo') {
+    this.modalTitle = title;
     this.showAdminVehiclesModalState = true;
   }
 

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { ManufacturerDto } from 'src/app/models/Admin/Vehicle/ManufacturerDto';
-import { VehicleDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
+import { VehicleDto, VehicleListDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
 import { VehicleTypeDto } from 'src/app/models/Admin/Vehicle/VehicleTypeDto';
 import { DataResponse } from 'src/app/models/DataResponse';
 import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
@@ -15,6 +15,9 @@ import { ModalService } from 'src/app/services/modal/modal.service';
   styleUrls: ['./admin-vehicle-modal.component.scss'],
 })
 export class AdminVehicleModalComponent implements OnInit {
+
+  @Input() vehicle?: VehicleListDto;
+
   constructor(
     private formBuilder: FormBuilder,
     protected vehicleService: AdminVehicleService,
@@ -22,7 +25,12 @@ export class AdminVehicleModalComponent implements OnInit {
     protected modalService: ModalService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    setTimeout(() => {
+      if (this.vehicle) {
+        this.mapInputVehicleToModel();
+      }
+    }, 0);
     this.initForm();
     this.getAllManufacturers();
     this.getAllVehicleTypes();
@@ -33,13 +41,25 @@ export class AdminVehicleModalComponent implements OnInit {
   protected manufacturers: Array<ManufacturerDto> = [];
   protected vehicleTypes: Array<VehicleTypeDto> = [];
 
+  private mapInputVehicleToModel() {
+    this.vehicleModel = {
+      id: this.vehicle?.id,
+      buildYear: this.vehicle!.buildYear,
+      color: this.vehicle!.color,
+      manufacturerId: this.vehicle!.manufacturer.id,
+      number: this.vehicle!.number,
+      registrationNumber: this.vehicle!.registrationNumber,
+      vehicleTypeId: this.vehicle!.type.id
+    };
+  }
+
   getAllManufacturers() {
     this.vehicleService
       .getAllManufacturers()
       .pipe(
         tap((response: DataResponse<ManufacturerDto[]>) => {
           this.manufacturers = response.data;
-          this.vehicleModel.manufacturerId = response.data[0].id;
+          this.vehicleModel.manufacturerId = this.vehicleModel.manufacturerId ?? response.data[0].id;
         })
       )
       .subscribe();
@@ -51,7 +71,7 @@ export class AdminVehicleModalComponent implements OnInit {
       .pipe(
         tap((response: DataResponse<VehicleTypeDto[]>) => {
           this.vehicleTypes = response.data;
-          this.vehicleModel.vehicleTypeId = response.data[0].id;
+          this.vehicleModel.vehicleTypeId =  this.vehicleModel.vehicleTypeId ?? response.data[0].id;
         })
       )
       .subscribe();
@@ -63,6 +83,12 @@ export class AdminVehicleModalComponent implements OnInit {
     if (this.registrationForm.valid) {
       this.vehicleService.addNewVehicle(this.vehicleModel).subscribe(this.modalService.closeModal.bind(this.modalService));
     }
+  }
+
+  private reloadPage() {
+    setTimeout(function () {
+      window.location.reload();
+    }, 1500);
   }
 
   showVehicleTypeModal() {
@@ -87,6 +113,11 @@ export class AdminVehicleModalComponent implements OnInit {
       },
       { updateOn: 'change' }
     );
+  }
+
+  editVehicle() {
+    this.vehicleService.editVehicle(this.vehicleModel)
+      .subscribe(this.reloadPage);
   }
 
   protected colors: Array<string> = [

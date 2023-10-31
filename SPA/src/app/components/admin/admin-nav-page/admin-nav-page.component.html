@@ -1,23 +1,32 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 black-nav" style="width: 270px;">
-  <div class="container justify-content-center d-flex">
-    <ul class="d-flex nav flex-column nav-pills ">
+<div class="d-flex flex-column flex-shrink-0 black-nav">
+  <ul class="d-flex nav flex-column nav-pills mt-4">
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('home')" [class.selected]="routeHighlights['home']">Početna</a>
+    </li>
 
-      <li class="nav-item">
-        <a class="nav-link a-link-nav" (click)="navigate('home')" [class.selected]="routeHighlights['home']">Početna</a>
-      </li>
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('users')" [class.selected]="routeHighlights['users']">Korisnici</a>
+    </li>
 
-      <li class="nav-item">
-        <a class="nav-link a-link-nav" (click)="navigate('users')" [class.selected]="routeHighlights['users']">Korisnici</a>
-      </li>
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('news')" [class.selected]="routeHighlights['news']">Obavijesti</a>
+    </li>
 
-      <li class="nav-item">
-        <a class="nav-link a-link-nav" (click)="navigate('company')" [class.selected]="routeHighlights['company']">GP Sarajevo</a>
-      </li>
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('tickets')" [class.selected]="routeHighlights['tickets']">Karte</a>
+    </li>
 
-      <li class="nav-item">
-        <a class="nav-link a-link-nav" (click)="navigate('report')" [class.selected]="routeHighlights['report']">Statistika</a>
-      </li>
-    </ul>
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('vehicles')" [class.selected]="routeHighlights['vehicles']">Vozila</a>
+    </li>
 
-  </div>
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('company')" [class.selected]="routeHighlights['company']">GP Sarajevo</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link a-link-nav" (click)="navigate('report')" [class.selected]="routeHighlights['report']">Statistika</a>
+    </li>
+  </ul>
+
 </div>

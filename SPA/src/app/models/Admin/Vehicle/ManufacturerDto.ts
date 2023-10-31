@@ -1,4 +1,4 @@
 export interface ManufacturerDto {
-  id: string;
+  id?: string;
   name: string;
 }

@@ -1,4 +1,4 @@
 export interface VehicleTypeDto {
-  id: string;
+  id?: string;
   name: string;
 }

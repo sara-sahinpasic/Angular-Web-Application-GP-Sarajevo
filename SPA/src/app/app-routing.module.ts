@@ -28,6 +28,7 @@ import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-typ
 import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminTicketsPageComponent } from './components/admin/children/admin-tickets-page/admin-tickets-page.component';
 import { AdminNewsPageComponent } from './components/admin/children/admin-news-page/admin-news-page.component';
+import { AdminVehiclePageComponent } from './components/admin/children/admin-vehicle-page/admin-vehicle-page.component';
 import { DriverComponent } from './components/driver/driver.component';
 import { DriverDelayPageComponent } from './components/driver/children/driver-delay-page/driver-delay-page.component';
 import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
@@ -47,7 +48,8 @@ const routes: Routes = [
     { path: 'users', component: AdminUsersPageComponent, outlet: "admin"},
     { path: 'tickets', component: AdminTicketsPageComponent, outlet: "admin"},
     { path: 'company', component: AdminCompanyPageComponent, outlet: "admin" },
-    { path: 'news', component: AdminNewsPageComponent, outlet: "admin" }
+    { path: 'news', component: AdminNewsPageComponent, outlet: "admin" },
+    { path: 'vehicles', component: AdminVehiclePageComponent, outlet: "admin" }
   ]},
   { path: 'admin/company/vehicle/manufacturer', component: AdminManufacturerModalComponent},
   { path: 'admin/company/vehicle/type', component: AdminVehicleTypeModalComponent},
