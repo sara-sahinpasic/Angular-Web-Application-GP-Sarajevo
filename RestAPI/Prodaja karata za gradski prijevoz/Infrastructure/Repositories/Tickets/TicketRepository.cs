@@ -1,6 +1,5 @@
 ﻿using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Domain.Entities.Tickets;
-using Domain.Entities.Users;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,13 +9,25 @@ public sealed class TicketRepository : GenericRepository<Ticket>, ITicketReposit
 {
     public TicketRepository(DataContext dataContext) : base(dataContext) { }
 
+    public IQueryable<Ticket> GetAll(bool includeInactive)
+    {
+        IQueryable<Ticket> query = GetAll();
+
+        if (!includeInactive)
+        {
+            query = query.Where(ticket => ticket.Active);
+        }
+        
+        return query;
+    }
+
     public Task<bool> DoesNameTicketExistAsync(string name, CancellationToken cancellationToken = default)
     {
-        return GetAll().AnyAsync(ticket => ticket.Name.Trim().ToLower() == name.Trim().ToLower());
+        return GetAll().AnyAsync(ticket => ticket.Name.Trim().ToLower() == name.Trim().ToLower(), cancellationToken);
     }
 
     public Task<bool> DoesTicketExistAsync(Guid ticketId, CancellationToken cancellationToken = default)
     {
-        return GetAll().AnyAsync(ticket => ticket.Id == ticketId);
+        return GetAll().AnyAsync(ticket => ticket.Id == ticketId, cancellationToken);
     }
 }

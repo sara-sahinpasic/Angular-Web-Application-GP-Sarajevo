@@ -1,0 +1,132 @@
+﻿using Application.Services.Abstractions.Interfaces.Repositories.Roles;
+using Application.Services.Abstractions.Interfaces.Repositories.Users;
+using Microsoft.AspNetCore.Mvc;
+using Presentation.DTO;
+using Microsoft.EntityFrameworkCore;
+using Domain.Entities.Users;
+using Application.Services.Abstractions.Interfaces.Mapper;
+using Application.Services.Abstractions.Interfaces.Hashing;
+using Presentation.DTO.Admin.User;
+using Application.Services.Abstractions.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Application.Config;
+
+namespace Presentation.Controllers.Admin.AdminUsers;
+
+[Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
+[ApiController]
+[Route("[controller]")]
+public sealed class AdminUserController : ControllerBase
+{
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AdminUserController(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork)
+    {
+        _userRepository = userRepository;
+        _roleRepository = roleRepository;
+        _unitOfWork = unitOfWork;
+    }
+
+    [HttpGet("/Roles")]
+    public async Task<IActionResult> GetAllRoles(CancellationToken cancellationToken)
+    {
+        var data = await _roleRepository.GetAll()
+            .ToArrayAsync(cancellationToken);
+
+        Response response = new()
+        {
+            Data = data
+        };
+
+        return Ok(response);
+    }
+
+    [HttpPost("/CreateUser")]
+    public async Task<IActionResult> CreateUser(CreateUserDto createDto, [FromServices] IPasswordService passwordService,
+        CancellationToken cancellationToken)
+    {
+        if (await _userRepository.IsUserRegisteredAsync(createDto.Email))
+        {
+            Response errorResponse = new()
+            {
+                Message = "Email već postoji u bazi podataka."
+            };
+
+            return BadRequest(errorResponse);
+        }
+
+        Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(createDto.Password);
+        User newUser = new User
+        {
+            FirstName = createDto.FirstName,
+            LastName = createDto.LastName,
+            Email = createDto.Email,
+            PasswordHash = passwordHashAndSalt.Item2,
+            PasswordSalt = passwordHashAndSalt.Item1,
+            DateOfBirth = createDto.DateOfBirth,
+            RoleId = createDto.RoleId,
+            RegistrationDate = DateTime.UtcNow
+        };
+
+        await _userRepository.CreateAsync(newUser, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        Response response = new()
+        {
+            Message = "Novi korisnik registrovan.",
+            Data = newUser
+        };
+        return Ok(response);
+    }
+
+    [HttpGet("/Users")]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var data = await _userRepository.GetAll()
+            .Select(user => new GetUserDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                RoleName = user.Role.Name,
+                Id = user.Id,
+                PhoneNumber = user.PhoneNumber,
+            })
+            .ToArrayAsync();
+
+        Response response = new()
+        {
+            Data = data
+        };
+
+        return Ok(response);
+    }
+
+    [HttpGet("/UserById")]
+    public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken, [FromServices] IObjectMapperService objectMapperService)
+    {
+        var data = await _userRepository.GetByIdAsync(id, cancellationToken: cancellationToken);
+
+        if (data == null)
+        {
+            Response errorResponse = new()
+            {
+                Message = "Korisnik nije pronađen"
+            };
+
+            return NotFound(errorResponse);
+        }
+
+        var user = new GetUserDto();
+        objectMapperService.Map(data, user);
+
+        Response response = new()
+        {
+            Data = user
+        };
+
+        return Ok(response);
+    }
+}

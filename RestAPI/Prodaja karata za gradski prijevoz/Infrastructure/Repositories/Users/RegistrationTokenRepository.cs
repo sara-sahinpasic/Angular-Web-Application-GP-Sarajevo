@@ -9,13 +9,13 @@ public sealed class RegistrationTokenRepository : GenericRepository<Registration
 {
     public RegistrationTokenRepository(DataContext dataContext) : base(dataContext) { }
 
-    public async Task DeleteAsync(string tokenString, CancellationToken cancellationToken)
+    public async Task DeleteByTokenStringAsync(string tokenString, CancellationToken cancellationToken)
     {
         RegistrationToken? registrationToken = await GetAll()
             .Where(token => token.Token == tokenString)
             .FirstOrDefaultAsync(cancellationToken);
 
-        Delete(registrationToken);
+        await DeleteAsync(registrationToken, cancellationToken);
     }
 
     public Task<RegistrationToken?> GetByTokenStringAsync(string tokenString, CancellationToken cancellationToken)

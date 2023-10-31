@@ -22,9 +22,9 @@ public sealed class ReviewController : ControllerBase
     public ReviewController(IReviewRepository reviewRepository, IUnitOfWork unitOfWork,
         IIssuedTicketRepository issuedTicket)
     {
-        this._reviewRepository = reviewRepository;
-        this._unitOfWork = unitOfWork;
-        this._issuedTicket = issuedTicket;
+        _reviewRepository = reviewRepository;
+        _unitOfWork = unitOfWork;
+        _issuedTicket = issuedTicket;
     }
 
     [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
@@ -32,7 +32,7 @@ public sealed class ReviewController : ControllerBase
     public async Task<IActionResult> AddReview([FromServices] IObjectMapperService objectMapperService,
          ReviewDto reviewDto, CancellationToken cancellationToken)
     {
-        if (IsReviewRequstInvalid(reviewDto))
+        if (IsReviewRequestInvalid(reviewDto))
         {
             Response invalidResponse = new()
             {
@@ -50,6 +50,7 @@ public sealed class ReviewController : ControllerBase
             {
                 Message = "review_controller_add_review_no_purchased_tickets_error"
             };
+            
             return BadRequest(errorResponse);
         }
         else
@@ -58,27 +59,29 @@ public sealed class ReviewController : ControllerBase
 
             objectMapperService.Map(reviewDto, newReview);
 
-            _reviewRepository.Create(newReview);
+            await _reviewRepository.CreateAsync(newReview, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
             {
                 Message = "review_controller_add_review_success"
             };
+            
             return Ok(response);
         }
     }
 
-    // it's better to create a seperate validator but this is quicker
-    private bool IsReviewRequstInvalid(ReviewDto reviewDto)
+    // it's better to create a separate validator but this is quicker
+    private static bool IsReviewRequestInvalid(ReviewDto reviewDto)
     {
-        return string.IsNullOrEmpty(reviewDto.Title) || string.IsNullOrEmpty(reviewDto.Description) || reviewDto.Score <= 0 || reviewDto.Score > 5;
+        return string.IsNullOrEmpty(reviewDto.Title) || string.IsNullOrEmpty(reviewDto.Description) 
+            || reviewDto.Score <= 0 || reviewDto.Score > 5;
     }
 
     [HttpGet("Pagination")]
-    public async Task<IActionResult> GetPage([FromServices] IReviewRepository reviewRepository, int page, int pageSize)
+    public async Task<IActionResult> GetPage(int page, int pageSize, CancellationToken cancellationToken)
     {
-        var productsPerPage = await reviewRepository
+        var productsPerPage = await _reviewRepository
            .GetAll()
            .OrderByDescending(review => review.DateOfCreation)
            .Select(review => new ReviewDto
@@ -89,19 +92,17 @@ public sealed class ReviewController : ControllerBase
            })
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToArrayAsync();
-
-        int totalCount = productsPerPage.Count();
+            .ToArrayAsync(cancellationToken);
 
         return Ok(productsPerPage);
     }
 
     [HttpGet("ReviewPagesCount")]
-    public async Task<IActionResult> GetReviewCount([FromServices] IReviewRepository reviewRepository, double pageSize)
+    public async Task<IActionResult> GetReviewCount(double pageSize, CancellationToken cancellationToken)
     {
-        var total = await reviewRepository
+        var total = await _reviewRepository
            .GetAll()
-           .CountAsync();
+           .CountAsync(cancellationToken);
 
         Response response = new()
         {

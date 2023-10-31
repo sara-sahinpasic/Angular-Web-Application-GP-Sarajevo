@@ -11,7 +11,7 @@ public sealed class Route : Entity
     public Guid EndStationId { get; set; }
     public Station EndStation { get; set; } = null!;
     public TimeSpan TimeOfDeparture { get; set; }
-    public TimeSpan TimeOfArival { get; set; }
+    public TimeSpan TimeOfArrival { get; set; }
     public Guid VehicleId { get; set; }
     public Vehicle Vehicle { get; set; } = null!;
     public bool Active { get; set; }

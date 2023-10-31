@@ -1,5 +1,7 @@
-﻿using Application.Services.Abstractions.Interfaces.Repositories.Routes;
+﻿using System.Collections.Immutable;
+using Application.Services.Abstractions.Interfaces.Repositories.Routes;
 using Application.Services.Abstractions.Interfaces.Repositories.Stations;
+using Domain.Entities.Stations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
@@ -43,20 +45,19 @@ public sealed class StationController : ControllerBase
     [HttpGet("GetRouted")]
     public async Task<IActionResult> GetRoutedAction(Guid startStationId, CancellationToken cancellationToken)
     {
-        IEnumerable<StationResponseDto> stations = await _routeRepository.GetAll()
-            .AsNoTracking()
-            .Where(route => route.StartStationId == startStationId)
-            .Select(route => new StationResponseDto
+        IReadOnlyCollection<Station> stations = await _stationRepository.GetRoutedStationsAsync(startStationId, cancellationToken);
+
+        IReadOnlyCollection<StationResponseDto> stationResponseData = stations
+            .Select(station => new StationResponseDto
             {
-                Id = route.EndStationId,
-                Name = route.EndStation.Name,
+                Id = station.Id,
+                Name = station.Name
             })
-            .Distinct()
-            .ToListAsync(cancellationToken);
+            .ToList();
 
         Response response = new()
         {
-            Data = stations
+            Data = stationResponseData
         };
 
         return Ok(response);

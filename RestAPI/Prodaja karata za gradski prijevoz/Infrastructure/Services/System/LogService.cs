@@ -39,7 +39,7 @@ public sealed class LogService : ILogService
             Date = DateTime.UtcNow
         };
 
-        _logRepository.Create(log);
+        await _logRepository.CreateAsync(log);
 
         bool shouldSendLogMail = _configuration.GetValue<bool>("SendErrorLogsToEmail");
 
@@ -51,7 +51,7 @@ public sealed class LogService : ILogService
         await _unitOfWork.CommitAsync(default);
     }
 
-    private bool IsValidLogLevel(LogLevel logLevel) => logLevel == LogLevel.Error || logLevel == LogLevel.Critical;
+    private static bool IsValidLogLevel(LogLevel logLevel) => logLevel == LogLevel.Error || logLevel == LogLevel.Critical;
 
     private Task SendLogMail(Log log)
     {

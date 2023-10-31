@@ -8,42 +8,42 @@ using Presentation.DTO;
 using Presentation.DTO.Invoice;
 using System.Linq.Expressions;
 
-namespace Presentation.Controllers.Account
+namespace Presentation.Controllers.Account;
+
+[Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
+[ApiController]
+[Route("[controller]/[action]")]
+public sealed class PurchaseHistoryController : ControllerBase
 {
-    [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
-    [ApiController]
-    [Route("[controller]/[action]")]
-    public sealed class PurchaseHistoryController : ControllerBase
+    private readonly IIssuedTicketRepository _issuedTicketRepository;
+
+    public PurchaseHistoryController(IIssuedTicketRepository issuedTicketRepository)
     {
-        private readonly IIssuedTicketRepository _issuedTicketRepository;
+        _issuedTicketRepository = issuedTicketRepository;
+    }
 
-        public PurchaseHistoryController(IIssuedTicketRepository issuedTicketRepository)
+    [HttpGet]
+    public async Task<IActionResult> GetAllUserPurchases(Guid userId, CancellationToken cancellationToken)
+    {
+        Expression<Func<IssuedTicket, IssuedTicketHistoryDto>> selector = issuedTicket => new IssuedTicketHistoryDto
         {
-            _issuedTicketRepository = issuedTicketRepository;
-        }
+            TicketName = issuedTicket.Ticket.Name,
+            Price = issuedTicket.Ticket.Price,
+            IssuedDate = issuedTicket.IssuedDate,
+            StartStationName = issuedTicket.Route.StartStation.Name,
+            EndStationName = issuedTicket.Route.EndStation.Name
+        };
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllUserPurchases(Guid userId, CancellationToken cancellationToken)
-        {
-            Expression<Func<IssuedTicket, IssuedTicketHistoryDto>> selector = issuedTicket => new IssuedTicketHistoryDto
-            {
-                TicketName = issuedTicket.Ticket.Name,
-                Price = issuedTicket.Ticket.Price,
-                IssuedDate = issuedTicket.IssuedDate,
-                StartStationName = issuedTicket.Route.StartStation.Name,
-                EndStationName = issuedTicket.Route.EndStation.Name
-            };
+        Expression<Func<IssuedTicket, object>> orderBy = issuedTicket => issuedTicket.IssuedDate;
 
-            Expression<Func<IssuedTicket, object>> orderBy = issuedTicket => issuedTicket.IssuedDate;
-
-            var data = await _issuedTicketRepository.GetByUserIdAsync(userId, selector, orderBy, OrderBy.Descending, cancellationToken);
+        var purchaseHistory = await _issuedTicketRepository.GetByUserIdAsync(userId, selector, 
+            orderBy, OrderBy.Descending, cancellationToken);
                 
-            Response response = new()
-            {
-                Data = data
-            };
+        Response response = new()
+        {
+            Data = purchaseHistory
+        };
 
-            return Ok(response);
-        }
+        return Ok(response);
     }
 }

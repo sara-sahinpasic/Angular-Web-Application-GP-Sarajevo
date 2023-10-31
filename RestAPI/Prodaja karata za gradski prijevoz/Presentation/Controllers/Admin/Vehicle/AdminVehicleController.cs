@@ -14,28 +14,28 @@ namespace Presentation.Controllers.Admin.Vehicles
     [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [ApiController]
     [Route("[controller]")]
-    public sealed class AdminVehicleContoller : ControllerBase
+    public sealed class AdminVehicleController : ControllerBase
     {
-        private readonly IManufacturerRepository manufacturerRepository;
-        private readonly IVehicleRepository vehicleRepository;
-        private readonly IVehicleTypeRepository vehicleTypeRepository;
-        private readonly IObjectMapperService mapperService;
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IManufacturerRepository _manufacturerRepository;
+        private readonly IVehicleRepository _vehicleRepository;
+        private readonly IVehicleTypeRepository _vehicleTypeRepository;
+        private readonly IObjectMapperService _mapperService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AdminVehicleContoller(IManufacturerRepository manufacturerRepository, IVehicleRepository vehicleRepository,
+        public AdminVehicleController(IManufacturerRepository manufacturerRepository, IVehicleRepository vehicleRepository,
             IVehicleTypeRepository vehicleTypeRepository, IObjectMapperService mapperService, IUnitOfWork unitOfWork)
         {
-            this.manufacturerRepository = manufacturerRepository;
-            this.vehicleRepository = vehicleRepository;
-            this.vehicleTypeRepository = vehicleTypeRepository;
-            this.mapperService = mapperService;
-            this.unitOfWork = unitOfWork;
+            _manufacturerRepository = manufacturerRepository;
+            _vehicleRepository = vehicleRepository;
+            _vehicleTypeRepository = vehicleTypeRepository;
+            _mapperService = mapperService;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("/Manufacturers")]
         public async Task<IActionResult> GetAllManufacturers(CancellationToken cancellationToken)
         {
-            var data = await manufacturerRepository.GetAll()
+            var data = await _manufacturerRepository.GetAll()
                 .ToArrayAsync(cancellationToken);
 
             Response response = new()
@@ -49,7 +49,7 @@ namespace Presentation.Controllers.Admin.Vehicles
         [HttpGet("/VehicleType")]
         public async Task<IActionResult> GetAllVehiclesType(CancellationToken cancellationToken)
         {
-            var data = await vehicleTypeRepository.GetAll()
+            var data = await _vehicleTypeRepository.GetAll()
                 .ToArrayAsync(cancellationToken);
 
             Response response = new()
@@ -63,7 +63,7 @@ namespace Presentation.Controllers.Admin.Vehicles
         [HttpPost("/Vehicle")]
         public async Task<IActionResult> CreateVehicle(VehicleDto vehicleDto, CancellationToken cancellationToken)
         {
-            if (await vehicleRepository.IsVehicleRegisteredAsync(vehicleDto.RegistrationNumber))
+            if (await _vehicleRepository.IsVehicleRegisteredAsync(vehicleDto.RegistrationNumber, cancellationToken))
             {
                 Response errorResponse = new()
                 {
@@ -75,22 +75,23 @@ namespace Presentation.Controllers.Admin.Vehicles
             }
 
             Vehicle newVehicle = new();
-            mapperService.Map(vehicleDto, newVehicle);
+            _mapperService.Map(vehicleDto, newVehicle);
 
-            vehicleRepository.Create(newVehicle);
-            await unitOfWork.CommitAsync(cancellationToken);
+            await _vehicleRepository.CreateAsync(newVehicle, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
             {
                 Message = "Novo vozilo registrovano.",
             };
+            
             return CreatedAtAction(nameof(CreateVehicle), response);
         }
 
         [HttpPost("/VehicleType")]
         public async Task<IActionResult> CreateVehicleType(VehicleTypeDto vehicleTypeDto, CancellationToken cancellationToken)
         {
-            if (await vehicleTypeRepository.IsVehicleTypeRegisteredAsync(vehicleTypeDto.Name))
+            if (await _vehicleTypeRepository.IsVehicleTypeRegisteredAsync(vehicleTypeDto.Name, cancellationToken))
             {
                 Response errorResponse = new()
                 {
@@ -102,21 +103,22 @@ namespace Presentation.Controllers.Admin.Vehicles
             }
 
             VehicleType newVehicleType = new();
-            mapperService.Map(vehicleTypeDto, newVehicleType);
+            _mapperService.Map(vehicleTypeDto, newVehicleType);
 
-            vehicleTypeRepository.Create(newVehicleType);
-            await unitOfWork.CommitAsync(cancellationToken);
+            await _vehicleTypeRepository.CreateAsync(newVehicleType, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
             {
                 Message = "Novi tip vozila registrovan.",
             };
+            
             return CreatedAtAction(nameof(CreateVehicleType), response);
         }
         [HttpPost("/Manufacturer")]
         public async Task<IActionResult> CreateManufacturer(ManufacturerDto manufacturerDto, CancellationToken cancellationToken)
         {
-            if (await manufacturerRepository.IsManufacturerRegisteredAsync(manufacturerDto.Name))
+            if (await _manufacturerRepository.IsManufacturerRegisteredAsync(manufacturerDto.Name, cancellationToken))
             {
                 Response errorResponse = new()
                 {
@@ -125,10 +127,13 @@ namespace Presentation.Controllers.Admin.Vehicles
                 };
                 return BadRequest(errorResponse);
             }
+            
             Manufacturer newManufacturer = new();
-            mapperService.Map(manufacturerDto, newManufacturer);
-            manufacturerRepository.Create(newManufacturer);
-            await unitOfWork.CommitAsync(cancellationToken);
+            
+            _mapperService.Map(manufacturerDto, newManufacturer);
+            await _manufacturerRepository.CreateAsync(newManufacturer, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
+            
             Response response = new()
             {
                 Message = "Novi proizvođač vozila registrovan.",

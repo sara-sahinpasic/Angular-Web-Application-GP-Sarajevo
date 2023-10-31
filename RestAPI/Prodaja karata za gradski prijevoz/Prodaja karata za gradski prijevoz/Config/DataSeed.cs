@@ -49,7 +49,7 @@ public static class DataSeed
 
         IUnitOfWork unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
 
-        ICollection<Guid> userIds = await SeedUsers(unitOfWork, serviceProvider);
+        IReadOnlyCollection<Guid> userIds = await SeedUsers(unitOfWork, serviceProvider);
 
         if (userIds.Count == 0)
         {
@@ -59,24 +59,23 @@ public static class DataSeed
         await SeedNews(userIds, unitOfWork, serviceProvider);
         await SeedReviews(unitOfWork, serviceProvider);
 
-        IEnumerable<Station> stations = await SeedStations(unitOfWork, serviceProvider);
-        IEnumerable<Manufacturer> manufacturers = await SeedManufacturers(unitOfWork, serviceProvider);
-        IEnumerable<VehicleType> vehicleTypes = await SeedVehicleTypes(unitOfWork, serviceProvider);
-        IEnumerable<Vehicle> vehicles = await SeedVehicles(vehicleTypes, manufacturers, unitOfWork, serviceProvider);
+        IReadOnlyCollection<Station> stations = await SeedStations(unitOfWork, serviceProvider);
+        IReadOnlyCollection<Manufacturer> manufacturers = await SeedManufacturers(unitOfWork, serviceProvider);
+        IReadOnlyCollection<VehicleType> vehicleTypes = await SeedVehicleTypes(unitOfWork, serviceProvider);
+        IReadOnlyCollection<Vehicle> vehicles = await SeedVehicles(vehicleTypes, manufacturers, unitOfWork, serviceProvider);
 
-        IEnumerable<Guid> routeIds = await SeedRoutes(stations, vehicles, unitOfWork, serviceProvider);
-        ICollection<IssuedTicket> issuedTickets = await SeedIssuedTickets(unitOfWork, userIds, routeIds, serviceProvider);
+        IReadOnlyCollection<Guid> routeIds = await SeedRoutes(stations, vehicles, unitOfWork, serviceProvider);
+        IReadOnlyCollection<IssuedTicket> issuedTickets = await SeedIssuedTickets(unitOfWork, userIds, routeIds, serviceProvider);
         await SeedInvoices(unitOfWork, issuedTickets, serviceProvider);
 
-        ICollection<Delay> delays = await SeedDelays(unitOfWork, routeIds, serviceProvider);
-        ICollection<Malfunction> malfunctions = await SeedMalfunction(unitOfWork, serviceProvider, vehicles);
+        await SeedDelays(unitOfWork, routeIds, serviceProvider);
+        await SeedMalfunction(unitOfWork, serviceProvider, vehicles);
 
     }
-    private static async Task<ICollection<Malfunction>> SeedMalfunction(IUnitOfWork unitOfWork,
-       IServiceProvider serviceProvider, IEnumerable<Vehicle> vehicles)
+    private static async Task SeedMalfunction(IUnitOfWork unitOfWork,
+       IServiceProvider serviceProvider, IReadOnlyCollection<Vehicle> vehicles)
     {
         IMalfunctionRepository malfunctionRepository = serviceProvider.GetRequiredService<IMalfunctionRepository>();
-        ICollection<Malfunction> malfunctions = new List<Malfunction>();
 
         for (int i = 0; i < MalfunctionCount; ++i)
         {
@@ -88,18 +87,16 @@ public static class DataSeed
                 Vehicle = vehicles.ElementAt(Random.Shared.Next(0, vehicles.Count())),
             };
 
-            malfunctionRepository.Create(malfunction);
-            malfunctions.Add(malfunction);
+            await malfunctionRepository.CreateAsync(malfunction);
         }
+        
         await unitOfWork.CommitAsync(default);
-        return malfunctions;
     }
-    private static async Task<ICollection<Delay>> SeedDelays(IUnitOfWork unitOfWork,
-    IEnumerable<Guid> routeIds, IServiceProvider serviceProvider)
+    
+    private static async Task SeedDelays(IUnitOfWork unitOfWork,
+        IReadOnlyCollection<Guid> routeIds, IServiceProvider serviceProvider)
     {
         IDelayRepository delayRepository = serviceProvider.GetRequiredService<IDelayRepository>();
-
-        ICollection<Delay> delays = new List<Delay>();
 
         for (int i = 0; i < DelaysCount; ++i)
         {
@@ -107,18 +104,19 @@ public static class DataSeed
             {
                 DelayAmount = new Random().Next(1, 60),
                 Reason = Faker.Lorem.Sentence(4),
-                RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count())),
+                RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count)),
             };
 
-            delayRepository.Create(delay);
-            delays.Add(delay);
+            await delayRepository.CreateAsync(delay);
         }
+        
         await unitOfWork.CommitAsync(default);
-        return delays;
     }
+    
     private static async Task SeedReviews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IReviewRepository reviewRepository = serviceProvider.GetRequiredService<IReviewRepository>();
+        
         for (int i = 0; i < ReviewsCount; i++)
         {
             Review review = new Review
@@ -127,13 +125,17 @@ public static class DataSeed
                 Description = Faker.Lorem.Paragraph(),
                 Score = new Random().Next(1, 5)
             };
-            reviewRepository.Create(review);
+            
+            await reviewRepository.CreateAsync(review);
         }
+        
         await unitOfWork.CommitAsync(default);
     }
-    private static async Task SeedNews(IEnumerable<Guid> userIds, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    
+    private static async Task SeedNews(IReadOnlyCollection<Guid> userIds, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         INewsRepository newsRepository = serviceProvider.GetRequiredService<INewsRepository>();
+    
         for (int i = 0; i < NewsCount; i++)
         {
             News news = new News
@@ -143,18 +145,21 @@ public static class DataSeed
                 Date = DateTime.UtcNow,
                 UserId = userIds.First(),
             };
-            newsRepository.Create(news);
+        
+            await newsRepository.CreateAsync(news);
         }
+        
         await unitOfWork.CommitAsync(default);
     }
 
-    private static async Task<ICollection<IssuedTicket>> SeedIssuedTickets(IUnitOfWork unitOfWork, ICollection<Guid> userIds, IEnumerable<Guid> routeIds, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<IssuedTicket>> SeedIssuedTickets(IUnitOfWork unitOfWork, IReadOnlyCollection<Guid> userIds,
+        IReadOnlyCollection<Guid> routeIds, IServiceProvider serviceProvider)
     {
         IIssuedTicketRepository issuedTicketRepository = serviceProvider.GetRequiredService<IIssuedTicketRepository>();
         ITicketRepository ticketRepository = serviceProvider.GetRequiredService<ITicketRepository>();
 
-        Ticket? oneWayTicket = await ticketRepository.GetByIdAsync(new Guid(Tickets.OneWay.ToString()), default);
-        ICollection<IssuedTicket> issuedTickets = new List<IssuedTicket>();
+        Ticket oneWayTicket = (await ticketRepository.GetByIdAsync(new Guid(Tickets.OneWay.ToString()), default))!;
+        List<IssuedTicket> issuedTickets = new();
 
         for (int i = 0; i < InvoicesCount; ++i)
         {
@@ -171,21 +176,23 @@ public static class DataSeed
                 RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count())),
             };
 
-            issuedTicketRepository.Create(issuedTicket);
+            await issuedTicketRepository.CreateAsync(issuedTicket);
             issuedTickets.Add(issuedTicket);
         }
+        
         await unitOfWork.CommitAsync(default);
 
         return issuedTickets;
     }
 
-    private static async Task SeedInvoices(IUnitOfWork unitOfWork, ICollection<IssuedTicket> issuedTickets, IServiceProvider serviceProvider)
+    private static async Task SeedInvoices(IUnitOfWork unitOfWork, IReadOnlyCollection<IssuedTicket> issuedTickets,
+        IServiceProvider serviceProvider)
     {
         IInvoiceRepository invoiceRepository = serviceProvider.GetRequiredService<IInvoiceRepository>();
         ITaxRepository taxRepository = serviceProvider.GetRequiredService<ITaxRepository>();
 
         issuedTickets = issuedTickets.OrderBy(issuedTicket => issuedTicket.UserId).ToList();
-        Tax? tax = await taxRepository.GetActiveAsync(default);
+        Tax tax = (await taxRepository.GetActiveAsync())!;
 
         while (issuedTickets.Count > 0)
         {
@@ -213,13 +220,13 @@ public static class DataSeed
 
             issuedTickets = issuedTickets.Skip(ticketPerInvoice).ToList();
 
-            invoiceRepository.Create(invoice);
+            await invoiceRepository.CreateAsync(invoice);
         }
 
         await unitOfWork.CommitAsync(default);
     }
 
-    private static async Task<ICollection<Guid>> SeedUsers(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<Guid>> SeedUsers(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IUserRepository userRepository = serviceProvider.GetRequiredService<IUserRepository>();
 
@@ -230,7 +237,7 @@ public static class DataSeed
 
         IPasswordService passwordService = serviceProvider.GetRequiredService<IPasswordService>();
 
-        ICollection<Guid> userIds = new List<Guid>();
+        List<Guid> userIds = new();
 
         for (int i = 0; i < UserCount; ++i)
         {
@@ -262,23 +269,27 @@ public static class DataSeed
                 Status = Statuses.Default,
                 ProfileImagePath = ""
             };
+            
             Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(DefaultUserPassword);
 
             user.PasswordHash = passwordHashAndSalt.Item2;
             user.PasswordSalt = passwordHashAndSalt.Item1;
-            userRepository.Create(user);
+            
+            await userRepository.CreateAsync(user);
+            
             userIds.Add(user.Id);
         }
+        
         await unitOfWork.CommitAsync(default);
 
         return userIds;
     }
 
-    public static async Task<IEnumerable<Station>> SeedStations(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<Station>> SeedStations(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IStationRepository stationRepository = serviceProvider.GetRequiredService<IStationRepository>();
 
-        ICollection<Station> stationIds = new List<Station>();
+        List<Station> stationIds = new();
 
         for (int i = 0; i < StationsCount; ++i)
         {
@@ -287,7 +298,7 @@ public static class DataSeed
                 Name = Faker.Country.Name(),
             };
 
-            stationRepository.Create(station);
+            await stationRepository.CreateAsync(station);
             stationIds.Add(station);
         }
         await unitOfWork.CommitAsync(default);
@@ -295,11 +306,11 @@ public static class DataSeed
         return stationIds;
     }
 
-    public static async Task<IEnumerable<VehicleType>> SeedVehicleTypes(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<VehicleType>> SeedVehicleTypes(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IVehicleTypeRepository vehicleTypeRepository = serviceProvider.GetRequiredService<IVehicleTypeRepository>();
 
-        ICollection<VehicleType> vehicleTypes = new List<VehicleType>();
+        List<VehicleType> vehicleTypes = new();
         string[] types = new[] { "Bus", "Tram" };
 
         for (int i = 0; i < 2; ++i)
@@ -309,19 +320,21 @@ public static class DataSeed
                 Name = types[i]
             };
 
-            vehicleTypeRepository.Create(vehicleType);
+            await vehicleTypeRepository.CreateAsync(vehicleType);
             vehicleTypes.Add(vehicleType);
         }
+        
         await unitOfWork.CommitAsync(default);
 
         return vehicleTypes;
     }
 
-    public static async Task<IEnumerable<Vehicle>> SeedVehicles(IEnumerable<VehicleType> vehicleTypes, IEnumerable<Manufacturer> manufacturers, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<Vehicle>> SeedVehicles(IReadOnlyCollection<VehicleType> vehicleTypes,
+        IReadOnlyCollection<Manufacturer> manufacturers, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IVehicleRepository vehicleRepository = serviceProvider.GetRequiredService<IVehicleRepository>();
 
-        ICollection<Vehicle> vehicles = new List<Vehicle>();
+        List<Vehicle> vehicles = new();
         string[] colors = new[] { "Blue", "Red", "Yellow", "Green", "Orange" };
 
         for (int i = 0; i < VehiclesCount; ++i)
@@ -336,7 +349,7 @@ public static class DataSeed
                 RegistrationNumber = Faker.Identification.SocialSecurityNumber(),
             };
 
-            vehicleRepository.Create(vehicle);
+            await vehicleRepository.CreateAsync(vehicle);
             vehicles.Add(vehicle);
         }
 
@@ -345,11 +358,11 @@ public static class DataSeed
         return vehicles;
     }
 
-    public static async Task<IEnumerable<Manufacturer>> SeedManufacturers(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<Manufacturer>> SeedManufacturers(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IManufacturerRepository manufacturerRepository = serviceProvider.GetRequiredService<IManufacturerRepository>();
 
-        ICollection<Manufacturer> manufacturers = new List<Manufacturer>();
+        List<Manufacturer> manufacturers = new();
 
         for (int i = 0; i < 2; ++i)
         {
@@ -358,7 +371,7 @@ public static class DataSeed
                 Name = Faker.Name.First(),
             };
 
-            manufacturerRepository.Create(manufacturer);
+            await manufacturerRepository.CreateAsync(manufacturer);
             manufacturers.Add(manufacturer);
         }
         await unitOfWork.CommitAsync(default);
@@ -366,7 +379,8 @@ public static class DataSeed
         return manufacturers;
     }
 
-    public static async Task<IEnumerable<Guid>> SeedRoutes(IEnumerable<Station> stations, IEnumerable<Vehicle> vehicles, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
+    private static async Task<IReadOnlyCollection<Guid>> SeedRoutes(IReadOnlyCollection<Station> stations, 
+        IReadOnlyCollection<Vehicle> vehicles, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IRouteRepository routeRepository = serviceProvider.GetRequiredService<IRouteRepository>();
 
@@ -379,7 +393,7 @@ public static class DataSeed
             Route route = new()
             {
                 Vehicle = vehicles.ElementAt(Random.Shared.Next(0, vehicles.Count())),
-                TimeOfArival = timeOfDeparture.Add(TimeSpan.FromMinutes(30)),
+                TimeOfArrival = timeOfDeparture.Add(TimeSpan.FromMinutes(30)),
                 TimeOfDeparture = timeOfDeparture,
                 Active = true,
                 ActiveOnHolidays = true,
@@ -388,7 +402,7 @@ public static class DataSeed
                 EndStationId = stations.Where(station => station.Id != startStationId).ElementAt(Random.Shared.Next(0, stations.Count() - 1)).Id
             };
 
-            routeRepository.Create(route);
+            await routeRepository.CreateAsync(route);
             routeIds.Add(route.Id);
         }
 

@@ -46,7 +46,7 @@ public sealed class CheckoutService : ICheckoutService
         foreach (IssuedTicket issuedTicket in invoice.IssuedTickets)
         {
             issuedTicket.Ticket = ticketCache[issuedTicket.TicketId];
-            _issuedTicketRepository.Create(issuedTicket);
+            await _issuedTicketRepository.CreateAsync(issuedTicket, cancellationToken);
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
@@ -69,8 +69,7 @@ public sealed class CheckoutService : ICheckoutService
 
         invoice.Tax = tax;
 
-        _invoiceRepository.Create(invoice);
-
+        await _invoiceRepository.CreateAsync(invoice, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
         await _emailService.SendInvoiceAsync(user, invoice, cancellationToken);
     }

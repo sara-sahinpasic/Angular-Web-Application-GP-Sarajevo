@@ -1,5 +1,6 @@
 ﻿using Application.Services.Abstractions.Interfaces.Repositories;
 using Domain.Abstractions.Classes;
+using Domain.Exceptions.Domain;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,44 +21,74 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
             .AsQueryable();
     }
 
-    public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken, string[]? includes = null)
+    public Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string>? includes = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(id, nameof(id));
-        IQueryable<TEntity> query = _dataContext.Set<TEntity>();
+        cancellationToken.ThrowIfCancellationRequested();
 
+        IQueryable<TEntity> query = _dataContext.Set<TEntity>();
+        
         if (includes is not null)
         {
-            foreach (string item in includes)
-            {
-                query = query.Include(item);
-            }
+            query = includes.Aggregate(query, (current, item) => current.Include(item));
         }
 
         return query.FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
     }
+    
+    public async Task<TEntity> GetByIdEnsuredAsync(Guid id, IEnumerable<string>? includes = null, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        TEntity? entity = await GetByIdAsync(id, includes, cancellationToken);
 
-    public virtual Guid? Create(TEntity? entity)
+        if (entity is null)
+        {
+            throw new DomainException($"{typeof(TEntity)} with the id {id} doesn't exist.");
+        }
+
+        return entity;
+    }
+
+    public virtual async Task<Guid?> CreateAsync(TEntity? entity, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        cancellationToken.ThrowIfCancellationRequested();
 
-        _dataContext.Add(entity);
+        await _dataContext.AddAsync(entity, cancellationToken);
 
         return entity.Id;
     }
 
-    public virtual bool Delete(TEntity? entity)
+    public virtual Task CreateRangeAsync(IReadOnlyCollection<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        if (entities.Count == 0)
+        {
+            throw new ArgumentException("Cannot be empty.", nameof(entities));
+        }
 
-        _dataContext.Remove(entity);
-
-        return true;
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return _dataContext.AddRangeAsync(entities, cancellationToken);
     }
 
-    public virtual void Update(TEntity? entity)
+    public virtual Task DeleteAsync(TEntity? entity, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        _dataContext.Remove(entity);
 
+        return Task.CompletedTask;
+    }
+
+    public virtual Task UpdateAsync(TEntity? entity, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        cancellationToken.ThrowIfCancellationRequested();
+        
         _dataContext.Update(entity);
+
+        return Task.CompletedTask;
     }
 }

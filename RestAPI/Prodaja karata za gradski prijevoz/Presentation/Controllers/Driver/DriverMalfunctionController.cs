@@ -10,61 +10,60 @@ using Presentation.DTO;
 using Presentation.DTO.Admin.Vehicles;
 using Presentation.DTO.Driver;
 
-namespace Presentation.Controllers.Driver
+namespace Presentation.Controllers.Driver;
+
+[Authorize]
+[ApiController]
+[Route("[controller]")]
+public class DriverMalfunctionController : ControllerBase
 {
-    [Authorize]
-    [ApiController]
-    [Route("[controller]")]
-    public class DriverMalfunctionController : ControllerBase
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IObjectMapperService _mapperService;
+    private readonly IVehicleRepository _vehicleRepository;
+    private readonly IMalfunctionRepository _malfunctionRepository;
+
+    public DriverMalfunctionController(IUnitOfWork unitOfWork,
+        IObjectMapperService mapperService, IVehicleRepository vehicleRepository, IMalfunctionRepository malfunctionRepository)
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IObjectMapperService mapperService;
-        private readonly IVehicleRepository vehicleRepository;
-        private readonly IMalfunctionRepository malfunctionRepository;
-        private readonly IManufacturerRepository manufacturerRepository;
+        _unitOfWork = unitOfWork;
+        _mapperService = mapperService;
+        _vehicleRepository = vehicleRepository;
+        _malfunctionRepository = malfunctionRepository;
+    }
 
-        public DriverMalfunctionController(IUnitOfWork unitOfWork,
-            IObjectMapperService mapperService, IVehicleRepository vehicleRepository, IMalfunctionRepository malfunctionRepository)
-        {
-            this.unitOfWork = unitOfWork;
-            this.mapperService = mapperService;
-            this.vehicleRepository = vehicleRepository;
-            this.malfunctionRepository = malfunctionRepository;
-        }
-
-        [HttpGet("/Vehicles")]
-        public async Task<IActionResult> GetAllVehicles(CancellationToken cancellationToken)
-        {
-            var data = await vehicleRepository.GetAll()
-                .Select(vehicle => new VehicleDto
-                {
-                    Id = vehicle.Id,
-                    RegistrationNumber = vehicle.RegistrationNumber
-                })
-                .ToArrayAsync(cancellationToken);
-
-            Response response = new()
+    [HttpGet("/Vehicles")]
+    public async Task<IActionResult> GetAllVehicles(CancellationToken cancellationToken)
+    {
+        var vehicles = await _vehicleRepository.GetAll()
+            .Select(vehicle => new VehicleDto
             {
-                Data = data
-            };
+                Id = vehicle.Id,
+                RegistrationNumber = vehicle.RegistrationNumber
+            })
+            .ToArrayAsync(cancellationToken);
 
-            return Ok(response);
-        }
-
-        [HttpPost("/Malfunction")]
-        public async Task<IActionResult> AddMalfunction(MalfunctionDto malfunctionDto, CancellationToken cancellationToken)
+        Response response = new()
         {
-            Malfunction newMalfunction = new();
-            mapperService.Map(malfunctionDto, newMalfunction);
+            Data = vehicles
+        };
 
-            malfunctionRepository.Create(newMalfunction);
-            await unitOfWork.CommitAsync(cancellationToken);
+        return Ok(response);
+    }
 
-            Response response = new()
-            {
-                Message = "Kvar zabilježen.",
-            };
-            return CreatedAtAction(nameof(AddMalfunction), response);
-        }
+    [HttpPost("/Malfunction")]
+    public async Task<IActionResult> AddMalfunction(MalfunctionDto malfunctionDto, CancellationToken cancellationToken)
+    {
+        Malfunction newMalfunction = new();
+        _mapperService.Map(malfunctionDto, newMalfunction);
+
+        await _malfunctionRepository.CreateAsync(newMalfunction, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        Response response = new()
+        {
+            Message = "Kvar zabilježen.",
+        };
+        
+        return CreatedAtAction(nameof(AddMalfunction), response);
     }
 }

@@ -6,65 +6,64 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
-using Presentation.DTO.Admin.Vehicles;
 using Presentation.DTO.Driver;
 using Presentation.DTO.Routes;
 
-namespace Presentation.Controllers.Driver
+namespace Presentation.Controllers.Driver;
+
+[Authorize]
+[ApiController]
+[Route("[controller]")]
+public class DriverDelayController : ControllerBase
 {
-    [Authorize]
-    [ApiController]
-    [Route("[controller]")]
-    public class DriverDelayController : ControllerBase
+    private readonly IRouteRepository _routeRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IObjectMapperService _mapperService;
+    private readonly IDelayRepository _delayRepository;
+
+    public DriverDelayController(IRouteRepository routeRepository, IUnitOfWork unitOfWork,
+        IObjectMapperService mapperService, IDelayRepository delayRepository)
     {
-        private readonly IRouteRepository routeRepository;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IObjectMapperService mapperService;
-        private readonly IDelayRepository delayRepository;
+        _routeRepository = routeRepository;
+        _unitOfWork = unitOfWork;
+        _mapperService = mapperService;
+        _delayRepository = delayRepository;
+    }
 
-        public DriverDelayController(IRouteRepository routeRepository, IUnitOfWork unitOfWork,
-            IObjectMapperService mapperService, IDelayRepository delayRepository)
-        {
-            this.routeRepository = routeRepository;
-            this.unitOfWork = unitOfWork;
-            this.mapperService = mapperService;
-            this.delayRepository = delayRepository;
-        }
-
-        [HttpGet("/Routes")]
-        public async Task<IActionResult> GetAllRoutess(CancellationToken cancellationToken)
-        {
-            var data = await routeRepository.GetAll()
-                .Select(route => new RouteResponseDto
-                {
-                    Id = route.Id,
-                    StartingLocation = route.StartStation.Name,
-                    EndingLocation = route.EndStation.Name,
-                })
-                .ToArrayAsync(cancellationToken);
-
-            Response response = new()
+    [HttpGet("/Routes")]
+    public async Task<IActionResult> GetAllRoutes(CancellationToken cancellationToken)
+    {
+        var routesResponseData = await _routeRepository.GetAll()
+            .Select(route => new RouteResponseDto
             {
-                Data = data
-            };
+                Id = route.Id,
+                StartingLocation = route.StartStation.Name,
+                EndingLocation = route.EndStation.Name,
+            })
+            .ToArrayAsync(cancellationToken);
 
-            return Ok(response);
-        }
-
-        [HttpPost("/Delay")]
-        public async Task<IActionResult> AddDelay(DelayDto delayDto, CancellationToken cancellationToken)
+        Response response = new()
         {
-            Domain.Entities.Driver.Delay newDelay = new();
-            mapperService.Map(delayDto, newDelay);
+            Data = routesResponseData
+        };
 
-            delayRepository.Create(newDelay);
-            await unitOfWork.CommitAsync(cancellationToken);
+        return Ok(response);
+    }
 
-            Response response = new()
-            {
-                Message = "Dodano kašnjenje.",
-            };
-            return CreatedAtAction(nameof(AddDelay), response);
-        }
+    [HttpPost("/Delay")]
+    public async Task<IActionResult> AddDelay(DelayDto delayDto, CancellationToken cancellationToken)
+    {
+        Domain.Entities.Driver.Delay newDelay = new();
+        _mapperService.Map(delayDto, newDelay);
+
+        await _delayRepository.CreateAsync(newDelay, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        Response response = new()
+        {
+            Message = "Dodano kašnjenje.",
+        };
+        
+        return CreatedAtAction(nameof(AddDelay), response);
     }
 }

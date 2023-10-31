@@ -22,14 +22,12 @@ namespace Presentation.Controllers.Account
         private readonly IFileService _fileService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestRepository _requestRepository;
-        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public RequestController(IFileService fileService, IUnitOfWork unitOfWork, IRequestRepository requestRepository, IWebHostEnvironment hostingEnvironment)
+        public RequestController(IFileService fileService, IUnitOfWork unitOfWork, IRequestRepository requestRepository)
         {
             _fileService = fileService;
             _unitOfWork = unitOfWork;
             _requestRepository = requestRepository;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpPost("SendRequest")]
@@ -72,7 +70,7 @@ namespace Presentation.Controllers.Account
                 UserId = specialRequestRequestDto.UserId
             };
 
-            _requestRepository.Create(newRequest);
+            await _requestRepository.CreateAsync(newRequest, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
@@ -81,19 +79,6 @@ namespace Presentation.Controllers.Account
             };
             
             return Ok(response);
-        }
-
-        [HttpGet("UserImage")]
-        public async Task<IActionResult> GetImage([FromRoute] string fileName)
-        {
-            string path = _hostingEnvironment.ContentRootPath + "\\ProfileImages\\";
-            var filePath = path + fileName;
-            if (System.IO.File.Exists(filePath))
-            {
-                byte[] b = await System.IO.File.ReadAllBytesAsync(filePath);
-                return File(b, "image/*");
-            }
-            return null;
         }
     }
 }

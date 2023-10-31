@@ -1,13 +1,13 @@
 ﻿using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
-using Domain.Entities.Tickets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TicketEntity = Domain.Entities.Tickets.Ticket;
 using Presentation.DTO;
 using Presentation.DTO.Admin.Ticket;
 
-namespace Presentation.Controllers.CardType;
+namespace Presentation.Controllers.Ticket;
 
 [ApiController]
 [Route("[controller]")]
@@ -25,16 +25,9 @@ public sealed class TicketController : ControllerBase
     [HttpGet("All")]
     public async Task<IActionResult> GetAllCardTypes(bool includeInactive, CancellationToken cancellationToken)
     {
-        IQueryable<Ticket> ticketQuery = _ticketRepository.GetAll();
-
-        if (!includeInactive)
-        {
-            ticketQuery = ticketQuery.Where(ticket => ticket.Active);
-        }
-
-        Ticket[] tickets = await ticketQuery
-                .AsNoTracking()
-                .ToArrayAsync(cancellationToken);
+        TicketEntity[] tickets = await _ticketRepository.GetAll(includeInactive)
+            .AsNoTracking()
+            .ToArrayAsync(cancellationToken);
 
         Response response = new()
         {
@@ -51,7 +44,7 @@ public sealed class TicketController : ControllerBase
     {
         Response response = new();
 
-        Ticket? ticket = await _ticketRepository.GetByIdAsync(id, cancellationToken);
+        TicketEntity? ticket = await _ticketRepository.GetByIdAsync(id, cancellationToken: cancellationToken);
 
         if (ticket is null)
         {
@@ -62,7 +55,7 @@ public sealed class TicketController : ControllerBase
 
         objectMapper.Map(ticketDto, ticket);
 
-        _ticketRepository.Update(ticket);
+        await _ticketRepository.UpdateAsync(ticket, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         response.Message = "Uspješno ste editovali kartu.";
@@ -74,7 +67,7 @@ public sealed class TicketController : ControllerBase
     public async Task<IActionResult> DeleteTicket(Guid id, CancellationToken cancellationToken)
     {
         Response response = new();
-        Ticket? ticket = await _ticketRepository.GetByIdAsync(id, cancellationToken);
+        TicketEntity? ticket = await _ticketRepository.GetByIdAsync(id, cancellationToken: cancellationToken);
 
         if (ticket is null)
         {
@@ -83,7 +76,7 @@ public sealed class TicketController : ControllerBase
             return NotFound(response);
         }
 
-        _ticketRepository.Delete(ticket);
+        await _ticketRepository.DeleteAsync(ticket, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         response.Message = "Uspješno obrisana karta";

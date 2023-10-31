@@ -21,34 +21,35 @@ namespace Presentation.Controllers.Account;
 [Authorize(Policy = AuthorizationPolicies.AdminUserPolicyName)]
 [ApiController]
 [Route("[controller]")]
-
 public sealed class ProfileController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-
-    public ProfileController(IUserRepository userRepository)
+    private readonly IUnitOfWork _unitOfWork;
+    
+    public ProfileController(IUserRepository userRepository, IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateProfile([FromForm] UserUpdateRequestDto vM, CancellationToken cancellationToken,
-        [FromServices] IUnitOfWork unitOfWork, [FromServices] IObjectMapperService objectMapperService,
-        [FromServices] IAuthService authService, [FromServices] IFileService fileService,
-        [FromServices] IPasswordService passwordService)
+    public async Task<IActionResult> UpdateProfile([FromForm] UserUpdateRequestDto userUpdateRequest,
+        [FromServices] IObjectMapperService objectMapperService, [FromServices] IAuthService authService,
+        [FromServices] IFileService fileService, [FromServices] IPasswordService passwordService,
+        CancellationToken cancellationToken)
     {
         string authorizationHeaderValue = Request.Headers["Authorization"];
         string token = authorizationHeaderValue.Split(" ")[1];
 
         JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-        if (!IdentityValidator.IsSameUser(vM.Id, jwtSecurityToken) && !IdentityValidator.IsUserRole("admin", jwtSecurityToken))
+        if (!IdentityValidator.IsSameUser(userUpdateRequest.Id, jwtSecurityToken) && !IdentityValidator.IsUserRole("admin", jwtSecurityToken))
         {
             return Forbid();
         }
 
-        string[] includes = new[] { "Role" };
-        User? data = await _userRepository.GetByIdAsync(vM.Id, cancellationToken, includes);
+        string[] includes = { "Role" };
+        User? data = await _userRepository.GetByIdAsync(userUpdateRequest.Id, includes, cancellationToken);
 
         if (data == null)
         {
@@ -60,9 +61,9 @@ public sealed class ProfileController : ControllerBase
             return NotFound(errorResponse);
         }
 
-        if (vM.ProfileImageFile is not null)
+        if (userUpdateRequest.ProfileImageFile is not null)
         {
-            string? filePath = await fileService.SaveFileAsync(new[] { "jpg", "jpeg", "png" }, vM.ProfileImageFile, "ProfileImages", cancellationToken);
+            string? filePath = await fileService.SaveFileAsync(new[] { "jpg", "jpeg", "png" }, userUpdateRequest.ProfileImageFile, "ProfileImages", cancellationToken);
 
             if (filePath is null)
             {
@@ -70,28 +71,29 @@ public sealed class ProfileController : ControllerBase
                 {
                     Message = "profile_controller_update_profile_file_extension_error",
                 };
+                
                 return NotFound(errorResponse);
             }
 
             data.ProfileImagePath = filePath;
         }
 
-        objectMapperService.Map(vM, data);
+        objectMapperService.Map(userUpdateRequest, data);
 
-        if (vM.Password is not null && vM.Password.Length >= 8)
+        if (userUpdateRequest.Password is not null && userUpdateRequest.Password.Length >= 8)
         {
-            Tuple<byte[], string> password = passwordService.GeneratePasswordHashAndSalt(vM.Password);
+            Tuple<byte[], string> password = passwordService.GeneratePasswordHashAndSalt(userUpdateRequest.Password);
 
             data.PasswordHash = password.Item2;
             data.PasswordSalt = password.Item1;
         }
 
-        _userRepository.Update(data);
-        await unitOfWork.CommitAsync(cancellationToken);
+        await _userRepository.UpdateAsync(data, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         JsonElement? jwtToken = null;
 
-        if (IdentityValidator.IsSameUser(vM.Id, jwtSecurityToken))
+        if (IdentityValidator.IsSameUser(userUpdateRequest.Id, jwtSecurityToken))
         {
             jwtToken = await authService.GetAuthTokenAsync(data, cancellationToken);
         }
@@ -106,7 +108,7 @@ public sealed class ProfileController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken, [FromServices] IUnitOfWork unitOfWork)
+    public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken)
     {
         string authorizationHeaderValue = Request.Headers["Authorization"];
         string token = authorizationHeaderValue.Split(" ")[1];
@@ -118,9 +120,9 @@ public sealed class ProfileController : ControllerBase
             return Forbid();
         }
 
-        var data = await _userRepository.GetByIdAsync(id, cancellationToken);
+        var user = await _userRepository.GetByIdAsync(id, cancellationToken: cancellationToken);
 
-        if (data == null)
+        if (user == null)
         {
             Response response = new()
             {
@@ -131,27 +133,28 @@ public sealed class ProfileController : ControllerBase
             return NotFound(response);
         }
 
-        _userRepository.Delete(data);
-        await unitOfWork.CommitAsync(cancellationToken);
+        await _userRepository.DeleteAsync(user, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         Response responseOk = new()
         {
             Message = "profile_controller_delete_profile_success",
         };
+        
         return Ok(responseOk);
     }
 
     [HttpGet("Status")]
     public async Task<IActionResult> GetAllStatuses([FromServices] IUserStatusRepository userStatusRepository)
     {
-        var data = await userStatusRepository
+        var userStatuses = await userStatusRepository
             .GetAll()
             .Select(status => new UserStatusDto { Name = status.Name, Id = status.Id })
             .ToArrayAsync();
 
         Response response = new()
         {
-            Data = data
+            Data = userStatuses
         };
 
         return Ok(response);
@@ -160,7 +163,10 @@ public sealed class ProfileController : ControllerBase
     [HttpGet("UserImage/{id}")]
     public async Task<IActionResult> GetUserImage(Guid id)
     {
-        string path = _userRepository.GetAll().Where(x => x.Id == id).Select(x => x.ProfileImagePath).First();
+        string? path = await _userRepository.GetAll()
+            .Where(x => x.Id == id)
+            .Select(x => x.ProfileImagePath)
+            .FirstOrDefaultAsync();
 
         if (string.IsNullOrEmpty(path))
         {
@@ -172,10 +178,12 @@ public sealed class ProfileController : ControllerBase
 
         string[] pathParts = path.Split(".");
         string extension = pathParts[pathParts.Length - 1];
+        
         Response responseOk = new()
         {
             Data = $"data:image/{extension};base64, {base64}"
         };
+        
         return Ok(responseOk);
     }
 }

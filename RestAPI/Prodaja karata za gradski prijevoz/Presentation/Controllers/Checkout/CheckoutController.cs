@@ -44,7 +44,7 @@ public sealed class CheckoutController : ControllerBase
     [HttpPost("Finish")]
     public async Task<IActionResult> Checkout(CheckoutDto checkoutDto, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByIdAsync(checkoutDto.UserId, cancellationToken);
+        User? user = await _userRepository.GetByIdAsync(checkoutDto.UserId, cancellationToken: cancellationToken);
 
         if (user is null)
         {
@@ -56,10 +56,10 @@ public sealed class CheckoutController : ControllerBase
             return BadRequest(badRequestReponse);
         }
 
-        bool doesTicketExtis = await _ticketRepository.DoesTicketExistAsync(checkoutDto.TicketId, cancellationToken);
+        bool doesTicketExist = await _ticketRepository.DoesTicketExistAsync(checkoutDto.TicketId, cancellationToken);
         bool doesPaymentMethodExist = await _paymentMethodRepository.DoesPaymentMethodExistAsync(checkoutDto.PaymentMethodId, cancellationToken);
 
-        if (!doesPaymentMethodExist || !doesTicketExtis)
+        if (!doesPaymentMethodExist || !doesTicketExist)
         {
             Response badResponse = new()
             {
@@ -75,6 +75,7 @@ public sealed class CheckoutController : ControllerBase
             .Where(route => route.Id == checkoutDto.RouteId)
             .FirstOrDefaultAsync(cancellationToken);
 
+        //todo: throw errors here
         if (route is null)
         {
             Response badResponse = new()

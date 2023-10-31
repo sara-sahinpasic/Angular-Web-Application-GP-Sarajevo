@@ -74,7 +74,7 @@ public sealed class AuthenticationController : ControllerBase
             return BadRequest(errorResponse);
         }
 
-        User? user = await _userRepository.GetByIdAsync(registrationToken.UserId, cancellationToken);
+        User? user = await _userRepository.GetByIdAsync(registrationToken.UserId, cancellationToken: cancellationToken);
 
         if (await _authService.HasRegistrationTokenExpiredAsync(registrationToken, cancellationToken))
         {

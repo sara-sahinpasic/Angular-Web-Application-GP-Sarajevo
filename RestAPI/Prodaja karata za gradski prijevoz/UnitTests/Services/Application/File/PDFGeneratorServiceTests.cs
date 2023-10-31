@@ -1,5 +1,7 @@
 ﻿using Application.Services.Abstractions.Interfaces.File;
 using Domain.Entities.Invoices;
+using Domain.Entities.Routes;
+using Domain.Entities.Stations;
 using Domain.Entities.Tickets;
 using Domain.Enums.PaymentOption;
 using FluentAssertions;
@@ -10,10 +12,11 @@ namespace UnitTests.Services.Application.File;
 
 public sealed class PDFGeneratorServiceTests
 {
+    private const bool ShouldGeneratePdFs = false;
+    
     private readonly IPDFGeneratorService _pdfGeneratorService = new PDFGeneratorService();
     private readonly IEnumerable<IssuedTicket> _issuedTickets;
     private readonly Invoice _invoice;
-    private readonly bool shouldGeneratePDFs = false;
 
     public PDFGeneratorServiceTests()
     {
@@ -42,6 +45,19 @@ public sealed class PDFGeneratorServiceTests
                     Email = "someEmail@amor.com",
                     FirstName = "Test",
                     LastName = "Test",
+                },
+                Route = new Route
+                {
+                    StartStation = new Station
+                    {
+                        Name = "Test1",
+                    },
+                    EndStation = new Station
+                    {
+                        Name = "Test2"
+                    },
+                    TimeOfDeparture = TimeSpan.FromHours(6),
+                    TimeOfArrival = TimeSpan.FromHours(7)
                 }
             },
             new()
@@ -64,6 +80,19 @@ public sealed class PDFGeneratorServiceTests
                     Email = "someEmail@amor.com",
                     FirstName = "Test",
                     LastName = "Test",
+                },
+                Route = new Route
+                {
+                    StartStation = new Station
+                    {
+                        Name = "Test1",
+                    },
+                    EndStation = new Station
+                    {
+                        Name = "Test2"
+                    },
+                    TimeOfDeparture = TimeSpan.FromHours(6),
+                    TimeOfArrival = TimeSpan.FromHours(7)
                 }
             },
             new()
@@ -86,6 +115,19 @@ public sealed class PDFGeneratorServiceTests
                     Email = "someEmail@amor.com",
                     FirstName = "Test",
                     LastName = "Test",
+                },
+                Route = new Route
+                {
+                    StartStation = new Station
+                    {
+                        Name = "Test1",
+                    },
+                    EndStation = new Station
+                    {
+                        Name = "Test2"
+                    },
+                    TimeOfDeparture = TimeSpan.FromHours(6),
+                    TimeOfArrival = TimeSpan.FromHours(7)
                 }
             },
             new()
@@ -108,9 +150,23 @@ public sealed class PDFGeneratorServiceTests
                     Email = "someEmail@amor.com",
                     FirstName = "Test",
                     LastName = "Test",
+                },
+                Route = new Route
+                {
+                    StartStation = new Station
+                    {
+                        Name = "Test1",
+                    },
+                    EndStation = new Station
+                    {
+                        Name = "Test2"
+                    },
+                    TimeOfDeparture = TimeSpan.FromHours(6),
+                    TimeOfArrival = TimeSpan.FromHours(7)
                 }
             }
         };
+        
         _invoice = new()
         {
             InvoicingDate = DateTime.UtcNow,
@@ -144,7 +200,7 @@ public sealed class PDFGeneratorServiceTests
         pdfDocument.Should().NotBeNull();
 
         // for testing the pdf contents
-        if (shouldGeneratePDFs)
+        if (ShouldGeneratePdFs)
         {
             CreatePDF(_invoice.Id + ".pdf", pdfDocument);
         }
@@ -183,7 +239,7 @@ public sealed class PDFGeneratorServiceTests
         pdfDocument.Should().NotBeNull();
 
         // for testing the pdf contents
-        if (shouldGeneratePDFs)
+        if (ShouldGeneratePdFs)
         {
             CreatePDF(_invoice.Id + "_tickets.pdf", pdfDocument);
         }
@@ -200,7 +256,7 @@ public sealed class PDFGeneratorServiceTests
         PdfDocument pdfDocument = _pdfGeneratorService.CreatePurchaseHistoryPDFDocument(moreTicketsToTest);
 
         // for testing the pdf contents
-        if (shouldGeneratePDFs)
+        if (ShouldGeneratePdFs)
         {
             CreatePDF(_invoice.User.Id + "_history.pdf", pdfDocument);
         }

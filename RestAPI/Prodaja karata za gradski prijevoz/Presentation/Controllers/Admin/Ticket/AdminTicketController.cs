@@ -12,23 +12,23 @@ namespace Presentation.Controllers.Admin.Ticket
     [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [ApiController]
     [Route("[controller]")]
-    public sealed class AdminTicketContoller : ControllerBase
+    public sealed class AdminTicketController : ControllerBase
     {
-        private readonly ITicketRepository ticketRepository;
-        private readonly IObjectMapperService mapperService;
-        private readonly IUnitOfWork unitOfWork;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly IObjectMapperService _mapperService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AdminTicketContoller(ITicketRepository ticketRepository, IObjectMapperService mapperService, IUnitOfWork unitOfWork)
+        public AdminTicketController(ITicketRepository ticketRepository, IObjectMapperService mapperService, IUnitOfWork unitOfWork)
         {
-            this.ticketRepository = ticketRepository;
-            this.mapperService = mapperService;
-            this.unitOfWork = unitOfWork;
+            _ticketRepository = ticketRepository;
+            _mapperService = mapperService;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost("/Ticket")]
         public async Task<IActionResult> AddTicket(TicketDto ticketDto, CancellationToken cancellationToken)
         {
-            bool doesTicketExistAsync = await ticketRepository.DoesNameTicketExistAsync(ticketDto.Name, cancellationToken);
+            bool doesTicketExistAsync = await _ticketRepository.DoesNameTicketExistAsync(ticketDto.Name, cancellationToken);
             if (doesTicketExistAsync)
             {
                 Response invalidResponse = new()
@@ -39,16 +39,17 @@ namespace Presentation.Controllers.Admin.Ticket
             }
 
             Domain.Entities.Tickets.Ticket newTicket = new();
-            mapperService.Map(ticketDto, newTicket);
+            _mapperService.Map(ticketDto, newTicket);
 
-            ticketRepository.Create(newTicket);
-            await unitOfWork.CommitAsync(cancellationToken);
+            await _ticketRepository.CreateAsync(newTicket, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
             {
                 Message = "Nova karta kreirana.",
                 Data = newTicket
             };
+            
             return Ok(response);
         }
     }

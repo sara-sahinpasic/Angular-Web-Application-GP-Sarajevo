@@ -56,8 +56,8 @@ public sealed class AuthService : IAuthService
     public async Task<LoginResult?> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
     {
         verificationCode.Activated = true;
-        _verificationCodeRepository.Update(verificationCode);
-
+        
+        await _verificationCodeRepository.UpdateAsync(verificationCode, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         JsonElement authToken = await GetAuthTokenAsync(verificationCode.User, cancellationToken);
@@ -71,7 +71,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<LoginResult?> LoginAsync(string email, string password, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken, new string[] { "Role" });
+        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken, new[] { "Role" });
         
         if (user is null || !_passwordService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
         {
@@ -93,7 +93,7 @@ public sealed class AuthService : IAuthService
 
         if (oldCode is not null) 
         {
-            _verificationCodeRepository.Delete(oldCode);
+            await _verificationCodeRepository.DeleteAsync(oldCode, cancellationToken);
         }
 
         VerificationCode verificationCode = new()
@@ -104,7 +104,7 @@ public sealed class AuthService : IAuthService
             DateExpiring = DateTime.UtcNow.AddMinutes(5)
         };
 
-        _verificationCodeRepository.Create(verificationCode);
+        await _verificationCodeRepository.CreateAsync(verificationCode, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         await _emailService.SendLoginVerificationMailAsync(user, verificationCode.Code, cancellationToken);
@@ -159,7 +159,7 @@ public sealed class AuthService : IAuthService
         user.PasswordSalt = passwordHashAndSalt.Item1;
 
         user.Id = Guid.NewGuid();
-        _userRepository.Create(user);
+        await _userRepository.CreateAsync(user, cancellationToken);
 
         RegistrationToken? token = null;
         bool shouldActivateUserOnCreation = true;
@@ -167,20 +167,20 @@ public sealed class AuthService : IAuthService
         if (_authConfirmationConfig.ShoudUseRegisteredAccountConfirmation)
         {
             shouldActivateUserOnCreation = false;
-            token = new()
+            token = new RegistrationToken
             {
                 User = user,
                 Token = GenerateRegistrationToken(), // todo: new algorithm: sprint 2
             };
 
-            _registrationTokenRepository.Create(token);
+            await _registrationTokenRepository.CreateAsync(token, cancellationToken);
         }
 
         user.Active = shouldActivateUserOnCreation;
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        // done this way because we want to send the email after succesfully commiting all changes to the database
+        // done this way because we want to send the email after successfully commiting all changes to the database
         if (_authConfirmationConfig.ShoudUseRegisteredAccountConfirmation)
         {
             await _emailService.SendRegistrationMailAsync(user, token!.Token!, cancellationToken);
@@ -195,6 +195,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<bool> HasRegistrationTokenExpiredAsync(RegistrationToken registrationToken, CancellationToken cancellationToken)
     {
+        // todo: add token expiration time into json settings
         if (DateTime.Now.Millisecond - registrationToken.CreatedDate.Millisecond < 1000 * 60 * 30)
         {
             return false;
@@ -202,21 +203,20 @@ public sealed class AuthService : IAuthService
 
         registrationToken.IsExpired = true;
 
-        _registrationTokenRepository.Update(registrationToken);
+        await _registrationTokenRepository.UpdateAsync(registrationToken, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         return true;
     }
 
-    public Task ActivateUserAccountAsync(User user, RegistrationToken registrationToken, CancellationToken cancellationToken)
+    public async Task ActivateUserAccountAsync(User user, RegistrationToken registrationToken, CancellationToken cancellationToken)
     {
-        user!.Active = true;
+        user.Active = true;
         registrationToken.IsActivated = true;
 
-        _userRepository.Update(user);
-        _registrationTokenRepository.Update(registrationToken);
-
-        return _unitOfWork.CommitAsync(cancellationToken);
+        await _userRepository.UpdateAsync(user, cancellationToken);
+        await _registrationTokenRepository.UpdateAsync(registrationToken, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
     }
 
     public async Task<bool> IsUserActivatedAsync(string email, CancellationToken cancellationToken)
@@ -236,7 +236,7 @@ public sealed class AuthService : IAuthService
             DateExpiring = DateTime.UtcNow.AddMinutes(5)
         };
 
-        _verificationCodeRepository.Create(newVerificationCode);
+        await _verificationCodeRepository.CreateAsync(newVerificationCode, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         await _emailService.SendLoginVerificationMailAsync(user, newVerificationCode.Code, cancellationToken);
@@ -244,17 +244,17 @@ public sealed class AuthService : IAuthService
 
     public async Task ResendActivationCodeAsync(string email, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(email, cancellationToken);
+        User user = await _userRepository.GetByEmailEnsuredAsync(email, cancellationToken);
 
         await _emailService.SendRegistrationMailAsync(user, GenerateRegistrationToken(), cancellationToken);
     }
 
-    private int GenerateVerificationCode()
+    private static int GenerateVerificationCode()
     {
         return Random.Shared.Next(1000, 9999);
     }
 
-    private UserClaims GetUserClaimsData(User user)
+    private static UserClaims GetUserClaimsData(User user)
     {
         UserClaims userClaims = new()
         {
@@ -271,8 +271,9 @@ public sealed class AuthService : IAuthService
         return userClaims;
     }
 
-    private string GenerateRegistrationToken()
+    private static string GenerateRegistrationToken()
     {
+        // todo: create a different way of generating registration tokens
         return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("/", "_").Replace("%", ".").Replace("<", ".")
             .Replace(">", ".").Replace("{", "-").Replace("}", "_").Replace("?", ".").Replace("#", ".")
             .Replace("=", ".");

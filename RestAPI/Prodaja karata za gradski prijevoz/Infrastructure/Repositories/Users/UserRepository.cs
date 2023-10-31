@@ -12,21 +12,33 @@ public sealed class UserRepository : GenericRepository<User>, IUserRepository
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken, string[]? includes = null)
     {
         ArgumentNullException.ThrowIfNull(email, nameof(email));
+        
         IQueryable<User> query = GetAll();
 
         if (includes is not null)
         {
-            foreach (string item in includes)
-            {
-                query = query.Include(item);
-            }
+            query = includes.Aggregate(query, (current, item) => current.Include(item));
         }
 
         return query.FirstOrDefaultAsync(user => user.Email!.ToLower() == email.ToLower(), cancellationToken);
     }
 
+    public Task<User> GetByEmailEnsuredAsync(string email, CancellationToken cancellationToken, string[]? includes = null)
+    {
+        ArgumentNullException.ThrowIfNull(email, nameof(email));
+        
+        IQueryable<User> query = GetAll();
+
+        if (includes is not null)
+        {
+            query = includes.Aggregate(query, (current, item) => current.Include(item));
+        }
+
+        return query.FirstAsync(user => user.Email!.ToLower() == email.ToLower(), cancellationToken);
+    }
+    
     public Task<bool> IsUserRegisteredAsync(string email, CancellationToken cancellationToken = default)
     {
-        return GetAll().AnyAsync(user => user.Email.ToLower() == email.ToLower());
+        return GetAll().AnyAsync(user => user.Email.ToLower() == email.ToLower(), cancellationToken);
     }
 }

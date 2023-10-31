@@ -281,7 +281,7 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
 
         gfx.DrawString(timeOfArivalText, _fontBold, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
         initalSecondColumnYPosition += headerRowIncrement;
-        gfx.DrawString(issuedTicket.Route.TimeOfArival.ToString("c"), _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
+        gfx.DrawString(issuedTicket.Route.TimeOfArrival.ToString("c"), _fontRegular, XBrushes.Black, columnXPosition, initalSecondColumnYPosition);
     }
 
     private void DrawFirstColumn(XGraphics gfx, IssuedTicket issuedTicket, PdfGraphicsData pdfGraphicsData)

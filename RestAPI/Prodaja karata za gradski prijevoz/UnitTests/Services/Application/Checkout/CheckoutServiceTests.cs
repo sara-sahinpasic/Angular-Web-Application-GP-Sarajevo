@@ -124,7 +124,7 @@ public sealed class CheckoutServiceTests
 
         A.CallTo(() => _taxRepository.GetActiveAsync(default)).Returns(Task.FromResult<Tax?>(tax));
         A.CallTo(() => _emailService.SendInvoiceAsync(user, invoice, default)).Returns(Task.CompletedTask);
-        A.CallTo(() => _invoiceRepository.Create(invoice)).Returns(invoice.Id);
+        A.CallTo(() => _invoiceRepository.CreateAsync(invoice, default)).Returns(Task.FromResult<Guid?>(invoice.Id));
         A.CallTo(() => _unitOfWork.CommitAsync(default)).Returns(Task.CompletedTask);
 
         await _checkoutService.IssueInvoiceAsync(invoice, user);

@@ -19,7 +19,7 @@ public sealed class ReportController : ControllerBase
         _reportService = reportService;
     }
 
-    [Authorize(Policy = AuthorizationPolicies.AdminUserPolicyName)]
+    [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
     [HttpGet]
     public async Task<IActionResult> DownloadPurchaseHistoryReport(Guid userId, CancellationToken cancellationToken)
     {

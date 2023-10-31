@@ -6,5 +6,5 @@ public interface IRegistrationTokenRepository : IGenericRepository<RegistrationT
 {
     public Task<RegistrationToken?> GetInactiveByTokenStringAsync(string tokenString, CancellationToken cancellationToken);
     public Task<RegistrationToken?> GetByTokenStringAsync(string tokenString, CancellationToken cancellationToken);
-    public Task DeleteAsync(string tokenString, CancellationToken cancellationToken);
+    public Task DeleteByTokenStringAsync(string tokenString, CancellationToken cancellationToken);
 }
