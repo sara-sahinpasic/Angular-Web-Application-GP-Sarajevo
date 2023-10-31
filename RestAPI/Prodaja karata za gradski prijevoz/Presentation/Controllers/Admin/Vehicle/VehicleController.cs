@@ -51,7 +51,7 @@ namespace Presentation.Controllers.Admin.Vehicles
             Vehicle newVehicle = new();
             _mapperService.Map(vehicleDto, newVehicle);
 
-            _vehicleRepository.Create(newVehicle);
+            await _vehicleRepository.CreateAsync(newVehicle, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
@@ -97,7 +97,7 @@ namespace Presentation.Controllers.Admin.Vehicles
         public async Task<IActionResult> DeleteVehicle(Guid vehicleId, CancellationToken cancellationToken)
         {
             Response response = new();
-            Vehicle? vehicle = await _vehicleRepository.GetByIdAsync(vehicleId, cancellationToken);
+            Vehicle? vehicle = await _vehicleRepository.GetByIdAsync(vehicleId, cancellationToken: cancellationToken);
 
             if (vehicle is null)
             {
@@ -105,7 +105,7 @@ namespace Presentation.Controllers.Admin.Vehicles
                 return NotFound(response);
             }
 
-            _vehicleRepository.Delete(vehicle);
+            await _vehicleRepository.DeleteAsync(vehicle, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             response.Message = "Uspješno obrisano vozilo";
@@ -117,7 +117,7 @@ namespace Presentation.Controllers.Admin.Vehicles
         public async Task<IActionResult> EditVehicle(Guid vehicleId, VehicleDto vehicleDto, CancellationToken cancellationToken)
         {
             Response response = new();
-            Vehicle? vehicle = await _vehicleRepository.GetByIdAsync(vehicleId, cancellationToken);
+            Vehicle? vehicle = await _vehicleRepository.GetByIdAsync(vehicleId, cancellationToken: cancellationToken);
 
             if (vehicle is null)
             {
@@ -127,7 +127,7 @@ namespace Presentation.Controllers.Admin.Vehicles
 
             _mapperService.Map(vehicleDto, vehicle);
 
-            _vehicleRepository.Update(vehicle);
+            await _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             response.Message = "Uspješno ažurirano vozilo.";
@@ -174,7 +174,7 @@ namespace Presentation.Controllers.Admin.Vehicles
                 Message = "Uspješno obrisan tip vozila."
             };
 
-            Manufacturer? manufacturer = await _manufacturerRepository.GetByIdAsync(manufacturerId, cancellationToken);
+            Manufacturer? manufacturer = await _manufacturerRepository.GetByIdAsync(manufacturerId, cancellationToken: cancellationToken);
 
             if (manufacturer is null)
             {
@@ -183,7 +183,7 @@ namespace Presentation.Controllers.Admin.Vehicles
                 return NotFound(response);
             }
 
-            _manufacturerRepository.Delete(manufacturer);
+            await _manufacturerRepository.DeleteAsync(manufacturer, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             return Ok(response);
@@ -201,14 +201,18 @@ namespace Presentation.Controllers.Admin.Vehicles
                 };
                 return BadRequest(errorResponse);
             }
+
             Manufacturer newManufacturer = new();
             _mapperService.Map(manufacturerDto, newManufacturer);
-            _manufacturerRepository.Create(newManufacturer);
+
+            await _manufacturerRepository.CreateAsync(newManufacturer, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
+
             Response response = new()
             {
                 Message = "Novi proizvođač vozila registrovan.",
             };
+
             return CreatedAtAction(nameof(CreateManufacturer), response);
         }
 
@@ -247,7 +251,7 @@ namespace Presentation.Controllers.Admin.Vehicles
             VehicleType newVehicleType = new();
             _mapperService.Map(vehicleTypeDto, newVehicleType);
 
-            _vehicleTypeRepository.Create(newVehicleType);
+            await _vehicleTypeRepository.CreateAsync(newVehicleType, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             Response response = new()
@@ -266,7 +270,7 @@ namespace Presentation.Controllers.Admin.Vehicles
                 Message = "Uspješno obrisan tip vozila."
             };
 
-            VehicleType? vehicleType = await _vehicleTypeRepository.GetByIdAsync(vehicleTypeId, cancellationToken);
+            VehicleType? vehicleType = await _vehicleTypeRepository.GetByIdAsync(vehicleTypeId, cancellationToken: cancellationToken);
 
             if (vehicleType is null)
             {
@@ -275,7 +279,7 @@ namespace Presentation.Controllers.Admin.Vehicles
                 return NotFound(response);
             }
 
-            _vehicleTypeRepository.Delete(vehicleType);
+            await _vehicleTypeRepository.DeleteAsync(vehicleType, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             return Ok(response);
