@@ -266,7 +266,6 @@ public static class DataSeed
                 Address = Faker.Address.StreetAddress(),
                 RegistrationDate = DateTime.UtcNow,
                 Roles = role,
-                Status = Statuses.Default,
                 ProfileImagePath = ""
             };
             

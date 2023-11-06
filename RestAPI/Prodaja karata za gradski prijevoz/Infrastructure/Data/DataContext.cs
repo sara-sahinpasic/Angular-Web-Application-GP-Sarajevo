@@ -157,12 +157,7 @@ public sealed class DataContext : DbContext
     {
         List<Status> statuses = new()
         {
-            new()
-            {
-                Id=new Guid("eb11af9e-f0c9-49b5-b3b3-149a9b4c7ebd"),
-                Name = "Default",
-                Discount=0
-            },
+          
             new()
             {
                 Id=new Guid("056b4a11-96b3-413c-a323-0cef9a5680c2"),
