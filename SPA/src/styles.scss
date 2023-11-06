@@ -59,7 +59,7 @@ button.secondary {
   }
 }
 
-a {
+a, input:not([type='text']):not([type='email']):not([type='password']):not([type='textarea']), select {
   cursor: pointer;
 }
 

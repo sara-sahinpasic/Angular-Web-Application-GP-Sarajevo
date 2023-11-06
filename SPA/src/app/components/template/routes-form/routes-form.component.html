@@ -1,0 +1,84 @@
+<div class="route-container" [formGroup]="route!">
+  <div class="stations-container d-flex justify-content-between flex-column w-100 mb-3">
+    <div class="mt-2 w-100 d-flex flex-column">
+      <label for="startStation" class="mb-1">Startna stanica:</label>
+      <select name="startStation" id="startStation" class="form-control-admin"
+        #startStation
+        formControlName="startStationId"
+        [class.is-invalid]="route!.get('startStationId')?.invalid && route!.get('startStationId')?.touched">
+        <option *ngFor="let station of stations" [value]="station.id">{{ station.name }}</option>
+      </select>
+      <div class="invalid-feedback">
+        <span *ngIf="!route!.get('startStationId')?.value">Obavezan unos</span>
+        <span *ngIf="route!.get('startStationId')?.value">Startna i završna stanica ne mogu dijeliti istu vrijednost.</span>
+      </div>
+    </div>
+
+    <div class="mt-2 w-100 d-flex flex-column">
+      <label for="endStation" class="mb-1">Završna stanica:</label>
+      <select name="endStation" id="endStation" class="form-control-admin"
+        #endStation
+        formControlName="endStationId"
+        [class.is-invalid]="route!.get('endStationId')?.invalid && route!.get('endStationId')?.touched">
+        <option *ngFor="let station of stations" [value]="station.id">{{ station.name }}</option>
+      </select>
+      <div class="invalid-feedback">
+        <span *ngIf="!route!.get('endStationId')?.value">Obavezan unos</span>
+        <span *ngIf="route!.get('endStationId')?.value">Startna i završna stanica ne mogu dijeliti istu vrijednost.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="time-container d-flex justify-content-between flex-column w-100 mb-3">
+    <label for="timeOfDeparture" class="mb-1">Vrijeme polaska:</label>
+    <input type="time" name="timeOfDeparture" id="timeOfDeparture" class="form-control-admin"
+      formControlName="timeOfDeparture"
+      [class.is-invalid]="route!.get('timeOfDeparture')?.invalid && route!.get('timeOfDeparture')?.touched">
+    <div class="invalid-feedback">
+      <span *ngIf="!route!.get('timeOfDeparture')?.value">Obavezan unos</span>
+      <span *ngIf="route!.get('timeOfDeparture')?.value">Vrieme polaska ne može biti isto kao vrijeme dolaska</span>
+    </div>
+
+    <label for="timeOfArrival" class="mb-1 mt-2">Vrijeme dolaska:</label>
+    <input type="time" name="timeOfArrival" id="timeOfArrival" class="form-control-admin"
+      formControlName="timeOfArrival"
+      [class.is-invalid]="route!.get('timeOfArrival')?.invalid && route!.get('timeOfArrival')?.touched">
+    <div class="invalid-feedback">
+      <span *ngIf="!route!.get('timeOfArrival')?.value">Obavezan unos</span>
+      <span *ngIf="route!.get('timeOfArrival')?.value">Vrieme dolaska ne može biti isto kao vrijeme polaska</span>
+    </div>
+  </div>
+
+  <div class="vehicle-container d-flex justify-content-between flex-column w-100 mb-3">
+    <label for="vehicles" class="mb-1">Vozilo (broj | reg. oznaka | tip):</label>
+    <select name="vehicles" id="vehicles" class="form-control-admin" formControlName="vehicleId"
+      [class.is-invalid]="route!.get('vehicleId')?.invalid && route!.get('vehicleId')?.touched"
+    >
+      <option *ngFor="let vehicle of vehicleList" [value]="vehicle.id">
+          {{ vehicle.number }} | {{ vehicle.registrationNumber }} | {{ vehicle.type.name }}
+      </option>
+    </select>
+    <div class="invalid-feedback">
+      Obavezan unos!
+    </div>
+  </div>
+
+  <div class="active-container d-flex justify-content-between flex-column w-100">
+    <div class="checkbox-group d-flex justify-content-between w-75 mb-2">
+      <label for="activeOnHolidays">Saobraća praznicima?</label>
+      <input type="checkbox" name="activeOnHolidays" id="activeOnHolidays"
+        formControlName="activeOnHolidays" class="form-control-admin">
+    </div>
+
+    <div class="checkbox-group d-flex justify-content-between w-75 mb-2">
+      <label for="activeOnWeekends">Saobraća vikendom?</label>
+      <input type="checkbox" name="activeOnWeekends" id="activeOnWeekends"
+        formControlName="activeOnWeekends" class="form-control-admin">
+    </div>
+
+    <div class="checkbox-group d-flex justify-content-between w-75">
+      <label for="active">Aktivna?</label>
+      <input type="checkbox" name="active" id="active" formControlName="active" class="form-control-admin">
+    </div>
+  </div>
+</div>

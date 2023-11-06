@@ -15,6 +15,7 @@ export class AdminNavPageComponent implements OnInit {
     ["home", false],
     ["tickets", false],
     ["news", false],
+    ["routes", false],
     ["vehicles", false]
   ]);
 

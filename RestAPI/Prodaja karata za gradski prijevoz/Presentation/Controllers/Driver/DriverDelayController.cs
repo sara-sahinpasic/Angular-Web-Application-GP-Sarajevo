@@ -34,7 +34,7 @@ public class DriverDelayController : ControllerBase
     public async Task<IActionResult> GetAllRoutes(CancellationToken cancellationToken)
     {
         var routesResponseData = await _routeRepository.GetAll()
-            .Select(route => new RouteResponseDto
+            .Select(route => new SelectedRouteResponse
             {
                 Id = route.Id,
                 StartingLocation = route.StartStation.Name,

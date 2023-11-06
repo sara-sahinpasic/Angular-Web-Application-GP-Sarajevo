@@ -18,6 +18,8 @@ export class ModalService {
   public showAdminUpdateUserModalState: boolean = false;
   public showAdminManufacturerModalState: boolean = false;
   public showAdminVehicleTypeModalState: boolean = false;
+  public showRouteCreationModalState: boolean = false;
+  public showRouteEditModalState: boolean = false;
 
   public data: any;
   private modalTitle: string = '';
@@ -71,6 +73,14 @@ export class ModalService {
     this.showAdminVehicleTypeModalState = true;
   }
 
+  adminShowCreateRouteModal() {
+    this.showRouteCreationModalState = true;
+  }
+
+  adminShowEditRouteModal() {
+    this.showRouteEditModalState = true;
+  }
+
   //user:
   showRequestModal() {
     this.showRequestModalState = true;
@@ -82,6 +92,10 @@ export class ModalService {
 
   showNewsModal() {
     this.showNewsModalState = true;
+  }
+
+  showRouteCreationModal() {
+    this.showRouteCreationModalState = true;
   }
 
   setModalTitle(title: string) {
@@ -104,6 +118,8 @@ export class ModalService {
     this.showAdminNewStationsModalState = false;
     this.showAdminManufacturerModalState = false;
     this.showAdminVehicleTypeModalState = false;
+    this.showRouteCreationModalState = false;
+    this.showRouteEditModalState = false;
 
     //user:
     this.showRequestModalState = false;

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { RouteDateModel } from 'src/app/models/routes/RouteDateModel';
-import { RouteInfo } from 'src/app/models/routes/RouteInfo';
+import { RouteInfoModel } from 'src/app/models/routes/RouteInfo';
 import { StationResponse } from 'src/app/models/stations/StationResponse';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { RouteService } from 'src/app/services/routes/route.service';
@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit{
       this.routeDate.date = new Date().toISOString().split("T")[0];
     }
 
-    const routeInfo: RouteInfo = {
+    const routeInfo: RouteInfoModel = {
       startingStation: this.startingStation!,
       endingStation: endingStation,
       dateStamp: this.routeDate

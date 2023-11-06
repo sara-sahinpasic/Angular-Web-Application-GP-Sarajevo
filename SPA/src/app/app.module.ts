@@ -55,6 +55,10 @@ import { AdminVehiclePageComponent } from './components/admin/children/admin-veh
 import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
 import { DriverNavPageComponent } from './components/driver/driver-nav-page/driver-nav-page.component';
 import { DriverComponent } from './components/driver/driver.component';
+import { AdminRoutesPageComponent } from './components/admin/children/admin-routes-page/admin-routes-page.component';
+import { AdminRouteModalComponent } from './modals/admin/admin-route-modal/admin-route-modal.component';
+import { AdminRouteEditModalComponent } from './modals/admin/admin-route-edit-modal/admin-route-edit-modal.component';
+import { RoutesFormComponent } from './components/template/routes-form/routes-form.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +105,11 @@ import { DriverComponent } from './components/driver/driver.component';
     DriverMalfunctionPageComponent,
     AdminTicketsPageComponent,
     AdminNewsPageComponent,
-    AdminVehiclePageComponent
+    AdminVehiclePageComponent,
+    AdminRoutesPageComponent,
+    AdminRouteModalComponent,
+    AdminRouteEditModalComponent,
+    RoutesFormComponent
   ],
   imports: [
     BrowserModule,

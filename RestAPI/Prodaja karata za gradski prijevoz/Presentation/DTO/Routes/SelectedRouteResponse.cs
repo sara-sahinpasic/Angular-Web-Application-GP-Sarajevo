@@ -1,6 +1,6 @@
 ﻿namespace Presentation.DTO.Routes;
 
-public sealed class RouteResponseDto
+public sealed class SelectedRouteResponse
 {
     public Guid Id { get; set; }
     public string StartingLocation { get; set; } = "";

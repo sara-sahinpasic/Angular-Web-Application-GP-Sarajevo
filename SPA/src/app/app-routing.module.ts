@@ -32,6 +32,7 @@ import { AdminVehiclePageComponent } from './components/admin/children/admin-veh
 import { DriverComponent } from './components/driver/driver.component';
 import { DriverDelayPageComponent } from './components/driver/children/driver-delay-page/driver-delay-page.component';
 import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
+import { AdminRoutesPageComponent } from './components/admin/children/admin-routes-page/admin-routes-page.component';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
@@ -49,7 +50,8 @@ const routes: Routes = [
     { path: 'tickets', component: AdminTicketsPageComponent, outlet: "admin"},
     { path: 'company', component: AdminCompanyPageComponent, outlet: "admin" },
     { path: 'news', component: AdminNewsPageComponent, outlet: "admin" },
-    { path: 'vehicles', component: AdminVehiclePageComponent, outlet: "admin" }
+    { path: 'vehicles', component: AdminVehiclePageComponent, outlet: "admin" },
+    { path: 'routes', component: AdminRoutesPageComponent, outlet: "admin" }
   ]},
   { path: 'admin/company/vehicle/manufacturer', component: AdminManufacturerModalComponent},
   { path: 'admin/company/vehicle/type', component: AdminVehicleTypeModalComponent},

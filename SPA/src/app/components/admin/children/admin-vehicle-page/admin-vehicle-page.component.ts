@@ -30,7 +30,7 @@ export class AdminVehiclePageComponent {
       .pipe(
         tap(this.loadVehicles.bind(this))
       )
-      .subscribe(() => console.log(this.vehicleList));
+      .subscribe();
   }
 
   loadVehicles(data: VehicleListDto[]) {

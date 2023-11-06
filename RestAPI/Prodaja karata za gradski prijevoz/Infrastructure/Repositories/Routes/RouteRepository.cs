@@ -15,7 +15,7 @@ public sealed class RouteRepository : GenericRepository<Route>, IRouteRepository
         _holidayRepository = holidayRepository;
     }
 
-    public async Task<IEnumerable<T>> GetRoutesByDateAsync<T>(Guid startStationId, Guid endStationId, DateTime date, Expression<Func<Route, T>> selector, CancellationToken cancellationToken = default)
+    public async Task<ICollection<T>> GetRoutesByDateAsync<T>(Guid startStationId, Guid endStationId, DateTime date, Expression<Func<Route, T>> selector, CancellationToken cancellationToken = default)
     {
         IQueryable<Route> query = GetAll().AsNoTracking()
             .Include(route => route.StartStation)

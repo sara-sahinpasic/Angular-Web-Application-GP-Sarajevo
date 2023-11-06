@@ -12,16 +12,24 @@ export class AdminCompanyPageComponent {
   adminShowNewsModal() {
     this.modalService.adminShowNewsModal();
   }
+
   adminShowUsersModal() {
     this.modalService.adminShowUsersModal();
   }
+
   adminShowTicketsModal() {
     this.modalService.adminShowTicketsModal();
   }
+
   adminShowVehiclesModal() {
     this.modalService.adminShowVehiclesModal();
   }
+
   adminShowStationsModal() {
     this.modalService.adminShowStationsModal();
+  }
+
+  showRouteCreationModal() {
+    this.modalService.adminShowCreateRouteModal();
   }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-import { RouteResponse } from 'src/app/models/routes/RouteResponse';
-import { RouteInfo } from 'src/app/models/routes/RouteInfo';
+import { SelectedRouteResponse } from 'src/app/models/routes/RouteResponse';
+import { RouteInfoModel } from 'src/app/models/routes/RouteInfo';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { RouteService } from 'src/app/services/routes/route.service';
 import { SelectedRoute } from 'src/app/models/routes/SelectedRoute';
@@ -14,21 +14,21 @@ import { SelectedRoute } from 'src/app/models/routes/SelectedRoute';
 })
 export class RoutesComponent implements OnInit{
 
-  protected routeList: RouteResponse[] = [];
+  protected routeList: SelectedRouteResponse[] = [];
 
   constructor(protected localizationService: LocalizationService, private routeService: RouteService, private router: Router) {}
 
   ngOnInit() {
-    this.routeService.getRoutes()
+    this.routeService.getSelectedRouteList()
       .pipe(
-        tap((data: RouteResponse[]) => this.routeList = data)
+        tap((data: SelectedRouteResponse[]) => this.routeList = data)
       )
       .subscribe();
   }
 
   // we have guards that guard agains undefined selected routes so the selectedRoute variable should never be undefined
-  chooseRouteTime(route: RouteResponse) {
-    const routeInfo: RouteInfo = this.routeService.getRouteInformation()!;
+  chooseRouteTime(route: SelectedRouteResponse) {
+    const routeInfo: RouteInfoModel = this.routeService.getRouteInformation()!;
     const selectedRoute: SelectedRoute = {
       id: route.id,
       dateStamp: {
