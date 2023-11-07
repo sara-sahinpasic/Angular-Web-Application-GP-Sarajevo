@@ -8,7 +8,6 @@ using Presentation.DTO;
 namespace Presentation.Controllers.Report;
 
 [ApiController]
-[Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
 [Route("[controller]/[action]")]
 public sealed class ReportController : ControllerBase
 {
@@ -19,7 +18,7 @@ public sealed class ReportController : ControllerBase
         _reportService = reportService;
     }
 
-    [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
+    [Authorize(Policy = AuthorizationPolicies.AdminUserPolicyName)]
     [HttpGet]
     public async Task<IActionResult> DownloadPurchaseHistoryReport(Guid userId, CancellationToken cancellationToken)
     {
@@ -28,6 +27,7 @@ public sealed class ReportController : ControllerBase
         return File(pdfContents, "application/octet-stream", $"{userId} purchase history.pdf");
     }
 
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [HttpGet("/Admin/[controller]/Daily")]
     public async Task<IActionResult> DailyReport()
     {
