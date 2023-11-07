@@ -89,10 +89,10 @@ public static class DataSeed
 
             await malfunctionRepository.CreateAsync(malfunction);
         }
-        
+
         await unitOfWork.CommitAsync(default);
     }
-    
+
     private static async Task SeedDelays(IUnitOfWork unitOfWork,
         IReadOnlyCollection<Guid> routeIds, IServiceProvider serviceProvider)
     {
@@ -109,33 +109,34 @@ public static class DataSeed
 
             await delayRepository.CreateAsync(delay);
         }
-        
+
         await unitOfWork.CommitAsync(default);
     }
-    
+
     private static async Task SeedReviews(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IReviewRepository reviewRepository = serviceProvider.GetRequiredService<IReviewRepository>();
-        
+
         for (int i = 0; i < ReviewsCount; i++)
         {
             Review review = new Review
             {
                 Title = Faker.Company.Name(),
                 Description = Faker.Lorem.Paragraph(),
-                Score = new Random().Next(1, 5)
+                Score = new Random().Next(1, 5),
+                DateOfCreation = DateTime.Now,
             };
-            
+
             await reviewRepository.CreateAsync(review);
         }
-        
+
         await unitOfWork.CommitAsync(default);
     }
-    
+
     private static async Task SeedNews(IReadOnlyCollection<Guid> userIds, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         INewsRepository newsRepository = serviceProvider.GetRequiredService<INewsRepository>();
-    
+
         for (int i = 0; i < NewsCount; i++)
         {
             News news = new News
@@ -145,10 +146,10 @@ public static class DataSeed
                 Date = DateTime.UtcNow,
                 UserId = userIds.First(),
             };
-        
+
             await newsRepository.CreateAsync(news);
         }
-        
+
         await unitOfWork.CommitAsync(default);
     }
 
@@ -179,7 +180,7 @@ public static class DataSeed
             await issuedTicketRepository.CreateAsync(issuedTicket);
             issuedTickets.Add(issuedTicket);
         }
-        
+
         await unitOfWork.CommitAsync(default);
 
         return issuedTickets;
@@ -268,17 +269,17 @@ public static class DataSeed
                 Roles = role,
                 ProfileImagePath = ""
             };
-            
+
             Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(DefaultUserPassword);
 
             user.PasswordHash = passwordHashAndSalt.Item2;
             user.PasswordSalt = passwordHashAndSalt.Item1;
-            
+
             await userRepository.CreateAsync(user);
-            
+
             userIds.Add(user.Id);
         }
-        
+
         await unitOfWork.CommitAsync(default);
 
         return userIds;
@@ -322,7 +323,7 @@ public static class DataSeed
             await vehicleTypeRepository.CreateAsync(vehicleType);
             vehicleTypes.Add(vehicleType);
         }
-        
+
         await unitOfWork.CommitAsync(default);
 
         return vehicleTypes;
@@ -378,7 +379,7 @@ public static class DataSeed
         return manufacturers;
     }
 
-    private static async Task<IReadOnlyCollection<Guid>> SeedRoutes(IReadOnlyCollection<Station> stations, 
+    private static async Task<IReadOnlyCollection<Guid>> SeedRoutes(IReadOnlyCollection<Station> stations,
         IReadOnlyCollection<Vehicle> vehicles, IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
     {
         IRouteRepository routeRepository = serviceProvider.GetRequiredService<IRouteRepository>();

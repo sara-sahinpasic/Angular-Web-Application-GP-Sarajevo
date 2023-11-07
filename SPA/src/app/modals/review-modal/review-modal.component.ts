@@ -36,7 +36,7 @@ export class ReviewModalComponent implements OnInit {
     title: '',
     description: '',
     score: 1,
-    userId: '',
+    userId: '',    
   };
   reviewModels: Array<number> = [1, 2, 3, 4, 5];
 

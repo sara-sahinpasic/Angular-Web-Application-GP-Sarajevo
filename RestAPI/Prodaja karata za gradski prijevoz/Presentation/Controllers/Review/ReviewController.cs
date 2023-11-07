@@ -58,6 +58,7 @@ public sealed class ReviewController : ControllerBase
             Domain.Entities.Reviews.Review newReview = new();
 
             objectMapperService.Map(reviewDto, newReview);
+            newReview.DateOfCreation = DateTime.Now;
 
             await _reviewRepository.CreateAsync(newReview, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
