@@ -6,5 +6,5 @@ export interface CheckoutModel {
   cardType?: TicketModel,
   quantity: number,
   paymentMethod?: PaymentMethodModel,
-  selectedRoute: SelectedRoute,
+  selectedRoute: SelectedRoute
 }

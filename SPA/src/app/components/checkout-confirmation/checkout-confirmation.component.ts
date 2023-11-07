@@ -14,7 +14,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./checkout-confirmation.component.scss']
 })
 export class CheckoutConfirmationComponent implements OnInit {
-
+  protected userDiscount: number = 0;
   protected checkoutModel: CheckoutModel = this.checkoutService.getCheckoutModel()!;
   protected user?: UserProfileModel;
 
@@ -35,10 +35,20 @@ export class CheckoutConfirmationComponent implements OnInit {
       tap((user?: UserProfileModel) => this.user = user)
     )
     .subscribe();
+
+    this.getDiscount();
   }
 
   protected confirmPurchase() {
     this.checkoutService.checkout()
       .subscribe(() => this.router.navigateByUrl(""));
+  }
+
+  private getDiscount() {
+    this.userService.getUserDiscount()
+      .pipe(
+        tap((response: number) => this.userDiscount = response)
+      )
+      .subscribe();
   }
 }

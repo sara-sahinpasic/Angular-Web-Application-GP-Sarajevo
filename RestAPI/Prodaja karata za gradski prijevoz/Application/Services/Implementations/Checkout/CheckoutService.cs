@@ -62,8 +62,17 @@ public sealed class CheckoutService : ICheckoutService
             throw new DomainException("A tax must be set!");
         }
 
-        invoice.Total = invoice.IssuedTickets.Select(issuedTicket => issuedTicket.Ticket.Price)
+        double totalWithoutDiscount = invoice.IssuedTickets.Select(issuedTicket => issuedTicket.Ticket.Price)
             .Sum();
+        double statusDiscountPercentage = user.UserStatus?.Discount ?? 0;
+        
+        if (user.StatusExpirationDate is null || user.StatusExpirationDate < DateTime.Now)
+        {
+            statusDiscountPercentage = 0;
+        }
+
+        double discount = Math.Round(totalWithoutDiscount * statusDiscountPercentage, 2);
+        invoice.Total = totalWithoutDiscount - discount;
 
         invoice.TotalWithoutTax = invoice.Total - (invoice.Total * tax.Percentage);
 

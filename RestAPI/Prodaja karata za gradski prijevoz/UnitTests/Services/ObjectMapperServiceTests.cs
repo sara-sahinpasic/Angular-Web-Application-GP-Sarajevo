@@ -21,7 +21,7 @@ public sealed class ObjectMapperServiceTests
         {
             FirstName = "amor",
             LastName = "osmic",
-            Status = Statuses.Default
+            Status = null
         };
 
         User userToMapTo = new();

@@ -11,6 +11,7 @@ using Application.Services.Abstractions.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Application.Config;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
+using Domain.Entities.Users;
 
 namespace Presentation.Controllers.Admin.AdminUsers;
 
@@ -79,6 +80,7 @@ public sealed class AdminUserController : ControllerBase
             Message = "Novi korisnik registrovan.",
             Data = newUser
         };
+
         return Ok(response);
     }
 
@@ -127,6 +129,27 @@ public sealed class AdminUserController : ControllerBase
         Response response = new()
         {
             Data = user
+        };
+
+        return Ok(response);
+    }
+
+    //todo: in cleanup, move this controller to the User folder and name it just UserController
+    [AllowAnonymous]
+    [HttpGet("Discount/Get/{userId}")]
+    public async Task<IActionResult> GetUserDiscount(Guid userId, CancellationToken cancellationToken)
+    {
+        UserEntity user = await _userRepository.GetByIdEnsuredAsync(userId, new[] { "UserStatus" }, cancellationToken);
+        Status? userStatus = null;
+
+        if (user.StatusExpirationDate is not null && user.StatusExpirationDate >= DateTime.Now)
+        {
+            userStatus = user.UserStatus;
+        }
+
+        Response response = new()
+        {
+            Data = userStatus?.Discount ?? 0
         };
 
         return Ok(response);

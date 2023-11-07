@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.Checkout;
+using TicketModel = Domain.Entities.Tickets.Ticket;
 
 namespace Presentation.Controllers.Checkout;
 
@@ -44,7 +45,7 @@ public sealed class CheckoutController : ControllerBase
     [HttpPost("Finish")]
     public async Task<IActionResult> Checkout(CheckoutDto checkoutDto, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByIdAsync(checkoutDto.UserId, cancellationToken: cancellationToken);
+        User? user = await _userRepository.GetByIdAsync(checkoutDto.UserId, new[] { "UserStatus" }, cancellationToken);
 
         if (user is null)
         {

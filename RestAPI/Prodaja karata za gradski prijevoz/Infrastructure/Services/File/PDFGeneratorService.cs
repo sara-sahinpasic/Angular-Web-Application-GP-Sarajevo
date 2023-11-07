@@ -1,6 +1,7 @@
 ﻿using Application.Services.Abstractions.Interfaces.File;
 using Domain.Entities.Invoices;
 using Domain.Entities.Tickets;
+using Domain.Entities.Users;
 using Domain.Enums.PaymentOption;
 using Infrastructure.Classes;
 using PdfSharp;
@@ -34,7 +35,6 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
         _fontHeader = new("Times New Roman", 30, XFontStyleEx.Bold, _options);
         _fontRegular = new("Times New Roman", 12, XFontStyleEx.Regular, _options);
         _fontBold = new("Times New Roman", 12, XFontStyleEx.Bold, _options);
-
     }
 
     public PdfDocument CreateInvoicePDFDocument(Invoice invoice)
@@ -114,27 +114,46 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
 
         foreach (IssuedTicket issuedTicket in issuedTickets)
         {
-            string[] columnsContent = new[] 
-            { 
-                issuedTicket.Ticket.Name, 
-                issuedTicket.Amount.ToString(), 
-                Math.Round(issuedTicket.Ticket.Price * issuedTicket.Amount, 2).ToString("F2", CultureInfo.GetCultureInfo("de-DE")) + "KM" 
+            string[] columnsContent = new[]
+            {
+                issuedTicket.Ticket.Name,
+                issuedTicket.Amount.ToString(),
+                Math.Round(issuedTicket.Ticket.Price * issuedTicket.Amount, 2).ToString("F2", CultureInfo.GetCultureInfo("de-DE")) + "KM"
             };
 
-            double headerColumnXPosition = pdfGraphicsData.CanvasContentWidth / (columnsContent.Length - 1);
-
-            for (int i = 0; i < columnsContent.Length; ++i)
-            {
-                string columnContent = columnsContent[i];
-                double centerOffset = i == 1 ? gfx.MeasureString(columnsContent[1], _fontRegular).Width / 2 : 0;
-                double endOffset = i == 2 ? gfx.MeasureString(columnsContent[2], _fontRegular).Width : 0;
-                double columnContentPositionX = pdfGraphicsData.CanvasContentStartingPointX + (i * headerColumnXPosition) - endOffset - centerOffset;
-
-                gfx.DrawString(columnContent, _fontRegular, XBrushes.Black, columnContentPositionX, pdfGraphicsData.RowPositionY);
-            }
-
-            pdfGraphicsData.RowPositionY += 40;
+            GenerateInvoiceTableEntry(gfx, pdfGraphicsData, columnsContent);
         }
+
+        if (invoice.User.UserStatus is not null && (invoice.User.StatusExpirationDate is not null && invoice.User.StatusExpirationDate >= DateTime.Now)) 
+        {
+            Status userStatus = invoice.User.UserStatus;
+
+            string[] columnsContent = new[]
+            {
+                $"{userStatus.Name} popust",
+                "1",
+                $"-{Math.Round(userStatus.Discount * 100, 0)}%"
+            };
+
+            GenerateInvoiceTableEntry(gfx, pdfGraphicsData, columnsContent);
+        }
+    }
+
+    private void GenerateInvoiceTableEntry(XGraphics gfx, PdfGraphicsData pdfGraphicsData, string[] columnsContent)
+    {
+        double headerColumnXPosition = pdfGraphicsData.CanvasContentWidth / (columnsContent.Length - 1);
+
+        for (int i = 0; i < columnsContent.Length; ++i)
+        {
+            string columnContent = columnsContent[i];
+            double centerOffset = i == 1 ? gfx.MeasureString(columnsContent[1], _fontRegular).Width / 2 : 0;
+            double endOffset = i == 2 ? gfx.MeasureString(columnsContent[2], _fontRegular).Width : 0;
+            double columnContentPositionX = pdfGraphicsData.CanvasContentStartingPointX + (i * headerColumnXPosition) - endOffset - centerOffset;
+
+            gfx.DrawString(columnContent, _fontRegular, XBrushes.Black, columnContentPositionX, pdfGraphicsData.RowPositionY);
+        }
+
+        pdfGraphicsData.RowPositionY += 40;
     }
 
     private static void DrawHorizontalLine(XGraphics gfx, PdfGraphicsData pdfGraphicsData)

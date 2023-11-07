@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserLoginRequest } from '../../models/User/UserLoginRequest';
 import { UserVerifyLoginRequest } from '../../models/User/UserVerifyLoginRequest';
@@ -217,6 +217,15 @@ export class UserService {
             this.router.navigateByUrl('');
           }, this.redirectionTime);
         })
+      );
+  }
+
+  public getUserDiscount(): Observable<number> {
+    const userId: string | undefined = this.getUser()?.id;
+
+    return this.httpClient.get<DataResponse<number>>(`${this.url}AdminUser/Discount/Get/${userId}`)
+      .pipe(
+        map((response: DataResponse<number>) => response.data)
       );
   }
 
