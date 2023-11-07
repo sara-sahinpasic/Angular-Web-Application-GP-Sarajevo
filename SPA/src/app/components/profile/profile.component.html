@@ -45,6 +45,18 @@
         </div>
       </div>
 
+      <div class="row" *ngIf="userStatusModel.userStatusName">
+        <div class="col">
+          <label for="status">{{ localizationService.localize("profile_status_label") }}</label>
+          <input id="status" type="text" placeholder="" readonly [value]="userStatusModel.userStatusName">
+        </div>
+        <div class="col">
+          <label for="statusValidUntil">{{ localizationService.localize("profile_valid_until_label") }}</label>
+          <input id="statusValidUntil" type="date" placeholder="" readonly
+            [value]="userStatusModel.statusValidUntil | date:'yyyy-MM-dd':'en' ">
+        </div>
+      </div>
+
       <div class="row" style="margin-bottom: 5px;">
         <div class="col">
           <label for="ime" style="text-align: center; margin-left: 0%;">{{ localizationService.localize("profile_profile_image_label") }}</label>

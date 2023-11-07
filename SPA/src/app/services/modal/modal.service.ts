@@ -20,6 +20,7 @@ export class ModalService {
   public showAdminVehicleTypeModalState: boolean = false;
   public showRouteCreationModalState: boolean = false;
   public showRouteEditModalState: boolean = false;
+  public showUserRequestModalState: boolean = false;
   public showHolidayModalState: boolean = false;
 
   public data: any;
@@ -82,6 +83,10 @@ export class ModalService {
     this.showRouteEditModalState = true;
   }
 
+  adminShowUserRequestModal() {
+    this.showUserRequestModalState = true;
+  }
+
   adminShowHolidayModal() {
     this.showHolidayModalState = true;
   }
@@ -125,6 +130,7 @@ export class ModalService {
     this.showAdminVehicleTypeModalState = false;
     this.showRouteCreationModalState = false;
     this.showRouteEditModalState = false;
+    this.showUserRequestModalState = false;
     this.showHolidayModalState = false;
 
     //user:

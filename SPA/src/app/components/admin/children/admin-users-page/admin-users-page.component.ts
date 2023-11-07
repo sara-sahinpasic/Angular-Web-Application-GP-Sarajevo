@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
   faEdit,
+  faFile,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
@@ -20,6 +21,7 @@ export class AdminUsersPageComponent implements OnInit {
   protected userId: string = '';
   protected editIcon = faEdit;
   protected deleteIcon = faTrash;
+  protected requestIcon = faFile
 
   constructor(
     private _adminUserService: AdminUserCreateService,
@@ -70,6 +72,11 @@ export class AdminUsersPageComponent implements OnInit {
     }
   }
 
+  protected showRequestModal(userId: string) {
+    this._modalService.data = userId;
+    this._modalService.adminShowUserRequestModal();
+  }
+
   private reloadPage() {
     setTimeout(() => {
       location.reload();
@@ -82,6 +89,7 @@ export class AdminUsersPageComponent implements OnInit {
     page: 1,
     totalCount: 0,
   };
+
   onPageChange(event) {
     this.paginationModel.page = event;
   }

@@ -107,6 +107,26 @@ public sealed class ProfileController : ControllerBase
         return Ok(responseOk);
     }
 
+    [HttpGet("Status/Get/{userId}")]
+    public async Task<IActionResult> GetUserStatus(Guid userId, CancellationToken cancellationToken)
+    {
+        User user = await _userRepository.GetByIdEnsuredAsync(userId, new[] { "UserStatus" }, cancellationToken);
+        Status? status = user.UserStatus;
+
+        ProfileUserStatusDto userStatusResponseData = new()
+        {
+            StatusValidUntil = user.StatusExpirationDate,
+            UserStatusName = status?.Name
+        };
+
+        Response response = new()
+        {
+            Data = userStatusResponseData
+        };
+
+        return Ok(response);
+    }
+
     [HttpDelete]
     public async Task<IActionResult> DeleteProfile(Guid id, CancellationToken cancellationToken)
     {

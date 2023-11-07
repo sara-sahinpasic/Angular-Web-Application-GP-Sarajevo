@@ -1,0 +1,68 @@
+<div class="fields-container">
+  <div class="request-info-fields-container">
+    <label>Korisnik je zatražio sljedeći status:</label>
+    <input type="text" readonly class="form-control-admin w-100" [ngModel]="requestViewOnlyModel.userStatusName" name="userStatusName">
+
+    <label class="mt-2">Zatražen na dan:</label>
+    <input type="date" [ngModel]="requestViewOnlyModel.dateCreated" readonly class="form-control-admin w-100" name="dateCreated">
+
+    <label class="mt-2">Priložena dokumentacija:</label>
+    <a *ngIf="requestViewOnlyModel.documentType != 'pdf'"
+      [href]="'data:image/' + requestViewOnlyModel.documentType + ';base64, ' + requestViewOnlyModel.documentFile"
+      target="_blank">
+      <img [src]="'data:image/' + requestViewOnlyModel.documentType + ';base64, ' + requestViewOnlyModel.documentFile" alt="dokumentacija"
+        class="w-100" />
+    </a>
+
+    <iframe *ngIf="requestViewOnlyModel.documentType == 'pdf'" [src]="'data:application/' + requestViewOnlyModel.documentType + ';base64, ' + requestViewOnlyModel.documentFile | safe"
+      height="500" width="100%"></iframe>
+  </div>
+
+  <div class="choice-container mt-2">
+    <label>Odobri:</label>
+
+    <div class="input-group">
+      <label>Da:</label>
+      <input #approveCheckbox type="checkbox" name="approve" class="form-control-admin ms-3" [(ngModel)]="approvalModel.approved"
+        (change)="changeState(approveCheckbox, rejectCheckbox)"
+        [class.is-invalid]="!approvalModel.approved && !approvalModel.rejected && isApprovalContainerDirty" />
+      <div class="invalid-feedback w-100">
+        Morate odabrati barem jednu opciju.
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Ne:</label>
+      <input #rejectCheckbox type="checkbox" name="reject" class="form-control-admin ms-3" [(ngModel)]="approvalModel.rejected"
+        (change)="changeState(rejectCheckbox, approveCheckbox)"
+        [class.is-invalid]="!approvalModel.approved && !approvalModel.rejected && isApprovalContainerDirty" />
+      <div class="invalid-feedback w-100">
+        Morate odabrati barem jednu opciju.
+      </div>
+    </div>
+  </div>
+
+  <div class="approval-choice-container mt-2">
+    <div *ngIf="approvalModel.approved">
+      <label>Datum isticanja:</label>
+      <input type="date" [(ngModel)]="approvalModel.dateOfExpiration" class="form-control-admin w-100"
+        [class.is-invalid]="!approvalModel.dateOfExpiration && isApprovalContainerDirty" />
+      <div class="invalid-feedback">
+        Obavezan unos!
+      </div>
+    </div>
+
+    <div *ngIf="approvalModel.rejected">
+      <label>Razlog odbijanja:</label>
+      <textarea *ngIf="approvalModel.rejected" [(ngModel)]="approvalModel.rejectionReason" class="form-control-admin w-100"
+        [class.is-invalid]="!approvalModel.rejectionReason && isApprovalContainerDirty" (change)="markAsDirty()"></textarea>
+        <div class="invalid-feedback">
+          Obavezan unos!
+        </div>
+    </div>
+  </div>
+</div>
+<div class="controls-container">
+  <button class="btn btn-dark myBtn" (click)="sendAnswer()">Sačuvaj</button>
+</div>
+

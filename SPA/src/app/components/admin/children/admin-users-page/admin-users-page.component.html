@@ -31,6 +31,10 @@
             <button *ngIf="userId !== u.id" type="button" class="btn btn-link btn-operation" (click)="deleteUser(u.id)">
               <fa-icon [icon]="deleteIcon"></fa-icon>
             </button>
+            <button *ngIf="u.hasPendingRequest" type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
+              data-bs-target="#base-modal" (click)="showRequestModal(u.id!)">
+              <fa-icon [icon]="requestIcon"></fa-icon>
+            </button>
           </td>
           <td>{{u.email}}</td>
           <td>{{u.firstName}}</td>

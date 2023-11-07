@@ -59,6 +59,8 @@ import { AdminRoutesPageComponent } from './components/admin/children/admin-rout
 import { AdminRouteModalComponent } from './modals/admin/admin-route-modal/admin-route-modal.component';
 import { AdminRouteEditModalComponent } from './modals/admin/admin-route-edit-modal/admin-route-edit-modal.component';
 import { RoutesFormComponent } from './components/template/routes-form/routes-form.component';
+import { AdminUserRequestModalComponent } from './modals/admin/admin-user-request-modal/admin-user-request-modal.component';
+import { SafePipe } from './pipes/safeUrl/safe.pipe';
 import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
 import { AdminHolidayModalComponent } from './modals/admin/admin-holiday-modal/admin-holiday-modal.component';
 
@@ -112,6 +114,8 @@ import { AdminHolidayModalComponent } from './modals/admin/admin-holiday-modal/a
     AdminRouteModalComponent,
     AdminRouteEditModalComponent,
     RoutesFormComponent,
+    AdminUserRequestModalComponent,
+    SafePipe,
     AdminHolidaysPageComponent,
     AdminHolidayModalComponent
   ],

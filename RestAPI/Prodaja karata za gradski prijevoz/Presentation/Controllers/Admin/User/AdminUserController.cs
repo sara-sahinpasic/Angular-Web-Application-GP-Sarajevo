@@ -3,13 +3,14 @@ using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities.Users;
+using UserEntity = Domain.Entities.Users.User;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Hashing;
 using Presentation.DTO.Admin.User;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Application.Config;
+using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 
 namespace Presentation.Controllers.Admin.AdminUsers;
 
@@ -58,7 +59,7 @@ public sealed class AdminUserController : ControllerBase
         }
 
         Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(createDto.Password);
-        User newUser = new User
+        UserEntity newUser = new UserEntity
         {
             FirstName = createDto.FirstName,
             LastName = createDto.LastName,
@@ -82,7 +83,7 @@ public sealed class AdminUserController : ControllerBase
     }
 
     [HttpGet("/Users")]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers([FromServices] IRequestRepository requestRepository, CancellationToken cancellationToken)
     {
         var data = await _userRepository.GetAll()
             .Select(user => new GetUserDto
@@ -93,8 +94,9 @@ public sealed class AdminUserController : ControllerBase
                 RoleName = user.Role.Name,
                 Id = user.Id,
                 PhoneNumber = user.PhoneNumber,
+                HasPendingRequest = requestRepository.GetAll().Where(request => request.UserId == user.Id && request.Active).Any()
             })
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken);
 
         Response response = new()
         {

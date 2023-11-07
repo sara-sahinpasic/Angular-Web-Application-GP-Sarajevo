@@ -5,4 +5,5 @@ export interface UserGetDto {
   email?: string;
   roleName?: string;
   phoneNumber?: string;
+  hasPendingRequest?: boolean;
 }

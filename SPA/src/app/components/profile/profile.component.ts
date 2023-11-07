@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
+import { UserProfileStatusModel } from 'src/app/models/status/userProfileStatusModel';
+import { CacheService } from 'src/app/services/cache/cache.service';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
+import { UserStatusService } from 'src/app/services/user/user-status.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -15,27 +18,50 @@ export class ProfileComponent implements OnInit {
   public profileModel!: UserProfileModel;
   protected showModalRequest: boolean = false;
   protected locale!: string | null;
+  protected userStatusModel: UserProfileStatusModel = {} as UserProfileStatusModel;
 
   constructor(
     private _router: Router,
     private userService: UserService,
     private modalService: ModalService,
-    protected localizationService: LocalizationService
+    private statusService: UserStatusService,
+    protected localizationService: LocalizationService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
     this.userService.user$
       .pipe(
-        tap((user: UserProfileModel | undefined) => (this.profileModel = user!))
+        tap(this.mapData.bind(this))
       )
       .subscribe();
+
     this.userService.getProfileImage().subscribe(
-      {
+    {
       next: (x) => (this.profileModel.profileImageBase64 = x.data),
       error: () => (this.profileModel.profileImageBase64 = "./assets/X.png"),
     });
 
     this.locale = this.localizationService.getLocale();
+  }
+
+  private mapData(user: UserProfileModel | undefined) {
+    this.profileModel = user!;
+
+    const userStatusModelFromCache: UserProfileStatusModel | null = this.cacheService.getDataFromCache("profile_userStatus");
+    if (userStatusModelFromCache) {
+      this.userStatusModel = userStatusModelFromCache;
+      return;
+    }
+
+    this.statusService.getUserStatus(user!.id!)
+      .pipe(
+        tap((response: UserProfileStatusModel) => {
+          this.userStatusModel = response;
+          this.cacheService.setCacheData('profile_userStatus', response);
+        })
+      )
+      .subscribe();
   }
 
   navigateToProfile() {

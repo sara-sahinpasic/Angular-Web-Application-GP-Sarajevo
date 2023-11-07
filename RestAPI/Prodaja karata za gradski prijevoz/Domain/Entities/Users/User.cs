@@ -35,6 +35,7 @@ public sealed class User : Entity
     public DateTime? ModifiedDate { get; set; }
     public bool Active { get; set; }
     public Guid? UserStatusId { get; set; }
+    public Status? UserStatus { get; set; }
     public string? ProfileImagePath { get; set; }
 
     [NotMapped]
@@ -52,5 +53,6 @@ public sealed class User : Entity
         }
     }
 
+    public DateTime? StatusExpirationDate { get; set; }
 }
 

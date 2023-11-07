@@ -22,6 +22,7 @@ using Application.Services.Abstractions.Interfaces.Repositories.System;
 using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Application.Services.Abstractions.Interfaces.Repositories.Users;
 using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
+using Application.Services.Abstractions.Interfaces.Requests;
 using Application.Services.Abstractions.Interfaces.System;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Checkout;
@@ -46,6 +47,7 @@ using Infrastructure.Repositories.Vehicles;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.File;
 using Infrastructure.Services.Report;
+using Infrastructure.Services.Requests;
 using Infrastructure.Services.System;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -115,5 +117,6 @@ public static partial class Services
         builder.Services.TryAddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.TryAddScoped<ILocalizationService, LocalizationService>();
         builder.Services.TryAddScoped<ILogService, LogService>();
+        builder.Services.TryAddScoped<IRequestService, RequestService>();
     }
 }

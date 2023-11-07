@@ -38,8 +38,6 @@ public sealed class DataContext : DbContext
     public DbSet<Delay> Delays { get; set; } = null!;
     public DbSet<Malfunction> Malfunctions { get; set; } = null!;
 
-
-
     public DataContext(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,12 +58,12 @@ public sealed class DataContext : DbContext
             .HasForeignKey(r => r.RoleId);
 
         modelBuilder.Entity<User>()
-            .HasOne<Status>()
+            .HasOne(user => user.UserStatus)
             .WithMany()
             .HasForeignKey(user => user.UserStatusId);
 
         modelBuilder.Entity<Request>()
-            .HasOne<Status>()
+            .HasOne(request => request.UserStatus)
             .WithMany()
             .HasForeignKey(r => r.UserStatusId);
 
