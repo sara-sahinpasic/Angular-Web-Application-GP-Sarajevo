@@ -19,6 +19,7 @@
         <app-admin-route-modal *ngIf="modalService.showRouteCreationModalState"></app-admin-route-modal>
         <app-admin-route-edit-modal *ngIf="modalService.showRouteEditModalState" [routeId]="modalService.data"></app-admin-route-edit-modal>
         <app-admin-vehicle-modal [vehicle]="modalService.data" *ngIf="modalService.showAdminVehiclesModalState"></app-admin-vehicle-modal>
+        <app-admin-holiday-modal [holidayToEdit]="modalService.data" *ngIf="modalService.showHolidayModalState"></app-admin-holiday-modal>
         <app-admin-station-modal *ngIf="modalService.showAdminStationsModalState"></app-admin-station-modal>
         <app-admin-new-station-modal *ngIf="modalService.showAdminNewStationsModalState"></app-admin-new-station-modal>
         <app-admin-user-modal *ngIf="modalService.showAdminUsersModalState"></app-admin-user-modal>

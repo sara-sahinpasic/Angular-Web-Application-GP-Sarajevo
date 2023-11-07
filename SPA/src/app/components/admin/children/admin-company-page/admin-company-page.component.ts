@@ -32,4 +32,8 @@ export class AdminCompanyPageComponent {
   showRouteCreationModal() {
     this.modalService.adminShowCreateRouteModal();
   }
+
+  protected showHolidayCreationModal() {
+    this.modalService.adminShowHolidayModal();
+  }
 }

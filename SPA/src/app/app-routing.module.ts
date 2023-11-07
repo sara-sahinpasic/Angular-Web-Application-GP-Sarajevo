@@ -24,8 +24,6 @@ import { AdminUsersPageComponent } from './components/admin/children/admin-users
 import { AdminCompanyPageComponent } from './components/admin/children/admin-company-page/admin-company-page.component';
 import { AdminGuard } from './guards/admin/admin.guard';
 import { AdminComponent } from './components/admin/admin.component';
-import { AdminVehicleTypeModalComponent } from './modals/admin/admin-vehicle-type-modal/admin-vehicle-type-modal.component';
-import { AdminManufacturerModalComponent } from './modals/admin/admin-manufacturer-modal/admin-manufacturer-modal.component';
 import { AdminTicketsPageComponent } from './components/admin/children/admin-tickets-page/admin-tickets-page.component';
 import { AdminNewsPageComponent } from './components/admin/children/admin-news-page/admin-news-page.component';
 import { AdminVehiclePageComponent } from './components/admin/children/admin-vehicle-page/admin-vehicle-page.component';
@@ -33,6 +31,7 @@ import { DriverComponent } from './components/driver/driver.component';
 import { DriverDelayPageComponent } from './components/driver/children/driver-delay-page/driver-delay-page.component';
 import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
 import { AdminRoutesPageComponent } from './components/admin/children/admin-routes-page/admin-routes-page.component';
+import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
@@ -51,10 +50,9 @@ const routes: Routes = [
     { path: 'company', component: AdminCompanyPageComponent, outlet: "admin" },
     { path: 'news', component: AdminNewsPageComponent, outlet: "admin" },
     { path: 'vehicles', component: AdminVehiclePageComponent, outlet: "admin" },
-    { path: 'routes', component: AdminRoutesPageComponent, outlet: "admin" }
+    { path: 'routes', component: AdminRoutesPageComponent, outlet: "admin" },
+    { path: 'holidays', component: AdminHolidaysPageComponent, outlet: "admin" }
   ]},
-  { path: 'admin/company/vehicle/manufacturer', component: AdminManufacturerModalComponent},
-  { path: 'admin/company/vehicle/type', component: AdminVehicleTypeModalComponent},
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [RouteNotSetGuard, LoggedInGuard, CheckoutConfirmGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [RouteNotSetGuard] },
   { path: 'news', component: NewsComponent },

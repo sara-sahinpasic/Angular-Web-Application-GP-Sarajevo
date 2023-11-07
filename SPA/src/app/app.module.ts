@@ -59,6 +59,8 @@ import { AdminRoutesPageComponent } from './components/admin/children/admin-rout
 import { AdminRouteModalComponent } from './modals/admin/admin-route-modal/admin-route-modal.component';
 import { AdminRouteEditModalComponent } from './modals/admin/admin-route-edit-modal/admin-route-edit-modal.component';
 import { RoutesFormComponent } from './components/template/routes-form/routes-form.component';
+import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
+import { AdminHolidayModalComponent } from './modals/admin/admin-holiday-modal/admin-holiday-modal.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +111,9 @@ import { RoutesFormComponent } from './components/template/routes-form/routes-fo
     AdminRoutesPageComponent,
     AdminRouteModalComponent,
     AdminRouteEditModalComponent,
-    RoutesFormComponent
+    RoutesFormComponent,
+    AdminHolidaysPageComponent,
+    AdminHolidayModalComponent
   ],
   imports: [
     BrowserModule,

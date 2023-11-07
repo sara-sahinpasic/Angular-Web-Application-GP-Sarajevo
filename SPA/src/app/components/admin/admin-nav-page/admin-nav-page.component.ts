@@ -16,7 +16,8 @@ export class AdminNavPageComponent implements OnInit {
     ["tickets", false],
     ["news", false],
     ["routes", false],
-    ["vehicles", false]
+    ["vehicles", false],
+    ["holidays", false]
   ]);
 
   constructor(private router: Router, private route: ActivatedRoute) {}
