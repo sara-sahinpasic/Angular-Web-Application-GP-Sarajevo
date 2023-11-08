@@ -100,7 +100,12 @@ export class Messages {
       checkout_finish_total_with_discount_label: "Cijena sa popustom:",
       routes_choose_btn_label: "Odaberi",
       routes_station_error_message: "Molimo Vas, odaberite jednu od ponuđenih stanica.",
-      must_login_error_message: "Molimo Vas da se ulogujete kako biste izvršili radnju."
+      must_login_error_message: "Molimo Vas da se ulogujete kako biste izvršili radnju.",
+      page_not_found_error_title: "Greška 404",
+      page_not_found_title: "Stranica nije pronađena",
+      page_not_found_paragraph: "Nažalost, stranica koju tražite ne postoji.",
+      page_not_found_link_text: "Molimo, vratite se nazad ili idite na našu ",
+      page_not_found_link: "početnu stranicu."
     },
     en: {
       home_search: "SEARCH",
@@ -202,7 +207,12 @@ export class Messages {
       checkout_finish_total_with_discount_label: "Total with discount:",
       routes_choose_btn_label: "Choose",
       routes_station_error_message: "Please, select on of the offered stations.",
-      must_login_error_message: "Please, login to continue."
+      must_login_error_message: "Please, login to continue.",
+      page_not_found_error_title: "Error 404",
+      page_not_found_title: "Page not found",
+      page_not_found_paragraph: "Sorry the page you are looking for doesn't exist.",
+      page_not_found_link_text: "Please, go back or go to our ",
+      page_not_found_link: "homepage."
     }
   }
 }

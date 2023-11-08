@@ -63,6 +63,7 @@ import { AdminUserRequestModalComponent } from './modals/admin/admin-user-reques
 import { SafePipe } from './pipes/safeUrl/safe.pipe';
 import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
 import { AdminHolidayModalComponent } from './modals/admin/admin-holiday-modal/admin-holiday-modal.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,8 @@ import { AdminHolidayModalComponent } from './modals/admin/admin-holiday-modal/a
     AdminUserRequestModalComponent,
     SafePipe,
     AdminHolidaysPageComponent,
-    AdminHolidayModalComponent
+    AdminHolidayModalComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

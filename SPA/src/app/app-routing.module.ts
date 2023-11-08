@@ -32,6 +32,7 @@ import { DriverDelayPageComponent } from './components/driver/children/driver-de
 import { DriverMalfunctionPageComponent } from './components/driver/children/driver-malfunction-page/driver-malfunction-page.component';
 import { AdminRoutesPageComponent } from './components/admin/children/admin-routes-page/admin-routes-page.component';
 import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
@@ -67,7 +68,7 @@ const routes: Routes = [
   { path: 'login', component: LogInComponent, canActivate:[NotLoggedInGuard] },
   { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard] },
   { path: '', component: HomeComponent},
-  { path: '**', component: HomeComponent }
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
