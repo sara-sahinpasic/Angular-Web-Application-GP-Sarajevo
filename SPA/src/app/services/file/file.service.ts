@@ -10,19 +10,12 @@ import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
   providedIn: 'root',
 })
 export class FileService {
-
   private baseApiUrl = environment.apiUrl;
-  private userId?: string;
 
-  constructor(private httpClient: HttpClient, private userService: UserService) {
-    this.userService.user$.pipe(
-      tap((user: UserProfileModel | undefined) => this.userId = user?.id)
-    )
-    .subscribe();
-  }
+  constructor(private httpClient: HttpClient) {}
 
   download(url: string): Observable<HttpResponse<Blob>> {
-    return this.httpClient.get(`${this.baseApiUrl}${url}?userId=${this.userId}`, { responseType: 'blob', observe: 'response' })
+    return this.httpClient.get(`${this.baseApiUrl}${url}`, { responseType: 'blob', observe: 'response' })
       .pipe(
         tap((response: HttpResponse<Blob>) => {
           const fileContents: Blob = response.body as Blob;

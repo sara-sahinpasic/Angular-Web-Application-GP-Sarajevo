@@ -16,9 +16,10 @@ import { ReportService } from 'src/app/services/report/report.service';
   styleUrls: ['./purchase-history.component.scss'],
 })
 export class PurchaseHistoryComponent implements OnInit {
-
   protected purchaseHistory: Array<PurchaseHistoryDto> = [];
+
   private apiUrl: string = environment.apiUrl;
+  private userId?: string;
 
   constructor(
     private httpClient: HttpClient,
@@ -34,15 +35,13 @@ export class PurchaseHistoryComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    let userId: string | undefined;
-
     this.userService.user$
-      .pipe(tap((user: UserProfileModel | undefined) => (userId = user?.id)))
+      .pipe(tap((user: UserProfileModel | undefined) => (this.userId = user?.id)))
       .subscribe();
 
     this.httpClient
       .get<DataResponse<PurchaseHistoryDto[]>>(
-        `${this.apiUrl}PurchaseHistory/GetAllUserPurchases?userId=${userId}`
+        `${this.apiUrl}PurchaseHistory/GetAllUserPurchases?userId=${this.userId}`
       )
       .subscribe((r: DataResponse<PurchaseHistoryDto[]>) => {
         this.purchaseHistory = r.data;
@@ -50,7 +49,7 @@ export class PurchaseHistoryComponent implements OnInit {
   }
 
   purchaseHistoryPrintButton() {
-    this.reportService.downloadPurchaseHistoryReport();
+    this.reportService.downloadPurchaseHistoryReport(this.userId!);
   }
 
   onPageChange(event) {

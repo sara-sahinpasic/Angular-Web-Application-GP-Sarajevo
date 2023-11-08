@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   faEdit,
   faFile,
+  faFilePdf,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
@@ -10,6 +11,7 @@ import { Pagination } from 'src/app/models/Pagination/Pagination';
 import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 import { AdminUserCreateService } from 'src/app/services/admin/user/admin-user-create.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
+import { ReportService } from 'src/app/services/report/report.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -22,10 +24,14 @@ export class AdminUsersPageComponent implements OnInit {
   protected editIcon = faEdit;
   protected deleteIcon = faTrash;
   protected requestIcon = faFile
+  protected purchaseHistoryIcon = faFilePdf;
+  protected usersData: Array<UserGetDto> = [];
+  protected usersDataTemp: Array<UserGetDto> = [];
 
   constructor(
     private _adminUserService: AdminUserCreateService,
     private _userService: UserService,
+    private reportService: ReportService,
     private _modalService: ModalService
   ) {}
 
@@ -40,15 +46,11 @@ export class AdminUsersPageComponent implements OnInit {
       .subscribe();
   }
 
-  usersData: Array<UserGetDto> = [];
-  usersDataTemp: Array<UserGetDto> = [];
-  protected userModel: UserGetDto = {};
-
-  resetData() {
+  private resetData() {
     this.usersData = this.usersDataTemp;
   }
 
-  findEmail(event: KeyboardEvent) {
+  protected findEmail(event: KeyboardEvent) {
     const eventTarget: HTMLInputElement = event.target as HTMLInputElement;
     const value: string = eventTarget.value;
 
@@ -59,12 +61,16 @@ export class AdminUsersPageComponent implements OnInit {
     );
   }
 
-  showUpdateUserModal(user: UserGetDto) {
+  protected getUserPurchaseHistory(userId: string) {
+    this.reportService.downloadPurchaseHistoryReport(userId);
+  }
+
+  protected showUpdateUserModal(user: UserGetDto) {
     this._modalService.data = user.id;
     this._modalService.adminShowUpdateUserModal();
   }
 
-  deleteUser(id: any) {
+  protected deleteUser(id: any) {
     const answer: boolean = confirm('Da li želite obrisati račun?');
 
     if (answer == true) {
@@ -90,7 +96,7 @@ export class AdminUsersPageComponent implements OnInit {
     totalCount: 0,
   };
 
-  onPageChange(event) {
+  protected onPageChange(event) {
     this.paginationModel.page = event;
   }
 }

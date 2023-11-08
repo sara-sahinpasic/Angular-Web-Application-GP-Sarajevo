@@ -1,8 +1,7 @@
 <div class="d-flex flex-column w-100 admin-container">
   <div class="form-group w-100 ps-5 pe-4">
     <label for="email_filter_input">Email:</label>
-    <input type="email" id="email_filter_input" class="form-control-admin mt-1" [(ngModel)]="userModel.email"
-      [ngModelOptions]="{standalone: true}" (keyup)="findEmail($event)">
+    <input type="email" id="email_filter_input" class="form-control-admin mt-1" (keyup)="findEmail($event)">
     <hr>
   </div>
   <div class="w-100 ps-3 pe-3 d-flex flex-column align-items-center">
@@ -34,6 +33,9 @@
             <button *ngIf="u.hasPendingRequest" type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
               data-bs-target="#base-modal" (click)="showRequestModal(u.id!)">
               <fa-icon [icon]="requestIcon"></fa-icon>
+            </button>
+            <button *ngIf="userId !== u.id" type="button" class="btn btn-link btn-operation" (click)="getUserPurchaseHistory(u.id!)">
+              <fa-icon [icon]="purchaseHistoryIcon"></fa-icon>
             </button>
           </td>
           <td>{{u.email}}</td>

@@ -10,7 +10,6 @@ import { FileService } from '../file/file.service';
   providedIn: 'root'
 })
 export class ReportService {
-
   private apiUrl: string = environment.apiUrl;
 
   constructor(private httpClient: HttpClient, private fileService: FileService) {}
@@ -22,7 +21,8 @@ export class ReportService {
     );
   }
 
-  public downloadPurchaseHistoryReport() {
-    this.fileService.download('Report/DownloadPurchaseHistoryReport').subscribe();
+  public downloadPurchaseHistoryReport(userId: string) {
+    this.fileService.download(`Report/DownloadPurchaseHistoryReport?userId=${userId}`)
+      .subscribe();
   }
 }
