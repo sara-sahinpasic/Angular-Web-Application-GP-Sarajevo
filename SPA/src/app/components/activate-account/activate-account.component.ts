@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -9,21 +8,19 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./activate-account.component.scss']
 })
 export class ActivateAccountComponent implements OnInit {
-
-  private token: string = "";
-  isActivated: boolean = false;
-
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService) { }
+  constructor(private activatedRoute: ActivatedRoute, private userService: UserService,
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.userService.isActivated$.pipe(
-      tap((val: boolean) => this.isActivated = val)
-    )
+    const token: string | undefined = this.activatedRoute.snapshot.paramMap.get("token") as string;
+
+    if (!token) {
+      this.router.navigateByUrl('');
+      return;
+    }
+
+    this.userService.activateAccount(token)
       .subscribe();
-
-    this.token = this.activatedRoute.snapshot.paramMap.get("token") as string;
-
-    this.userService.activateAccount(this.token).subscribe();
   }
 }
 
