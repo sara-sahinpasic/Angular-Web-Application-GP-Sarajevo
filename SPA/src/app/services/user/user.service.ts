@@ -91,6 +91,7 @@ export class UserService {
             this.hasUserSentVerifyRequest.next(true);
             return;
           }
+
           const userTokenData: UserTokenData = (response.data.loginData) as UserTokenData;
           localStorage.setItem('token', userTokenData.access_token);
 
@@ -110,10 +111,7 @@ export class UserService {
       );
   }
 
-  public verifyLogin(
-    code: number,
-    redirectionRoute: string | null = null
-  ): Observable<DataResponse<UserLoginResponse>> {
+  public verifyLogin(code: number, redirectionRoute: string | null = null): Observable<DataResponse<UserLoginResponse>> {
     const userVerifyLoginRequest: UserVerifyLoginRequest = {
       userId: this.userId as string,
       code: code,
@@ -131,7 +129,14 @@ export class UserService {
 
           this.user.next(this.getUser());
 
-          if (redirectionRoute) {
+          const user: UserProfileModel = this.getUser() as UserProfileModel;
+
+          if (user.role.toLowerCase() === "admin") {
+            this.router.navigateByUrl("/admin");
+            return;
+          }
+
+          if (redirectionRoute != null) {
             this.router.navigateByUrl(redirectionRoute);
           }
         })
