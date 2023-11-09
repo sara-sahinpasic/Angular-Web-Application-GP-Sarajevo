@@ -17,7 +17,10 @@ public sealed class ClaimsTokenRequestValidator : ICustomTokenRequestValidator
 
             foreach(KeyValuePair<string, string> item in claimsJson)
             {
-                claims.Add(new(item.Key, item.Value));
+                if (item.Value is not null)
+                {
+                    claims.Add(new(item.Key, item.Value));
+                }
             }
 
             context.Result.ValidatedRequest.ClientClaims = claims;
