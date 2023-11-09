@@ -83,6 +83,10 @@ export class HttpInterceptorInterceptor implements HttpInterceptor {
 
     const errors = response.error.errors;
     if (!errors) {
+      if (response.status == HttpStatusCode.NotFound) {
+        return;
+      }
+
       toastMessage.message = this.localizationService.localize("general_api_error");
       return;
     }
