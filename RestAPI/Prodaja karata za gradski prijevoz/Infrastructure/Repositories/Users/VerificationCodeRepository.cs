@@ -13,6 +13,8 @@ public sealed class VerificationCodeRepository : GenericRepository<VerificationC
     {
         return GetAll()
             .Include(c => c.User)
+            .ThenInclude(user => user.Role)
+            .Include(c => c.User)
             .Where(c => c.UserId == userId && c.Code == verificationCode)
             .FirstOrDefaultAsync(cancellationToken);
     }
