@@ -51,7 +51,10 @@ public sealed class Messages
         { "review_controller_add_review_invalid_input", "Unos nije validan. Molimo Vas, provjerite Vaš unos." },
 
         // route controller
-        { "route_controller_no_routes_found_message", "Nije pronađena niti jedna aktivna ruta za zadani period." }
+        { "route_controller_no_routes_found_message", "Nije pronađena niti jedna aktivna ruta za zadani period." },
+
+        // error controller
+        { "error_controller_general_error", "Došlo je do greške." }
     };
 
     public Dictionary<string, string> En { get; } = new() {
@@ -103,6 +106,9 @@ public sealed class Messages
         { "review_controller_add_review_invalid_input", "Invalid input. Please, check your data." },
         
         // route controller
-        { "route_controller_no_routes_found_message", "No active routes were found for the selected time period." }
+        { "route_controller_no_routes_found_message", "No active routes were found for the selected time period." },
+        
+        // error controller
+        { "error_controller_general_error", "An error occurred." }
     };
 }

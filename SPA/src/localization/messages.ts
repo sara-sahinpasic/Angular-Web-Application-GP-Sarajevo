@@ -105,7 +105,8 @@ export class Messages {
       page_not_found_title: "Stranica nije pronađena",
       page_not_found_paragraph: "Nažalost, stranica koju tražite ne postoji.",
       page_not_found_link_text: "Molimo, vratite se nazad ili idite na našu ",
-      page_not_found_link: "početnu stranicu."
+      page_not_found_link: "početnu stranicu.",
+      general_api_error: "Došlo je do greške.",
     },
     en: {
       home_search: "SEARCH",
@@ -212,7 +213,8 @@ export class Messages {
       page_not_found_title: "Page not found",
       page_not_found_paragraph: "Sorry the page you are looking for doesn't exist.",
       page_not_found_link_text: "Please, go back or go to our ",
-      page_not_found_link: "homepage."
+      page_not_found_link: "homepage.",
+      general_api_error: "An error has occurred",
     }
   }
 }

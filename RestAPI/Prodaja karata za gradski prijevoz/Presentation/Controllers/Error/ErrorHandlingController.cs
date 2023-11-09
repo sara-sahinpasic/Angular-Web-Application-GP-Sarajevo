@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Presentation.DTO;
+using System.Net;
 
 namespace Presentation.Controllers.Error;
 
@@ -21,7 +23,7 @@ public sealed class ErrorHandlingController : ControllerBase
 
     public async Task<IActionResult> ErrorHandlerAsync()
     {
-        var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>()!;
 
         return await HandleException(exceptionFeature.Error);
     }
@@ -30,17 +32,16 @@ public sealed class ErrorHandlingController : ControllerBase
     {
         ArgumentNullException.ThrowIfNull(exception, nameof(exception));
 
-        ProblemDetails problem = new()
+        Response response = new()
         {
-            Title = "Error",
-            Detail = "Something went wrong. Contact site administrator.",
-            Status = 500
+            Message = "error_controller_general_error"
         };
+
         var exceptionMessage = exception.InnerException?.Message ?? exception.Message;
 
         _logger.LogError(exceptionMessage);
         await _logService.LogAsync(exceptionMessage, LogLevel.Error);
 
-        return StatusCode((int)problem.Status, problem);
+        return StatusCode((int)HttpStatusCode.InternalServerError, response);
     }
 }

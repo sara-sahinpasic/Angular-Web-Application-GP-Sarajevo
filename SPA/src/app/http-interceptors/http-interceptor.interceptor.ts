@@ -72,19 +72,24 @@ export class HttpInterceptorInterceptor implements HttpInterceptor {
     const response: HttpErrorResponse = event as HttpErrorResponse;
     toastMessage.type = ToastType.Error;
 
-    if (response.status == HttpStatusCode.BadRequest || response.status == HttpStatusCode.NotFound) {
-      this.showErrorMessage(response, toastMessage);
-      return;
-    }
-
-    if (response.status >= 500) {
-      toastMessage.message = "Something went wrong.";
-    }
+    this.showErrorMessage(response, toastMessage);
   }
 
   private showErrorMessage(response: HttpErrorResponse, toastMessage: ToastMessage) {
     if (response.error.message) {
       toastMessage.message = response.error.message;
+      return;
     }
+
+    const errors = response.error.errors;
+    if (!errors) {
+      toastMessage.message = this.localizationService.localize("general_api_error");
+      return;
+    }
+
+    const errorKey: string = Object.keys(errors)[0];
+    const errorMessage: string = errors[errorKey][0];
+
+    toastMessage.message = errorMessage;
   }
 }
