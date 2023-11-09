@@ -45,7 +45,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationForm.markAllAsTouched();
 
     if (this.registrationForm.valid) {
-      this.userService.register(this.userRequest).subscribe();
+      this.userService.register(this.userRequest, "/login").subscribe();
     }
   }
 

@@ -28,11 +28,8 @@ public sealed class AuthenticationController : ControllerBase
     }
 
     [HttpPost("/register")]
-    public async Task<IActionResult> RegisterAction
-    (
-        [FromServices] IObjectMapperService objectMapperService, UserRegistrationRequestDto userRequest,
-        CancellationToken cancellationToken
-    )
+    public async Task<IActionResult> RegisterAction([FromServices] IObjectMapperService objectMapperService, UserRegistrationRequestDto userRequest,
+        CancellationToken cancellationToken)
     {
         if (await _userRepository.IsUserRegisteredAsync(userRequest.Email))
         {
@@ -51,7 +48,7 @@ public sealed class AuthenticationController : ControllerBase
 
         Response response = new()
         {
-            Message = "auth_controller_register_action_success",
+            Message = registerResult.IsAccountActivationRequired ? "auth_controller_register_action_activation_token_sent" : "auth_controller_register_action_success",
             Data = registerResult
         };
 

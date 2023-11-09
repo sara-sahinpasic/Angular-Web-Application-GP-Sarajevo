@@ -46,10 +46,7 @@ export class UserService {
     this.isDeleteRequestSent$ = this.isDeleteRequestSent.asObservable();
   }
 
-  public register(
-    registerRequest: UserRegisterRequest,
-    redirectionRoute: string | null = '/login'
-  ): Observable<DataResponse<UserRegisterResponse>> {
+  public register(registerRequest: UserRegisterRequest, redirectionRoute: string | null = null): Observable<DataResponse<UserRegisterResponse>> {
     return this.httpClient
       .post<DataResponse<UserRegisterResponse>>(
         this.url + 'register',

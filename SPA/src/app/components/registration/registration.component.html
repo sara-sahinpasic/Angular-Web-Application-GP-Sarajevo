@@ -100,8 +100,8 @@
           <button class="primary mt-2" (click)="registration()">{{ localizationService.localize("registration_register_btn_text") }}</button>
           <button class="secondary mt-3" (click)="login()">{{ localizationService.localize("registration_login_btn_text") }}</button>
         </div>
-        <h1 *ngIf="registrationSent">{{ localizationService.localize("registration_activation_email_text") }}</h1>
       </div>
     </div>
+    <h3 *ngIf="registrationSent">{{ localizationService.localize("registration_activation_email_text") }}</h3>
   </div>
 </div>
