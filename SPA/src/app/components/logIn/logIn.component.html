@@ -28,7 +28,7 @@
     </div>
     <div class="verify-login-container" *ngIf="isVerifyLoginRequestSent">
       <h3>{{ localizationService.localize("verify_login_paragraph") }}</h3>
-      <input #codeInput type="text" (keyup)="validateCodeLength(codeInput.value)">
+      <input #codeInput type="text" (keyup)="validateCodeLength(codeInput.value)" class="form-control mb-3">
       <button class="primary" (click)="verifyLogin(codeInput.value)" [disabled]="!enableVerifyButton">
         {{ localizationService.localize("verify_login_btn_text") }}
       </button>
