@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { RouteDateModel } from 'src/app/models/routes/RouteDateModel';
 import { RouteInfoModel } from 'src/app/models/routes/RouteInfo';
-import { StationResponse } from 'src/app/models/stations/StationResponse';
+import { StationModel } from 'src/app/models/stations/stationModel';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { RouteService } from 'src/app/services/routes/route.service';
 import { StationService } from 'src/app/services/stations/station.service';
@@ -16,14 +16,14 @@ import { StationService } from 'src/app/services/stations/station.service';
 })
 export class HomeComponent implements OnInit{
 
-  protected startingStations: Array<StationResponse> = [];
-  protected endingStations: Array<StationResponse> = [];
+  protected startingStations: Array<StationModel> = [];
+  protected endingStations: Array<StationModel> = [];
   protected formGroup!: FormGroup;
   protected routeDate: RouteDateModel = {
     time: null,
     date: ""
   };
-  private startingStation?: StationResponse;
+  private startingStation?: StationModel;
 
   constructor(
     protected localizationService: LocalizationService,
@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit{
       .subscribe();
   }
 
-  private setStartingStations(data: Array<StationResponse>) {
+  private setStartingStations(data: Array<StationModel>) {
     this.startingStations = data;
   }
 
@@ -53,8 +53,8 @@ export class HomeComponent implements OnInit{
     });
   }
 
-  private validateStation(control: FormControl, stations: Array<StationResponse>, controlName: string): object | null {
-    if (stations.findIndex((station: StationResponse) => station.name == control.value) > -1) {
+  private validateStation(control: FormControl, stations: Array<StationModel>, controlName: string): object | null {
+    if (stations.findIndex((station: StationModel) => station.name == control.value) > -1) {
       return null;
     }
     return {
@@ -72,13 +72,13 @@ export class HomeComponent implements OnInit{
 
     this.stationService.getAllRoutedStations(this.startingStation.id)
       .pipe(
-        tap((data: Array<StationResponse>) => this.endingStations = data)
+        tap((data: Array<StationModel>) => this.endingStations = data)
       )
       .subscribe();
   }
 
   private setStartingStation(stationName: string) {
-    this.startingStation = this.startingStations.find((station: StationResponse) => station.name === stationName);
+    this.startingStation = this.startingStations.find((station: StationModel) => station.name === stationName);
   }
 
   // todo: Guard for the routes route. Fix for routing to home not workin issue.
@@ -90,7 +90,7 @@ export class HomeComponent implements OnInit{
       return;
     }
 
-    const endingStation: StationResponse = this.endingStations.find((station: StationResponse) => station.name === this.formGroup.get("end")?.value)!;
+    const endingStation: StationModel = this.endingStations.find((station: StationModel) => station.name === this.formGroup.get("end")?.value)!;
 
     if (!this.routeDate.date) {
       this.routeDate.date = new Date().toISOString().split("T")[0];

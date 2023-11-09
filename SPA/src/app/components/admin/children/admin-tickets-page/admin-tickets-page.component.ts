@@ -13,7 +13,6 @@ import { TicketService } from 'src/app/services/ticket/ticket.service';
   styleUrls: ['./admin-tickets-page.component.scss']
 })
 export class AdminTicketsPageComponent implements OnInit{
-
   protected paginationModel: Pagination = {
     pageSize: 5,
     page: 1,

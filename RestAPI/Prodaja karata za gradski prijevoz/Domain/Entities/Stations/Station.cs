@@ -5,4 +5,5 @@ namespace Domain.Entities.Stations;
 public sealed class Station : Entity
 {
     public string Name { get; set; } = null!;
+    public DateTime DateCreated { get; set; } = DateTime.Now;
 }

@@ -29,4 +29,15 @@ public sealed class StationRepository : GenericRepository<Station>, IStationRepo
             .ToListAsync(cancellationToken)
             .ContinueWith(list => (IReadOnlyList<Station>)list.Result, cancellationToken);
     }
+
+    public Task<bool> IsStationPartOfAnyRoute(Guid stationId, CancellationToken cancellationToken = default)
+    {
+        return _routeRepository.GetAll().Where(route => route.StartStationId == stationId || route.EndStationId == stationId)
+            .AnyAsync(cancellationToken);
+    }
+
+    public Task<bool> IsStationPartOfAnyRoute(Station station, CancellationToken cancellationToken = default)
+    {
+        return IsStationPartOfAnyRoute(station.Id, cancellationToken);
+    }
 }

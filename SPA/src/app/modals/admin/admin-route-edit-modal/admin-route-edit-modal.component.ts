@@ -6,7 +6,7 @@ import { TicketDto } from 'src/app/models/Admin/Ticket/TicketDto';
 import { TicketModel } from 'src/app/models/Admin/Ticket/TicketModel';
 import { CreateRouteModel, EditRouteModel } from 'src/app/models/routes/RouteRequest';
 import { EditRouteResponse, RouteListResponse } from 'src/app/models/routes/RouteResponse';
-import { StationResponse } from 'src/app/models/stations/StationResponse';
+import { StationModel } from 'src/app/models/stations/stationModel';
 import { CacheService } from 'src/app/services/cache/cache.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { RouteService } from 'src/app/services/routes/route.service';
@@ -22,7 +22,7 @@ export class AdminRouteEditModalComponent implements OnInit {
 
   protected routeModel!: CreateRouteModel;
   protected routeEditForm!: FormGroup;
-  protected stations: StationResponse[] = [];
+  protected stations: StationModel[] = [];
 
   constructor(
     protected routeService: RouteService,

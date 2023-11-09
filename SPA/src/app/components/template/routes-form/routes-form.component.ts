@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { tap } from 'rxjs';
 import { VehicleListDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
-import { StationResponse } from 'src/app/models/stations/StationResponse';
+import { StationModel } from 'src/app/models/stations/stationModel';
 import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { CacheService } from 'src/app/services/cache/cache.service';
 import { StationService } from 'src/app/services/stations/station.service';
@@ -16,7 +16,7 @@ export class RoutesFormComponent implements OnInit {
   @Input() public route?: FormGroup;
   @Input() public isCreationForm: boolean = true;
 
-  protected stations: StationResponse[] = [];
+  protected stations: StationModel[] = [];
   protected vehicleList: VehicleListDto[] = [];
 
   constructor(
@@ -52,13 +52,13 @@ export class RoutesFormComponent implements OnInit {
 
   private loadStations() {
     if (this.cacheService.getDataFromCache("routes.routeStations")) {
-      this.stations = this.cacheService.getDataFromCache("routes.routeStations") as StationResponse[];
+      this.stations = this.cacheService.getDataFromCache("routes.routeStations") as StationModel[];
       return;
     }
 
     this.stationService.getAllStations()
       .pipe(
-        tap((stations: StationResponse[]) => {
+        tap((stations: StationModel[]) => {
           this.stations = stations;
           this.cacheService.setCacheData("routes.routeStations", stations);
         })

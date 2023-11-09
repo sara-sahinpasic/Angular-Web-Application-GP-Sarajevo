@@ -296,6 +296,7 @@ public static class DataSeed
             Station station = new()
             {
                 Name = Faker.Country.Name(),
+                DateCreated = DateTime.Now
             };
 
             await stationRepository.CreateAsync(station);

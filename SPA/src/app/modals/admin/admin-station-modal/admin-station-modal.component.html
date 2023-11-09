@@ -1,17 +1,60 @@
-<form>
-  <div class="form-group">
-
-    <label for="exampleFormControlInput1">Naziv stanice:</label>
-    <input type="email" class="form-control-admin mt-1"><br />
+<div class="d-flex flex-column w-100 admin-container">
+  <div class="mb-3">
+    <label>Naziv nove stanice:</label>
+    <input type="text" class="form-control-admin mt-1" required
+      (blur)="validate($event.target)"
+      [(ngModel)]="stationCreateModel.name"
+      [class.is-invalid]="isStationNameValid === false" />
+    <div class="invalid-feedback">
+      Obavezan unos!
+    </div>
   </div>
-
-  <label for="formControlInput1-2" style="word-spacing: 60px;">Br.stanice | Naziv | Lokacija</label><br />
-  <div class="inputDiv">
-    <hr>
-    <input type="text" class="form-control-admin" style="border: none;">
-    <hr>
+  <div class="table-container mb-3">
+    <table class="table table-striped table-with-controls" >
+      <thead>
+        <tr>
+          <th>Stanica:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let station of this.stations | paginate:{
+          itemsPerPage: paginationModel.pageSize,
+          currentPage: paginationModel.page,
+          totalItems: paginationModel.totalCount
+        };">
+        <td>
+          <span *ngIf="!station.isEditing">
+            {{ station.name }}
+          </span>
+          <input *ngIf="station.isEditing" type="text" (focus)="perserveOldValue(station)" [(ngModel)]="station.name">
+        </td>
+        <td>
+          <div class="controls-container d-flex justify-content-end">
+            <button *ngIf="!station.isEditing" type="button" class="btn btn-link btn-operation" (click)="startEditing(station)">
+              <fa-icon [icon]="editIcon"></fa-icon>
+            </button>
+            <button *ngIf="station.isEditing" type="button" class="btn btn-link btn-operation" (click)="cancelEditing(station)">
+              <fa-icon [icon]="closeIcon"></fa-icon>
+            </button>
+            <button *ngIf="station.isEditing" type="button" class="btn btn-link btn-operation" (click)="finishEditing(station)">
+              <fa-icon [icon]="checkmarkIcon"></fa-icon>
+            </button>
+            <button type="button" class="btn btn-link btn-operation" (click)="deleteStation(station)">
+              <fa-icon [icon]="deleteIcon"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    </table>
   </div>
-  <button type="button" class="btn btn-dark myBtn" (click)="deleteStation()">Obriši stanicu</button>
-</form>
-<button type="button" class="btn btn-light myBtn" data-bs-toggle="modal" data-bs-target="#base-modal"
-  (click)="adminShowNewStationsModal()" style=" border: 1px solid gray; ">Evidentiraj novu stanicu</button>
+  <div class="paging d-flex justify-content-center">
+    <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+    </pagination-controls>
+  </div>
+  <hr />
+  <button type="button" class="btn btn-dark btn-sm" (click)="createNewStation()"
+    style="font-weight: bolder;">
+      Kreiraj novu stanicu
+    </button>
+</div>

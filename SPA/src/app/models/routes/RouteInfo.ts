@@ -1,8 +1,8 @@
-import { StationResponse } from "../stations/StationResponse";
+import { StationModel } from "../stations/stationModel";
 import { RouteDateModel } from "./RouteDateModel";
 
 export interface RouteInfoModel {
-  startingStation: StationResponse,
-  endingStation: StationResponse,
+  startingStation: StationModel,
+  endingStation: StationModel,
   dateStamp: RouteDateModel
 }

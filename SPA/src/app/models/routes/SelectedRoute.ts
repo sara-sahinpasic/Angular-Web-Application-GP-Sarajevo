@@ -1,9 +1,9 @@
-import { StationResponse } from "../stations/StationResponse";
+import { StationModel } from "../stations/stationModel";
 import { RouteDateModel } from "./RouteDateModel";
 
 export interface SelectedRoute {
   id: string,
-  startStation: StationResponse,
-  endStation: StationResponse,
+  startStation: StationModel,
+  endStation: StationModel,
   dateStamp: RouteDateModel
 }

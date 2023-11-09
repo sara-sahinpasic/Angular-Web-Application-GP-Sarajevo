@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class CacheService {
 
-  private expiryTime: number = 1000 * 60 * 30;
+  private readonly EXPIRY_TIME: number = 1000 * 60 * 30;
 
   constructor() { }
 
@@ -20,7 +20,7 @@ export class CacheService {
     const currentTimeInMillis: number = new Date().getTime();
     const milliSecondsDifference: number = currentTimeInMillis - cacheData.expiryTimeInMillis;
 
-    if (milliSecondsDifference > this.expiryTime) {
+    if (milliSecondsDifference > this.EXPIRY_TIME) {
       this.unsetCacheItem(cacheKey);
       return null;
     }
