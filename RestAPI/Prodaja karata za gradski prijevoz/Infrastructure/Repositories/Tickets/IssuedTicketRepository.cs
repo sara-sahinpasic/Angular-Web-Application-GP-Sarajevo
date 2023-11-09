@@ -1,11 +1,9 @@
-﻿using Application.Services.Abstractions.Interfaces.Repositories.News;
-using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+﻿using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
 using Domain.Entities.Tickets;
 using Domain.Enums.OrderBy;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
 
 namespace Infrastructure.Repositories.Tickets;
 
@@ -43,7 +41,7 @@ public sealed class IssuedTicketRepository : GenericRepository<IssuedTicket>, II
                 .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<IssuedTicket>> GetIssuedTicketsForDateAsync(DateTime date, CancellationToken cancellationToken = default)
+    public async Task<ICollection<IssuedTicket>> GetIssuedTicketsForDateAsync(DateTime date, CancellationToken cancellationToken = default)
     {
         IEnumerable<Ticket> tickets = await _ticketRepository.GetAll().AsNoTracking()
             .ToArrayAsync(cancellationToken);
@@ -102,5 +100,44 @@ public sealed class IssuedTicketRepository : GenericRepository<IssuedTicket>, II
         return GetAll()
              .Where(issuedTicket => issuedTicket.UserId == userId)
              .AnyAsync(cancellationToken);
-    }    
+    }
+
+    public async Task<ICollection<IssuedTicket>> GetIssuedTicketsForPeriodAsync(int month, int year, CancellationToken cancellationToken = default)
+    {
+        IEnumerable<Ticket> tickets = await _ticketRepository.GetAll()
+            .AsNoTracking()
+            .ToArrayAsync(cancellationToken);
+
+        IDictionary<Guid, IssuedTicket> issuedTicketsForDate = await GetAll()
+            .Where(issuedTicket => issuedTicket.IssuedDate.Year == year && issuedTicket.IssuedDate.Month == month)
+            .GroupBy(issuedTicket => issuedTicket.TicketId)
+            .Select(group => new IssuedTicket
+            {
+                TicketId = group.Key,
+                Amount = group.Count(),
+                Ticket = group.First(item => item.TicketId == group.Key).Ticket,
+            })
+            .AsNoTracking()
+            .ToDictionaryAsync(key => key.TicketId, val => val, cancellationToken);
+
+        ICollection<IssuedTicket> ticketsForReport = new List<IssuedTicket>();
+
+        foreach (Ticket ticket in tickets)
+        {
+            if (issuedTicketsForDate.ContainsKey(ticket.Id))
+            {
+                ticketsForReport.Add(issuedTicketsForDate[ticket.Id]);
+                continue;
+            }
+
+            ticketsForReport.Add(new IssuedTicket
+            {
+                Ticket = ticket,
+                TicketId = ticket.Id,
+                Amount = 0
+            });
+        }
+
+        return ticketsForReport;
+    }
 }

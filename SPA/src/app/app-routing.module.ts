@@ -33,6 +33,8 @@ import { DriverMalfunctionPageComponent } from './components/driver/children/dri
 import { AdminRoutesPageComponent } from './components/admin/children/admin-routes-page/admin-routes-page.component';
 import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AdminReportPageComponent } from './components/admin/children/admin-report-page/admin-report-page.component';
+import { AdminStatisticsPageComponent } from './components/admin/children/admin-statistics-page/admin-statistics-page.component';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
@@ -52,7 +54,8 @@ const routes: Routes = [
     { path: 'news', component: AdminNewsPageComponent, outlet: "admin" },
     { path: 'vehicles', component: AdminVehiclePageComponent, outlet: "admin" },
     { path: 'routes', component: AdminRoutesPageComponent, outlet: "admin" },
-    { path: 'holidays', component: AdminHolidaysPageComponent, outlet: "admin" }
+    { path: 'holidays', component: AdminHolidaysPageComponent, outlet: "admin" },
+    { path: 'report', component: AdminStatisticsPageComponent, outlet: "admin" }
   ]},
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [RouteNotSetGuard, LoggedInGuard, CheckoutConfirmGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [RouteNotSetGuard] },

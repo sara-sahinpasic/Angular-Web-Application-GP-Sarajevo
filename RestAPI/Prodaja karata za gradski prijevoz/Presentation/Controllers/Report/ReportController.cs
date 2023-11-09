@@ -1,4 +1,5 @@
 ﻿using Application.Config;
+using Application.DataClasses.Report.Route;
 using Application.DataClasses.Report.Ticket;
 using Application.Services.Abstractions.Interfaces.Report;
 using Microsoft.AspNetCore.Authorization;
@@ -29,15 +30,43 @@ public sealed class ReportController : ControllerBase
 
     [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
     [HttpGet("/Admin/[controller]/Daily")]
-    public async Task<IActionResult> DailyReport()
+    public async Task<IActionResult> DailyReport(CancellationToken cancellationToken)
     {
         DateTime date = DateTime.Now;
 
-        TicketReportData ticketReportData = await _reportService.GetTicketReportForDateAsync(date);
+        TicketReportData ticketReportData = await _reportService.GetTicketReportForDateAsync(date, cancellationToken);
 
         Response response = new()
         {
             Data = ticketReportData
+        };
+
+        return Ok(response);
+    }
+
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
+    [HttpGet("/Admin/[controller]/Period")]
+    public async Task<IActionResult> ReportForPeriod(int month, int year, CancellationToken cancellationToken)
+    {
+        TicketReportData ticketReportData = await _reportService.GetTicketReportForPeriodAsync(month, year, cancellationToken);
+
+        Response response = new()
+        {
+            Data = ticketReportData
+        };
+
+        return Ok(response);
+    }
+
+    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
+    [HttpGet("/Admin/[controller]/MostSoldRoute/Period")]
+    public async Task<IActionResult> RouteReportForPeriod(int month, int year, CancellationToken cancellationToken)
+    {
+        RouteReportData? routeReportData = await _reportService.GetRouteWithMostPurchasedTicketsForPeriodAsync(month, year, cancellationToken);
+
+        Response response = new()
+        {
+            Data = routeReportData
         };
 
         return Ok(response);

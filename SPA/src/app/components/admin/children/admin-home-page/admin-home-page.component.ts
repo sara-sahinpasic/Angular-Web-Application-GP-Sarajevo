@@ -13,7 +13,6 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./admin-home-page.component.scss'],
 })
 export class AdminHomePageComponent implements OnInit {
-
   protected user!: UserProfileModel;
   protected totalSum: number = 0;
   protected dailyChartData: Row[] = [];

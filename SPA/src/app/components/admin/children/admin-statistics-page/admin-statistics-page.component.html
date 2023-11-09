@@ -1,0 +1,31 @@
+<div class="admin-container p-5">
+  <div class="period-controls d-flex justify-content-center">
+    <div class="field-group d-flex flex-column me-5">
+      <label>Mjesec:</label>
+      <select class="form-control-admin" (change)="fetchStatistics()" [(ngModel)]="period.month">
+        <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+      </select>
+    </div>
+    <div class="field-group d-flex flex-column">
+      <label>Godina:</label>
+      <select class="form-control-admin" (change)="fetchStatistics()" [(ngModel)]="period.year">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+  <div *ngIf="chartData.length > 0" class="chart-container">
+    <google-chart #chart [data]="chartData" [columns]="columns" [options]="chartOptions" [type]="chartType"
+       class="w-100"></google-chart>
+    <p>
+      <strong>Akumulirana suma od prodaje je:</strong> {{ totalSum | number:"1.2-2" }}KM
+    </p>
+  </div>
+  <p *ngIf="chartData.length === 0">Za odabrani period nema prodanih karti.</p>
+  <p *ngIf="routeReport">
+    <strong>
+      Ruta za koju je najviše karti kupljeno u odabranom periodu:
+    </strong>
+    {{ routeReport.startStation }} - {{ routeReport.endStation }}</p>
+  <p *ngIf="routeReport">
+    <strong>Za rutu je prodano karti:</strong> {{ routeReport.quantityOfTicketsBought }}</p>
+</div>
