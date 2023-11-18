@@ -108,6 +108,8 @@ export class Messages {
       page_not_found_link_text: 'Molimo, vratite se nazad ili idite na našu ',
       page_not_found_link: 'početnu stranicu.',
       general_api_error: 'Došlo je do greške.',
+      general_session_expired: 'Istekla je sesija.',
+      general_forbidden: 'Nemate prava na tu akciju.',
     },
     en: {
       home_search: 'SEARCH',
@@ -217,6 +219,8 @@ export class Messages {
       page_not_found_link_text: 'Please, go back or go to our ',
       page_not_found_link: 'homepage.',
       general_api_error: 'An error has occurred',
+      general_session_expired: 'Session expired.',
+      general_forbidden: 'You do not have the rights to access this resource.',
     }
   }
 }
