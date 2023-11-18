@@ -27,7 +27,7 @@ export class UserService {
   private isRegistrationSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isUserActivated: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private isResetPasswordRequestSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
-  private isDeleteRequestSent: Subject<any> = new Subject();
+  private isDeleteRequestSent: Subject<boolean> = new BehaviorSubject<boolean>(false);
   private user: BehaviorSubject<UserProfileModel | undefined>;
   public user$: Observable<UserProfileModel | undefined>;
   public isActivated$: Observable<boolean>;
@@ -242,11 +242,13 @@ export class UserService {
           if (!redirectRoute) {
             return;
           }
+          this.isDeleteRequestSent.next(true);
           this.router.navigateByUrl(redirectRoute);
 
           setTimeout(() => {
             this.logout();
             this.router.navigateByUrl('');
+            this.isDeleteRequestSent.next(false);
           }, this.redirectionTime);
         })
       );
