@@ -1,0 +1,20 @@
+<form class="content-form" [formGroup]="routeCreationForm">
+  <div formArrayName="routes" *ngFor="let routeFormGroup of routeFormGroupArray; index as i" class="w-100"
+    class="d-flex flex-wrap border p-3 mb-3">
+    <div class="header-container d-flex justify-content-between w-100">
+      <h5>Ruta {{ i + 1 }}</h5>
+      <button type="button" class="btn-close" (click)="discardRoute(i)"></button>
+    </div>
+    <app-routes-form [route]="routeFormGroup" class="w-100"></app-routes-form>
+  </div>
+</form>
+<div class="controls mt-2">
+  <div class="add-button-container d-flex justify-content-center pt-2">
+    <button class="btn btn-light rounded-circle" (click)="addRoute()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      </svg>
+    </button>
+  </div>
+  <button type="button" class="btn btn-dark admin-button" (click)="saveRoutes()">Sačuvaj rute</button>
+</div>

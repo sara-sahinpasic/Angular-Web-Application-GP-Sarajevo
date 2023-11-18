@@ -16,7 +16,7 @@ namespace Presentation.Controllers.Routes;
 
 [ApiController]
 [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
-[Route("[controller]")]
+[Route("Admin/[controller]")]
 public sealed class RoutesController : ControllerBase
 {
 	private readonly IRouteRepository _routeRepository;
@@ -29,7 +29,7 @@ public sealed class RoutesController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("GetByDate")]
+    [HttpGet("/[controller]/GetByDate")]
     public async Task<IActionResult> GetAllRoutesForDateAction(Guid startStationId, Guid endStationId, DateTime date, CancellationToken cancellationToken)
     {
         DateTime currentDate = DateTime.Now;
@@ -65,10 +65,13 @@ public sealed class RoutesController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("All")]
+    [AllowAnonymous]
+    [HttpGet("/[controller]/All")]
     public async Task<IActionResult> GetAllRoutes(CancellationToken cancellationToken)
     {
         IReadOnlyList<RoutesListResponseDto> routesList = await _routeRepository.GetAll()
+            .OrderBy(route => route.StartStation.Name)
+            .ThenBy(route => route.TimeOfDeparture)
             .Select(route => new RoutesListResponseDto
             {
                 Id = route.Id,
@@ -91,7 +94,7 @@ public sealed class RoutesController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/Get/{routeId}")]
+    [HttpGet("Get/{routeId}")]
     public async Task<IActionResult> GetRoute([FromServices] IObjectMapperService mapperService, Guid routeId, CancellationToken cancellationToken)
     {
         Route route = await _routeRepository.GetByIdEnsuredAsync(routeId, cancellationToken: cancellationToken);
@@ -189,19 +192,17 @@ public sealed class RoutesController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPut("Deactivate/{routeId}")]
-    public async Task<IActionResult> DeactivateRoute(Guid routeId, CancellationToken cancellationToken)
+    [HttpPut("Delete/{routeId}")]
+    public async Task<IActionResult> DeleteRoute(Guid routeId, CancellationToken cancellationToken)
     {
         Route route = await _routeRepository.GetByIdEnsuredAsync(routeId, cancellationToken: cancellationToken);
 
-        route.Active = false;
-
-        await _routeRepository.UpdateAsync(route, cancellationToken);
+        await _routeRepository.DeleteAsync(route, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         Response response = new()
         {
-            Message = "Uspješno deaktivirana ruta."
+            Message = "Uspješno obrisana ruta."
         };
         
         return Ok(response);

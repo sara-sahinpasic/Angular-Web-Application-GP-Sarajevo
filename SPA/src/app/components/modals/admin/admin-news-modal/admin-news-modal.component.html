@@ -1,0 +1,24 @@
+<form [formGroup]="registrationForm">
+  <div class="form-group mb-3">
+    <label for="news_title_input">Naslov:</label>
+    <input type="text" class="form-control-admin mt-1" id="news_title_input" placeholder="" formControlName="title"
+      [(ngModel)]="newsModel.title" [class.is-invalid]="registrationForm.get('title')?.invalid && (registrationForm.get('title')?.dirty
+        || registrationForm.get('title')?.touched)" />
+    <div class="invalid-feedback">
+      Obavezan unos!
+    </div>
+  </div>
+  <div class="form-group mb-3">
+    <label for="news_content">Obavijest</label>
+    <textarea class="form-control-admin mt-1" id="news_content" rows="3"
+      formControlName="content" [(ngModel)]="newsModel.content"
+      [class.is-invalid]="registrationForm.get('content')?.invalid && (registrationForm.get('content')?.dirty
+        || registrationForm.get('content')?.touched)">
+    </textarea>
+    <div class="invalid-feedback">
+      {{ "Obavezan unos!" }}
+    </div>
+  </div>
+  <button *ngIf="!news" type="button" class="btn btn-dark admin-button" (click)="publish()">Objavi</button>
+  <button *ngIf="news" type="button" class="btn btn-dark admin-button" (click)="edit()">Izmjeni</button>
+</form>

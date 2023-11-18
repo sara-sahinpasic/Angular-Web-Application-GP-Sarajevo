@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Row, ChartType, GoogleChartComponent } from 'angular-google-charts';
 import { tap } from 'rxjs';
-import { TicketReportModel } from 'src/app/models/report/TicketReportModel';
-import { TicketReportRowModel } from 'src/app/models/report/TicketReportRowModel';
+import { TicketReportModel } from 'src/app/models/report/ticketReportModel';
+import { TicketReportRowModel } from 'src/app/models/report/ticketReportRowModel';
 import { PeriodModel } from 'src/app/models/report/periodModel';
 import { RouteReportModel } from 'src/app/models/report/routeReportModel';
 import { ReportService } from 'src/app/services/report/report.service';
@@ -15,10 +15,11 @@ import { ReportService } from 'src/app/services/report/report.service';
 export class AdminStatisticsPageComponent {
   @ViewChild(GoogleChartComponent)
   public readonly chart: GoogleChartComponent = {} as GoogleChartComponent;
+
   protected routeReport: RouteReportModel = {} as RouteReportModel;
   protected totalSum: number = 0;
   protected chartData: Row[] = [];
-  protected readonly columns: any = ["Tip karte", "Prodana količina", { role: "style" }];
+  protected readonly columns: any = ['Tip karte', 'Prodana količina', { role: 'style' }];
   protected readonly chartType: ChartType = ChartType.ColumnChart;
   protected ticketTypes: string[] = [];
   protected readonly months: number[] = Array(12).fill(1).map((value, index) => value + index);
@@ -28,9 +29,9 @@ export class AdminStatisticsPageComponent {
     year: new Date().getFullYear()
   };
   protected readonly chartOptions: any = {
-    backgroundColor: "transparent",
-    role: "style",
-    legend: "none",
+    backgroundColor: 'transparent',
+    role: 'style',
+    legend: 'none',
     hAxis: {
       title: this.columns[0],
       textStyle: {
@@ -45,12 +46,12 @@ export class AdminStatisticsPageComponent {
     },
     animation: {
       duration: 500,
-      easing: "inAndOut",
+      easing: 'inAndOut',
       startup: true
     }
   };
 
-  private chartColors: string[] = ["blue", "gold", "purple", "red"];
+  private chartColors: string[] = ['blue', 'gold', 'purple', 'red'];
 
   constructor(private reportService: ReportService) {
     this.years = Array(this.period.year - 1999).fill(2000).map((value, index) => value + index)
@@ -78,7 +79,7 @@ export class AdminStatisticsPageComponent {
     const chartRows: Row[] = [];
 
     reportModel.data.forEach((reportRow: TicketReportRowModel, i: number) => {
-      const color: string = i < this.chartColors.length ? this.chartColors[i] : "";
+      const color: string = i < this.chartColors.length ? this.chartColors[i] : '';
       chartRows.push([reportRow.cardType, reportRow.quantitySold, color]);
     });
 

@@ -1,12 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
-import { ReviewDto } from 'src/app/models/Review/ReviewDto';
+import { tap } from 'rxjs';
+import { Pagination } from 'src/app/models/pagination/pagination';
+import { ReviewDto } from 'src/app/models/review/reviewDto';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
+import { ReviewService } from 'src/app/services/review/review.service';
 import { UserService } from 'src/app/services/user/user.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-review',
@@ -14,84 +13,80 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./review.component.scss'],
 })
 export class ReviewComponent implements OnInit {
-
-  shouldShowReviewButton: boolean = false;
-  protected reviewTable: Array<ReviewDto> = [];
-  public paginationModel: Pagination = {
+  protected shouldShowReviewButton: boolean = false;
+  protected reviews: ReviewDto[] = [];
+  protected paginationModel: Pagination = {
     pageSize: 4,
     page: 1,
   };
-  pages: number = 0;
-  pagesArray: Array<number> = [];
-  private apiUrl: string = environment.apiUrl;
-  protected scoreMarkerColors: string[] = ["#C41E3A", "#FCF55F", "#009E60"];
+  protected pages: number = 0;
+  protected pageNumbers: number[] = [];
+  protected scoreMarkerColors: string[] = ['#C41E3A', '#FCF55F', '#009E60'];
 
   constructor(
     private modalService: ModalService,
     private userService: UserService,
-    private httpClient: HttpClient,
+    private reviewService: ReviewService,
     protected localizationService: LocalizationService
   ) {}
 
-  getMarkerColor(score: number): string {
+  protected getMarkerColor(score: number): string {
     return this.scoreMarkerColors[Math.floor(score / 2)];
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.isUserLoggedIn();
     this.getPageSize();
-    this.getPage();
+    this.getReviewsForPage();
   }
 
-  isUserLoggedIn() {
+  protected isUserLoggedIn() {
     this.shouldShowReviewButton = this.userService.isLoggedIn();
   }
 
-  showReviewModalButton() {
+  protected showReviewModalButton() {
     this.modalService.showReviewModal();
   }
 
-  getPage() {
-    this.httpClient
-      .get(
-        `${this.apiUrl}Review/Pagination?page=${this.paginationModel.page}&pageSize=${this.paginationModel.pageSize}`
+  protected getReviewsForPage() {
+    this.reviewService.getReviewsPage(this.paginationModel.page, this.paginationModel.pageSize)
+      .pipe(
+        tap((response: ReviewDto[]) => this.reviews = response)
       )
-      .subscribe((x: any) => {
-        this.reviewTable = x;
-      });
+      .subscribe();
   }
 
-  nextPage() {
-    if ((this.paginationModel.page as number) >= this.pages) {
+  protected nextPage() {
+    if (this.paginationModel.page >= this.pages) {
       return;
     }
 
-    (this.paginationModel.page as number)++;
-    this.getPage();
+    this.paginationModel.page++;
+    this.getReviewsForPage();
   }
 
-  prevPage() {
-    if ((this.paginationModel.page as number) <= 1) {
+  protected prevPage() {
+    if (this.paginationModel.page <= 1) {
       return;
     }
-    (this.paginationModel.page as number)--;
-    this.getPage();
+
+    this.paginationModel.page--;
+    this.getReviewsForPage();
   }
 
-  getPageSize() {
-    this.httpClient
-      .get<DataResponse<number>>(
-        `${this.apiUrl}Review/ReviewPagesCount?pageSize=${this.paginationModel.pageSize}`
-      )
-      .subscribe((response: DataResponse<number>) => {
-        this.pages = response.data;
-        this.pagesArray = Array(this.pages)
-          .fill(0)
-          .map((x, i) => i + 1);
-      });
+  protected getPageSize() {
+   this.reviewService.getNumberOfPages(this.paginationModel.pageSize)
+      .pipe(
+        tap((response: number) => {
+        this.pages = response;
+        this.pageNumbers = Array(this.pages).fill(1)
+          .map((x, i) => x + i);
+      }))
+      .subscribe();
   }
-  changePage(page: number) {
+
+  protected changePage(page: number) {
     this.paginationModel.page = page;
-    this.getPage();
+    this.getReviewsForPage();
   }
 }

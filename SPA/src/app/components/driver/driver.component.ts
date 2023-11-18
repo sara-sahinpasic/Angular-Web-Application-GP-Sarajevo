@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-driver',
   templateUrl: './driver.component.html',
-  styleUrls: ['./driver.component.css']
+  styleUrls: ['./driver.component.scss']
 })
-export class DriverComponent implements OnInit {
-
+export class DriverComponent {
   constructor() { }
-
-  ngOnInit() {
-  }
-
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
+import { UserProfileModel } from 'src/app/models/user/userProfileModel';
 import { UserProfileStatusModel } from 'src/app/models/status/userProfileStatusModel';
 import { CacheService } from 'src/app/services/cache/cache.service';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
@@ -15,13 +15,13 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  public profileModel!: UserProfileModel;
+  protected profileModel: UserProfileModel = {} as UserProfileModel;
   protected showModalRequest: boolean = false;
-  protected locale!: string | null;
+  protected locale: string | null = null;
   protected userStatusModel: UserProfileStatusModel = {} as UserProfileStatusModel;
 
   constructor(
-    private _router: Router,
+    private router: Router,
     private userService: UserService,
     private modalService: ModalService,
     private statusService: UserStatusService,
@@ -29,26 +29,32 @@ export class ProfileComponent implements OnInit {
     private cacheService: CacheService
   ) {}
 
-  ngOnInit(): void {
-    this.userService.user$
-      .pipe(
-        tap(this.mapData.bind(this))
-      )
-      .subscribe();
-
-    this.userService.getProfileImage().subscribe(
-    {
-      next: (x) => (this.profileModel.profileImageBase64 = x.data),
-      error: () => (this.profileModel.profileImageBase64 = "./assets/X.png"),
-    });
-
+  ngOnInit() {
+    this.setUser();
+    this.setProfileImage();
     this.locale = this.localizationService.getLocale();
   }
 
-  private mapData(user: UserProfileModel | undefined) {
+  private setProfileImage() {
+    this.userService.getProfileImage().subscribe(
+      {
+        next: (x) => (this.profileModel.profileImageBase64 = x.data),
+        error: () => (this.profileModel.profileImageBase64 = './assets/X.png'),
+      });
+  }
+
+  private setUser() {
+    this.userService.user$
+      .pipe(
+        tap(this.mapUser.bind(this))
+      )
+      .subscribe();
+  }
+
+  private mapUser(user: UserProfileModel | undefined) {
     this.profileModel = user!;
 
-    const userStatusModelFromCache: UserProfileStatusModel | null = this.cacheService.getDataFromCache("profile_userStatus");
+    const userStatusModelFromCache: UserProfileStatusModel | null = this.cacheService.getDataFromCache('profile_userStatus');
     if (userStatusModelFromCache) {
       this.userStatusModel = userStatusModelFromCache;
       return;
@@ -64,31 +70,25 @@ export class ProfileComponent implements OnInit {
       .subscribe();
   }
 
-  navigateToProfile() {
-    this._router.navigateByUrl('/profile');
+  protected navigateToUpdate() {
+    this.router.navigateByUrl('/update');
   }
 
-  navigateToUpdate() {
+  protected deleteProfile() {
     const id: string = this.profileModel?.id as string;
-
-    this._router.navigateByUrl(`/update`);
-  }
-
-  deleteProfile() {
-    const id: string = this.profileModel?.id as string;
-    const answer: boolean = confirm('Da li želite obrisati račun?');
+    const answer: boolean = confirm(this.localizationService.localize('edit_profile_deletion_confirmation_text'));
 
     if (answer == true) {
       this.userService.deleteUser(id).subscribe();
     }
   }
 
-  navigateToPurchaseHistory() {
-    this._router.navigateByUrl(`/purchaseHistory`);
+  protected navigateToPurchaseHistory() {
+    this.router.navigateByUrl('/purchaseHistory');
   }
 
-  showModal() {
-    this.modalService.setModalTitle(this.localizationService.localize("request_modal_title"));
+  protected showRequestModal() {
+    this.modalService.setModalTitle(this.localizationService.localize('request_modal_title'));
     this.modalService.showRequestModal();
   }
 }

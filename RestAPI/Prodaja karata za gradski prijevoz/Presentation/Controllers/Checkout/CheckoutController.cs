@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.Checkout;
-using TicketModel = Domain.Entities.Tickets.Ticket;
 
 namespace Presentation.Controllers.Checkout;
 

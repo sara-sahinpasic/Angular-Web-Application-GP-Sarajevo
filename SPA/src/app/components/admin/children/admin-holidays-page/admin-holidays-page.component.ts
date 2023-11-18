@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { InvalidArgumentException } from 'src/app/exceptions/InvalidArgumentException';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { InvalidArgumentException } from 'src/app/exceptions/invalidArgumentException';
+import { Pagination } from 'src/app/models/pagination/pagination';
 import { HolidayListModel } from 'src/app/models/holiday/holidayModel';
 import { HolidayService } from 'src/app/services/holiday/holiday.service';
 import { ModalService } from 'src/app/services/modal/modal.service';

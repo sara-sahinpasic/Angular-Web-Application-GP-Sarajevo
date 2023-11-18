@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { InvalidArgumentException } from 'src/app/exceptions/InvalidArgumentException';
-import { NewsResponseDto } from 'src/app/models/News/NewsDto';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { InvalidArgumentException } from 'src/app/exceptions/invalidArgumentException';
+import { NewsResponseDto } from 'src/app/models/news/newsDto';
+import { Pagination } from 'src/app/models/pagination/pagination';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { NewsService } from 'src/app/services/news/news.service';
 
@@ -13,7 +13,6 @@ import { NewsService } from 'src/app/services/news/news.service';
   styleUrls: ['./admin-news-page.component.scss']
 })
 export class AdminNewsPageComponent implements OnInit {
-
   protected paginationModel: Pagination = {
     pageSize: 5,
     page: 1,
@@ -27,30 +26,28 @@ export class AdminNewsPageComponent implements OnInit {
   constructor(private newsService: NewsService, private modalService: ModalService) {}
 
   ngOnInit() {
-    const includeCreatedBy: boolean = true;
-
-    this.newsService.getAllNews(includeCreatedBy)
+    this.newsService.getAllNews()
       .pipe(
         tap(this.loadNews.bind(this))
       )
       .subscribe();
   }
 
-  loadNews(data: NewsResponseDto[]) {
+  private loadNews(data: NewsResponseDto[]) {
     this.newsList = data;
     this.filteredNewsList = data;
   }
 
-  onPageChange(event) {
+  protected onPageChange(event) {
     this.paginationModel.page = event;
   }
 
-  showNewsEditModal(news: NewsResponseDto) {
+  protected showNewsEditModal(news: NewsResponseDto) {
     this.modalService.data = news;
     this.modalService.adminShowNewsModal(news.title);
   }
 
-  deleteNews(news: NewsResponseDto) {
+  protected deleteNews(news: NewsResponseDto) {
     if (!news.id) {
       throw new InvalidArgumentException(['news'])
     }
@@ -65,7 +62,7 @@ export class AdminNewsPageComponent implements OnInit {
     }, 1500);
   }
 
-  findByNewsTitle(event: KeyboardEvent) {
+  protected findByNewsTitle(event: KeyboardEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
 
     if (!target.value) {
@@ -76,7 +73,7 @@ export class AdminNewsPageComponent implements OnInit {
     this.filteredNewsList = this.newsList.filter(news => news.title!.toLowerCase().indexOf(target.value.toLowerCase()) > -1);
   }
 
-  resetFilter() {
+  private resetFilter() {
     this.filteredNewsList = this.newsList;
   }
 }

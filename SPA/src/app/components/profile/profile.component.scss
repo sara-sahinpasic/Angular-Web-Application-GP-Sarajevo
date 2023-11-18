@@ -19,14 +19,7 @@
   padding: 0 2%;
 }
 
-.nav {
-  display: flex;
-  flex-direction: row;
-}
-
-.data,
-.history,
-.request {
+.history-btn, .request-btn {
   background-color: rgba(0, 0, 0, 0.916);
   color: white;
   border: 1px solid black;
@@ -41,13 +34,9 @@
   margin-right: 5px;
 }
 
-label {
-  width: 100%;
-}
-
 input {
-  width: 96%;
-  margin-bottom: 2%;
+  width: 100%;
+  margin-bottom: 5px;
   background-color: rgba(255, 255, 255, 0.251);
   border: 2px solid rgba(104, 104, 104, 0.187);
 }

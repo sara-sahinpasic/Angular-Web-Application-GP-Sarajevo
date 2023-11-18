@@ -1,0 +1,6 @@
+<form class="content" *ngIf="routeEditForm" [formGroup]="routeEditForm">
+  <app-routes-form  [route]="routeEditForm"></app-routes-form>
+</form>
+<div class="controlls">
+  <button type="button" class="btn btn-dark admin-button" (click)="editRoute()">Sačuvaj rute</button>
+</div>

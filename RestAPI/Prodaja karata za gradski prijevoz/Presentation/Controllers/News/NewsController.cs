@@ -1,13 +1,9 @@
-﻿using Application.Config;
+﻿using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories.News;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.DTO;
 using Microsoft.EntityFrameworkCore;
-using Application.Services.Abstractions.Interfaces.Mapper;
+using Presentation.DTO;
 using Presentation.DTO.News;
-using NewsEntity = Domain.Entities.News.News;
-using Application.Services.Abstractions.Interfaces.Repositories;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers.News;
 
@@ -16,19 +12,17 @@ namespace Presentation.Controllers.News;
 public sealed class NewsController : ControllerBase
 {
     private readonly INewsRepository _newsRepository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public NewsController(INewsRepository newsRepository, IUnitOfWork unitOfWork)
+    public NewsController(INewsRepository newsRepository)
     {
         _newsRepository = newsRepository;
-        _unitOfWork = unitOfWork;
     }
 
-    [HttpGet("GetNewsById")]
-    public async Task<IActionResult> GetNewsById([FromServices] IObjectMapperService objectMapperService, Guid id,
+    [HttpGet("Get/{newsId}")]
+    public async Task<IActionResult> GetNewsById([FromServices] IObjectMapperService objectMapperService, Guid newsId,
         CancellationToken cancellationToken)
     {
-        var news = await _newsRepository.GetByIdAsync(id, cancellationToken: cancellationToken);
+        var news = await _newsRepository.GetByIdAsync(newsId, cancellationToken: cancellationToken);
 
         if (news == null)
         {
@@ -51,33 +45,7 @@ public sealed class NewsController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("Pagination")]
-    public async Task<IActionResult> GetPage([FromServices] INewsRepository newsRepository, int page, int pageSize)
-    {
-        var newsPerPage = await newsRepository
-            .GetAll()
-            .OrderByDescending(news => news.Date)
-            .Select(news => new NewsDto
-            {
-                Id = news.Id,
-                Title = news.Title,
-                Content = news.Content,
-                Date = news.Date
-            })
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToArrayAsync();
-
-        Response response = new()
-        {
-            Data = newsPerPage
-        };
-
-
-        return Ok(response);
-    }
-
-    [HttpGet("NewsPagesCount")]
+    [HttpGet("PagesCount")]
     public async Task<IActionResult> GetNewsCount([FromServices] INewsRepository newsRepository, double pageSize)
     {
         var total = await newsRepository
@@ -93,9 +61,9 @@ public sealed class NewsController : ControllerBase
     }
 
     [HttpGet("All")]
-    public async Task<IActionResult> GetAllNews(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllNews(int? page, int? pageSize, CancellationToken cancellationToken)
     {
-        IEnumerable<NewsDto> newsList = await _newsRepository.GetAll()
+        IQueryable<NewsDto> query = _newsRepository.GetAll()
             .Select(news => new NewsDto
             {
                 Id = news.Id,
@@ -104,58 +72,20 @@ public sealed class NewsController : ControllerBase
                 Title = news.Title,
                 CreatedBy = $"{news.User.FirstName} {news.User.LastName}"
             })
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .OrderByDescending(news => news.Date);
+
+        if (page is not null && pageSize is not null) 
+        {
+            query = query.Skip(((int)page - 1) * (int)pageSize)
+                .Take((int)pageSize);
+        }
+
+        IEnumerable<NewsDto> newsList = await query.ToListAsync(cancellationToken);
 
         Response response = new()
         {
             Data = newsList
         };
-
-        return Ok(response);
-    }
-
-    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
-    [HttpPut("/Admin/[controller]/Edit/{newsId}")]
-    public async Task<IActionResult> EditNews(Guid newsId, NewsDto newsDto, CancellationToken cancellationToken)
-    {
-        Response response = new();
-        NewsEntity? news = await _newsRepository.GetByIdAsync(newsId, cancellationToken: cancellationToken);
-
-        if (news is null)
-        {
-            response.Message = "Nepostojeća obavijest";
-            return NotFound(response);
-        }
-
-        news.Content = newsDto.Content;
-        news.Title = newsDto.Title;
-
-        await _newsRepository.UpdateAsync(news, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        response.Message = "Uspješno editovana obavijest";
-
-        return Ok(response);
-    }
-
-    [Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
-    [HttpDelete("/Admin/[controller]/Delete/{newsId}")]
-    public async Task<IActionResult> DeleteNews(Guid newsId, CancellationToken cancellationToken)
-    {
-        Response response = new();
-        NewsEntity? news = await _newsRepository.GetByIdAsync(newsId, cancellationToken: cancellationToken);
-
-        if (news is null)
-        {
-            response.Message = "Nepostojeća obavijest";
-            return NotFound(response);
-        }
-
-        await _newsRepository.DeleteAsync(news, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        response.Message = "Uspješno obrisana obavijest.";
 
         return Ok(response);
     }

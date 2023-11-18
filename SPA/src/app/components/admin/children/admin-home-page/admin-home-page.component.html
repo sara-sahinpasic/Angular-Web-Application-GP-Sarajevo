@@ -2,7 +2,8 @@
   <h1 class="mb-5">Dobrodošli {{ user.firstName }} {{ user.lastName }}.</h1>
   <div *ngIf="dailyChartData.length > 0" class="chart-container">
     <google-chart  [data]="dailyChartData" [columns]="columns" [options]="chartOptions" [type]="chartType"
-       class="w-100"></google-chart>
+       class="w-100">
+    </google-chart>
     <p>
       <strong>Akumulirana suma od prodaje je:</strong> {{ totalSum | number:"1.2-2" }}KM
     </p>

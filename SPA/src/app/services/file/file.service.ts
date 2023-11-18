@@ -2,9 +2,6 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserService } from '../user/user.service';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
-
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +11,7 @@ export class FileService {
 
   constructor(private httpClient: HttpClient) {}
 
-  download(url: string): Observable<HttpResponse<Blob>> {
+  public download(url: string): Observable<HttpResponse<Blob>> {
     return this.httpClient.get(`${this.baseApiUrl}${url}`, { responseType: 'blob', observe: 'response' })
       .pipe(
         tap((response: HttpResponse<Blob>) => {
@@ -40,6 +37,6 @@ export class FileService {
   }
 
   private getFileNameFromResponseHeader(response: HttpResponse<Blob>): string {
-    return response.headers.get("Content-Disposition")?.split("; ")[1].split("=")[1] as string;
+    return response.headers.get('Content-Disposition')?.split('; ')[1].split('=')[1] as string;
   }
 }

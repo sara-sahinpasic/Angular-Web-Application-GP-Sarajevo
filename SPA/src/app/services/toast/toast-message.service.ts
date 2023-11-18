@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ToastType } from 'src/app/enums/ToastType';
-import { ToastMessage } from 'src/app/models/ToastMessage';
+import { ToastType } from 'src/app/enums/toastType';
+import { ToastMessage } from 'src/app/models/toastMessage';
 
 @Injectable({
   providedIn: 'root'

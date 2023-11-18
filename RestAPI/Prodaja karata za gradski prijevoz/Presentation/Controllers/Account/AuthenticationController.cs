@@ -27,7 +27,7 @@ public sealed class AuthenticationController : ControllerBase
         _userRepository = userRepository;
     }
 
-    [HttpPost("/register")]
+    [HttpPost("Register")]
     public async Task<IActionResult> RegisterAction([FromServices] IObjectMapperService objectMapperService, UserRegistrationRequestDto userRequest,
         CancellationToken cancellationToken)
     {
@@ -55,7 +55,7 @@ public sealed class AuthenticationController : ControllerBase
         return CreatedAtAction(nameof(RegisterAction), response);
     }
 
-    [HttpPut("/account/activate/{tokenString}")]
+    [HttpPut("Account/Activate/{tokenString}")]
     public async Task<IActionResult> ActivateAction(string tokenString, CancellationToken cancellationToken)
     {
         RegistrationToken? registrationToken = await _registrationTokenRepository.GetByTokenStringAsync(tokenString, cancellationToken);
@@ -87,13 +87,16 @@ public sealed class AuthenticationController : ControllerBase
 
         await _authService.ActivateUserAccountAsync(user!, registrationToken, cancellationToken);
 
-        return Ok();
+        Response response = new()
+        {
+            Message = "auth_controller_activate_action_success"
+        };
+
+        return Ok(response);
     }
 
-    [HttpPost("/login")]
-    public async Task<IActionResult> LoginAction(
-        UserLoginRequestDto loginData,
-        CancellationToken cancellationToken)
+    [HttpPost("Login")]
+    public async Task<IActionResult> LoginAction(UserLoginRequestDto loginData, CancellationToken cancellationToken)
     {
         Response errorResponse = new();
         
@@ -134,7 +137,7 @@ public sealed class AuthenticationController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("/verifyLogin")]
+    [HttpPost("VerifyLogin")]
     public async Task<IActionResult> AuthenticateLoginAction(
         [FromServices] IVerificationCodeRepository verificationCodeRepository, AuthLoginDataDto authLoginData,
         CancellationToken cancellationToken)
@@ -162,7 +165,7 @@ public sealed class AuthenticationController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("/resetPassword")]
+    [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPasswordAction([FromBody] string email, CancellationToken cancellationToken)
     {
         Response response = new();

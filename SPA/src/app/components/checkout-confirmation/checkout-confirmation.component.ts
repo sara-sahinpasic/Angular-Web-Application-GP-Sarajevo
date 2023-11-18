@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
-import { CheckoutModel } from 'src/app/models/checkout/CheckoutModel';
-import { CheckoutService } from 'src/app/services/checkout/checkout.service';
-import { LocalizationService } from 'src/app/services/localization/localization.service';
-import { ToastMessageService } from 'src/app/services/toast/toast-message.service';
-import { UserService } from 'src/app/services/user/user.service';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { tap } from "rxjs";
+import { CheckoutModel } from "src/app/models/checkout/checkoutModel";
+import { UserProfileModel } from "src/app/models/user/userProfileModel";
+import { CheckoutService } from "src/app/services/checkout/checkout.service";
+import { LocalizationService } from "src/app/services/localization/localization.service";
+import { ToastMessageService } from "src/app/services/toast/toast-message.service";
+import { UserService } from "src/app/services/user/user.service";
+
 
 @Component({
   selector: 'app-checkout-confirmation',
@@ -16,7 +17,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class CheckoutConfirmationComponent implements OnInit {
   protected userDiscount: number = 0;
   protected checkoutModel: CheckoutModel = this.checkoutService.getCheckoutModel()!;
-  protected user?: UserProfileModel;
+  protected user: UserProfileModel = {} as UserProfileModel;
 
   constructor(
     private checkoutService: CheckoutService,
@@ -25,14 +26,14 @@ export class CheckoutConfirmationComponent implements OnInit {
     private router: Router,
     protected localizationService: LocalizationService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (!this.checkoutService.isCheckoutModelValid()) {
-      this.router.navigateByUrl("/checkout");
-      this.toastMessageService.pushErrorMessage("Invalid data was supplied. Please, check your purchase again.");
+      this.toastMessageService.pushErrorMessage('Invalid data was supplied. Please, check your purchase again.');
+      this.router.navigateByUrl('/checkout');
     }
 
     this.userService.user$.pipe(
-      tap((user?: UserProfileModel) => this.user = user)
+      tap((user?: UserProfileModel) => this.user = user!)
     )
     .subscribe();
 
@@ -41,7 +42,7 @@ export class CheckoutConfirmationComponent implements OnInit {
 
   protected confirmPurchase() {
     this.checkoutService.checkout()
-      .subscribe(() => this.router.navigateByUrl(""));
+      .subscribe(() => this.router.navigateByUrl(''));
   }
 
   private getDiscount() {

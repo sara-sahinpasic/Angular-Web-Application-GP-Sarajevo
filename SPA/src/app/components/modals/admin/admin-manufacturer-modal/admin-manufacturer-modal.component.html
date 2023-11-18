@@ -1,0 +1,46 @@
+<div class="d-flex flex-column w-100 admin-container">
+  <div class="manufacturer-form-container">
+    <form [formGroup]="registrationForm" class="mb-3">
+      <div class="form-group">
+        <label for="name">Naziv novog proizvođača vozila:</label>
+        <input type="text" class="form-control-admin mt-1" id="name" formControlName="name" required name="name"
+          [(ngModel)]="manufacturerModel.name" formControlName="name"
+          [class.is-invalid]="registrationForm.get('name')?.invalid && (registrationForm.get('name')?.dirty
+            || registrationForm.get('name')?.touched)" />
+        <div class="invalid-feedback">
+          Obavezan unos!
+        </div>
+      </div>
+    </form>
+    <div class="table-container mb-3">
+      <table class="table table-striped">
+        <tr>
+          <th>Postojeći proizvođači vozila:</th>
+        </tr>
+        <tbody>
+          <tr *ngFor="let m of this.manufactures | paginate:{
+                itemsPerPage: paginationModel.pageSize,
+                currentPage: paginationModel.page,
+                totalItems: paginationModel.totalCount
+              }; let i=index">
+            <td>{{m.name}}</td>
+            <td>
+              <button type="button" class="btn btn-link btn-operation" (click)="deleteManufacturer(m)">
+                <fa-icon [icon]="deleteIcon"></fa-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination-container d-flex justify-content-center">
+      <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+      </pagination-controls>
+    </div>
+  </div>
+  <hr />
+  <button type="button" class="btn btn-dark btn-sm" (click)="addNewManufacturer()"
+    style="font-weight: bolder;">
+    Evidentiraj novog proizvođača vozila
+  </button>
+</div>

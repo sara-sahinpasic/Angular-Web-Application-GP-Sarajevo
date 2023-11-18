@@ -1,54 +1,61 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { DelayCreateModel } from 'src/app/models/Driver/Delay/DelayCreateModel';
-import { RouteDto } from 'src/app/models/Driver/Delay/RouteDto';
-import { DriverDelayService } from 'src/app/services/driver/driver.service';
+import { DelayCreateModel } from 'src/app/models/driver/delay/delayCreateModel';
+import { RouteDto } from 'src/app/models/driver/delay/routeDto';
+import { DriverService } from 'src/app/services/driver/driver.service';
+import { RouteService } from 'src/app/services/routes/route.service';
+
 @Component({
   selector: 'app-driver-delay-page',
   templateUrl: './driver-delay-page.component.html',
   styleUrls: ['./driver-delay-page.component.scss'],
 })
 export class DriverDelayPageComponent implements OnInit {
+  protected delayForm: FormGroup = {} as FormGroup;
+  protected delayModel: DelayCreateModel = {} as DelayCreateModel;
+  protected routes: RouteDto[] = [];
+
   constructor(
-    protected driverService: DriverDelayService,
+    private driverService: DriverService,
+    private routeService: RouteService,
     private formBuilder: FormBuilder
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getAllRoutes();
-    this.initForm();
+    this.initializeForm();
   }
-  registrationForm!: FormGroup;
 
-  protected delayModel: DelayCreateModel = {};
-  protected routes: Array<RouteDto> = [];
+  protected addDelay() {
+    this.delayForm.markAllAsTouched();
 
-  addDelay() {
-    this.registrationForm.markAllAsTouched();
-    if (this.registrationForm.valid) {
-      this.driverService.addDelay(this.delayModel).subscribe(() => {
-        setTimeout(function () {
-          window.location.reload();
-        }, 3000);
-      });
+    if (this.delayForm.valid) {
+      this.driverService.addDelay(this.delayModel)
+      .subscribe(this.reloadPage);
     }
   }
 
-  getAllRoutes() {
-    this.driverService
+  private reloadPage() {
+    setTimeout(function () {
+      window.location.reload();
+    }, 1500);
+  }
+
+  private getAllRoutes() {
+    this.routeService
       .getAllRoutes()
       .pipe(
-        tap((response: DataResponse<RouteDto[]>) => {
-          this.routes = response.data;
-          this.delayModel.routeId = response.data[0].id;
+        tap((response: RouteDto[]) => {
+          this.routes = response;
+          this.delayModel.routeId = response[0].id;
         })
       )
       .subscribe();
   }
-  initForm() {
-    this.registrationForm = this.formBuilder.group(
+
+  private initializeForm() {
+    this.delayForm = this.formBuilder.group(
       {
         reason: ['', Validators.required],
         delayAmount: ['', Validators.required],

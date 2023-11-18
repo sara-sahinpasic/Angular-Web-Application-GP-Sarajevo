@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { ManufacturerDto } from 'src/app/models/Admin/Vehicle/ManufacturerDto';
-import { VehicleDto, VehicleListDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
-import { VehicleTypeDto } from 'src/app/models/Admin/Vehicle/VehicleTypeDto';
-import { DataResponse } from 'src/app/models/DataResponse';
+import { ManufacturerDto } from 'src/app/models/admin/vehicle/manufacturerDto';
+import { VehicleDto, VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
+import { VehicleTypeDto } from 'src/app/models/admin/vehicle/vehicleTypeDto';
+import { DataResponse } from 'src/app/models/dataResponse';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

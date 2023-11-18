@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DriverDelayService } from './driver.service';
+import { DriverService } from './driver.service';
 
 describe('DriverDelayService', () => {
-  let service: DriverDelayService;
+  let service: DriverService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DriverDelayService);
+    service = TestBed.inject(DriverService);
   });
 
   it('should be created', () => {

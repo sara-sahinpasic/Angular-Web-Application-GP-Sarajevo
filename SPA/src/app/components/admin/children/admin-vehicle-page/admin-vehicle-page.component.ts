@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { InvalidArgumentException } from 'src/app/exceptions/InvalidArgumentException';
-import { VehicleListDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { InvalidArgumentException } from 'src/app/exceptions/invalidArgumentException';
+import { VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
+import { Pagination } from 'src/app/models/pagination/pagination';
 import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 
@@ -33,21 +33,21 @@ export class AdminVehiclePageComponent {
       .subscribe();
   }
 
-  loadVehicles(data: VehicleListDto[]) {
+  private loadVehicles(data: VehicleListDto[]) {
     this.vehicleList = data;
     this.filteredVehicleList = data;
   }
 
-  onPageChange(event) {
+  protected onPageChange(event) {
     this.paginationModel.page = event;
   }
 
-  showVehicleEditModal(vehicle: VehicleListDto) {
+  protected showVehicleEditModal(vehicle: VehicleListDto) {
     this.modalService.data = vehicle;
     this.modalService.adminShowVehiclesModal(vehicle.registrationNumber);
   }
 
-  deleteVehicle(vehicle: VehicleListDto) {
+  protected deleteVehicle(vehicle: VehicleListDto) {
     if (!vehicle.id) {
       throw new InvalidArgumentException(['vehicle.id'])
     }
@@ -62,7 +62,7 @@ export class AdminVehiclePageComponent {
     }, 1500);
   }
 
-  findByRegistrationNumber(event: KeyboardEvent) {
+  protected findByRegistrationNumber(event: KeyboardEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
 
     if (!target.value) {
@@ -73,7 +73,7 @@ export class AdminVehiclePageComponent {
     this.filteredVehicleList = this.vehicleList.filter(vehicle => vehicle.registrationNumber!.toLowerCase().indexOf(target.value.toLowerCase()) > -1);
   }
 
-  resetFilter() {
+  private resetFilter() {
     this.filteredVehicleList = this.vehicleList;
   }
 }

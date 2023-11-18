@@ -10,9 +10,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit {
-
-  @ViewChild("email") resetPasswordInput?: ElementRef<HTMLInputElement>;
-  protected locale!: string | null;
+  @ViewChild('email') resetPasswordInput: ElementRef<HTMLInputElement> = {} as ElementRef<HTMLInputElement>;
   protected isEmailValid: boolean | undefined = undefined;
   protected isResetPasswordRequestSent: boolean = false;
   protected formGroup!: FormGroup;
@@ -20,27 +18,25 @@ export class ResetPasswordComponent implements OnInit {
   constructor(private userService: UserService, private formBuilder: FormBuilder, protected localizationService: LocalizationService) { }
 
   ngOnInit() {
-    this.initializeValidators();
+    this.initializeForm();
     this.userService.isResetPasswordRequestSent$.pipe(
       tap((val: boolean) => this.isResetPasswordRequestSent = val)
-    )
+      )
       .subscribe();
-
-    this.locale = this.localizationService.getLocale();
   }
 
-  sendResetPasswordRequest() {
+  protected sendResetPasswordRequest() {
     this.formGroup.markAllAsTouched();
 
     if (this.formGroup.invalid) {
       return;
     }
 
-    const email: string = this.formGroup.get("email")!.value;
+    const email: string = this.formGroup.get('email')!.value;
     this.userService.resetPassword(email).subscribe();
   }
 
-  private initializeValidators() {
+  private initializeForm() {
     this.formGroup = this.formBuilder.group({
       email: ["", Validators.compose([Validators.pattern(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/), Validators.required])]
     })

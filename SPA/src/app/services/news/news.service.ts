@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { NewsRequestDto, NewsResponseDto } from 'src/app/models/News/NewsDto';
+import { DataResponse } from 'src/app/models/dataResponse';
+import { NewsRequestDto, NewsResponseDto } from 'src/app/models/news/newsDto';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -13,26 +13,41 @@ export class NewsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getNewsById(id: string) {
-    return this.httpClient.get(`${this.apiUrl}News/GetNewsById?id=${id}`);
+  public getNewsById(id: string) {
+    return this.httpClient.get(`${this.apiUrl}News/Get/${id}`);
   }
 
-  getAllNews(includeCreatedBy: boolean = false): Observable<NewsResponseDto[]> {
-    return this.httpClient.get<DataResponse<NewsResponseDto[]>>(`${this.apiUrl}News/All?includeCreatedBy=${includeCreatedBy}`)
+  public getNewsPageCount(pageSize: number): Observable<number> {
+    return this.httpClient.get<DataResponse<number>>(
+      `${this.apiUrl}News/PagesCount?pageSize=${pageSize}`
+    )
+    .pipe(
+      map((response: DataResponse<number>) => response.data)
+    );
+  }
+
+  public getAllNews(page: number | null = null, pageSize: number | null = null): Observable<NewsResponseDto[]> {
+    let queryString: string = '';
+
+    if (page && pageSize) {
+      queryString = `?page=${page}&pageSize=${pageSize}`;
+    }
+
+    return this.httpClient.get<DataResponse<NewsResponseDto[]>>(`${this.apiUrl}News/All${queryString}`)
       .pipe(
         map((response: DataResponse<NewsResponseDto[]>) => response.data)
       );
   }
 
-  publishNews(newsModel: NewsRequestDto): Observable<unknown> {
-    return this.httpClient.post(`${this.apiUrl}News`, newsModel);
+  public publishNews(newsModel: NewsRequestDto): Observable<unknown> {
+    return this.httpClient.post(`${this.apiUrl}Admin/News/Publish`, newsModel);
   }
 
-  updateNews(news: NewsRequestDto): Observable<unknown> {
+  public updateNews(news: NewsRequestDto): Observable<unknown> {
     return this.httpClient.put(`${this.apiUrl}Admin/News/Edit/${news.id}`, news);
   }
 
-  deleteNews(newsId: string): Observable<unknown> {
+  public deleteNews(newsId: string): Observable<unknown> {
     return this.httpClient.delete(`${this.apiUrl}Admin/News/Delete/${newsId}`);
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { TicketModel } from 'src/app/models/Admin/Ticket/TicketModel';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { TicketModel } from 'src/app/models/admin/ticket/ticketModel';
+import { DataResponse } from 'src/app/models/dataResponse';
+import { Pagination } from 'src/app/models/pagination/pagination';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
 
@@ -35,21 +35,21 @@ export class AdminTicketsPageComponent implements OnInit{
     .subscribe();
   }
 
-  loadTickets(response: DataResponse<TicketModel[]>) {
+  private loadTickets(response: DataResponse<TicketModel[]>) {
     this.tickets = response.data;
     this.filteredTickets = response.data;
   }
 
-  onPageChange(event) {
+  protected onPageChange(event) {
     this.paginationModel.page = event;
   }
 
-  showTicketEditModal(ticket: TicketModel) {
+  protected showTicketEditModal(ticket: TicketModel) {
     this.modalService.data = ticket;
     this.modalService.adminShowTicketsModal(ticket.name);
   }
 
-  deleteTicket(ticket: TicketModel) {
+  protected deleteTicket(ticket: TicketModel) {
     this.ticketService.deleteTicket(ticket.id)
       .subscribe(this.reloadPage);
   }
@@ -60,7 +60,7 @@ export class AdminTicketsPageComponent implements OnInit{
     }, 1500);
   }
 
-  findByTicketName(event: KeyboardEvent) {
+  protected findByTicketName(event: KeyboardEvent) {
     const target: HTMLInputElement = event.target as HTMLInputElement;
 
     if (!target.value) {
@@ -71,7 +71,7 @@ export class AdminTicketsPageComponent implements OnInit{
     this.filteredTickets = this.tickets.filter(ticket => ticket.name.toLowerCase().indexOf(target.value.toLowerCase()) > -1);
   }
 
-  resetFilter() {
+  private resetFilter() {
     this.filteredTickets = this.tickets;
   }
 }

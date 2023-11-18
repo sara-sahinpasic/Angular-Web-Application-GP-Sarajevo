@@ -1,0 +1,30 @@
+<div class="modal fade" id="base-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="staticBackdropLabel">{{ modalService.getModalTitle() }}</h3>
+        <button #closeModalBtn type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="modalService.closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <app-request-modal *ngIf="modalService.showRequestModalState"></app-request-modal>
+        <app-review-modal *ngIf="modalService.showReviewModalState"></app-review-modal>
+        <app-news-modal *ngIf="modalService.showNewsModalState" [newsId]="modalService.data"></app-news-modal>
+        <app-admin-update-user-modal *ngIf="modalService.showAdminUpdateUserModalState"
+          [userId]="modalService.data"></app-admin-update-user-modal>
+        <app-admin-ticket-modal [ticket]="modalService.data" *ngIf="modalService.showAdminTicketsModalState"></app-admin-ticket-modal>
+        <app-admin-news-modal [news]="modalService.data" *ngIf="modalService.showAdminNewsModalState"></app-admin-news-modal>
+        <app-admin-route-modal *ngIf="modalService.showRouteCreationModalState"></app-admin-route-modal>
+        <app-admin-route-edit-modal *ngIf="modalService.showRouteEditModalState" [routeId]="modalService.data"></app-admin-route-edit-modal>
+        <app-admin-vehicle-modal [vehicle]="modalService.data" *ngIf="modalService.showAdminVehiclesModalState"></app-admin-vehicle-modal>
+        <app-admin-holiday-modal [holidayToEdit]="modalService.data" *ngIf="modalService.showHolidayModalState"></app-admin-holiday-modal>
+        <app-admin-station-modal *ngIf="modalService.showAdminStationsModalState"></app-admin-station-modal>
+        <app-admin-user-request-modal *ngIf="modalService.showUserRequestModalState" [userId]="modalService.data"></app-admin-user-request-modal>
+        <app-admin-user-modal *ngIf="modalService.showAdminUsersModalState"></app-admin-user-modal>
+        <app-admin-manufacturer-modal *ngIf="modalService.showAdminManufacturerModalState"></app-admin-manufacturer-modal>
+        <app-admin-vehicle-type-modal *ngIf="modalService.showAdminVehicleTypeModalState"></app-admin-vehicle-type-modal>
+      </div>
+    </div>
+  </div>
+</div>

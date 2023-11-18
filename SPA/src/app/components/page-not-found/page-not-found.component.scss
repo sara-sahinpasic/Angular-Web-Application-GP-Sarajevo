@@ -1,12 +1,14 @@
-h1,
-h3 {
+h1, h3 {
   text-align: center;
   font-weight: bold;
   color: red;
 }
 
-p,
-a {
+p, a {
   font-weight: bolder;
   font-size: medium;
+}
+
+.form-container {
+  border: 7px solid red;
 }

@@ -6,10 +6,10 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { UserGetDto } from 'src/app/models/Admin/User/UserGetDto';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
-import { AdminUserCreateService } from 'src/app/services/admin/user/admin-user-create.service';
+import { UserGetDto } from 'src/app/models/admin/user/userGetDto';
+import { Pagination } from 'src/app/models/pagination/pagination';
+import { UserProfileModel } from 'src/app/models/user/userProfileModel';
+import { AdminUserService } from 'src/app/services/admin/user/admin-user-service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { ReportService } from 'src/app/services/report/report.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -25,23 +25,23 @@ export class AdminUsersPageComponent implements OnInit {
   protected deleteIcon = faTrash;
   protected requestIcon = faFile
   protected purchaseHistoryIcon = faFilePdf;
-  protected usersData: Array<UserGetDto> = [];
-  protected usersDataTemp: Array<UserGetDto> = [];
+  protected usersData: UserGetDto[] = [];
+  protected usersDataTemp: UserGetDto[] = [];
 
   constructor(
-    private _adminUserService: AdminUserCreateService,
-    private _userService: UserService,
+    private adminUserService: AdminUserService,
+    private userService: UserService,
     private reportService: ReportService,
-    private _modalService: ModalService
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
-    this._adminUserService.getAllUsers().subscribe((x: any) => {
+    this.adminUserService.getAllUsers().subscribe((x: any) => {
       this.usersData = x.data;
       this.usersDataTemp = this.usersData;
     });
 
-    this._userService.user$
+    this.userService.user$
       .pipe(tap((user?: UserProfileModel) => (this.userId = user!.id!)))
       .subscribe();
   }
@@ -50,7 +50,7 @@ export class AdminUsersPageComponent implements OnInit {
     this.usersData = this.usersDataTemp;
   }
 
-  protected findEmail(event: KeyboardEvent) {
+  protected findByEmail(event: KeyboardEvent) {
     const eventTarget: HTMLInputElement = event.target as HTMLInputElement;
     const value: string = eventTarget.value;
 
@@ -66,21 +66,21 @@ export class AdminUsersPageComponent implements OnInit {
   }
 
   protected showUpdateUserModal(user: UserGetDto) {
-    this._modalService.data = user.id;
-    this._modalService.adminShowUpdateUserModal();
+    this.modalService.data = user.id;
+    this.modalService.adminShowUpdateUserModal();
   }
 
   protected deleteUser(id: any) {
     const answer: boolean = confirm('Da li želite obrisati račun?');
 
     if (answer == true) {
-      this._userService.deleteUser(id, null).subscribe(this.reloadPage);
+      this.userService.deleteUser(id, null).subscribe(this.reloadPage);
     }
   }
 
   protected showRequestModal(userId: string) {
-    this._modalService.data = userId;
-    this._modalService.adminShowUserRequestModal();
+    this.modalService.data = userId;
+    this.modalService.adminShowUserRequestModal();
   }
 
   private reloadPage() {

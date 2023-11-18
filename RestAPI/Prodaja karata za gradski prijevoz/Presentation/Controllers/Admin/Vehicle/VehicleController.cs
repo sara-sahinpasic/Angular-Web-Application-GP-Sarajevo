@@ -61,6 +61,7 @@ namespace Presentation.Controllers.Admin.Vehicles
             return CreatedAtAction(nameof(CreateVehicle), response);
         }
 
+        [AllowAnonymous]
         [HttpGet("All")]
         public async Task<IActionResult> GetVehicleList(CancellationToken cancellationToken)
         {

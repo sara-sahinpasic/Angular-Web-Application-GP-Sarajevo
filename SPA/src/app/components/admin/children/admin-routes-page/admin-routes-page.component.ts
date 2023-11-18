@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
-import { RouteListResponse } from 'src/app/models/routes/RouteResponse';
+import { Pagination } from 'src/app/models/pagination/pagination';
+import { RouteListResponse } from 'src/app/models/routes/routeResponse';
 import { ModalService } from 'src/app/services/modal/modal.service';
 import { RouteService } from 'src/app/services/routes/route.service';
 
@@ -11,8 +11,7 @@ import { RouteService } from 'src/app/services/routes/route.service';
   templateUrl: './admin-routes-page.component.html',
   styleUrls: ['./admin-routes-page.component.scss']
 })
-export class AdminRoutesPageComponent implements OnInit{
-
+export class AdminRoutesPageComponent implements OnInit {
   public paginationModel: Pagination = {
     pageSize: 5,
     page: 1,
@@ -71,13 +70,13 @@ export class AdminRoutesPageComponent implements OnInit{
   }
 
   protected deactivateRoute(route: RouteListResponse) {
-    const isDeactivationConfirmed: boolean = confirm("Ovo će deaktivirati odabranu rutu. Ako želite obrisati rutu, obrišite stanicu koja je dio rute. Da li želite nastaviti?");
+    const isDeactivationConfirmed: boolean = confirm('Da li želite obrisati rutu?');
 
     if (!isDeactivationConfirmed) {
       return;
     }
 
-    this.routeService.deactivateRoute(route)
+    this.routeService.deleteRoute(route)
       .subscribe(this.reloadPage);
   }
 
@@ -92,7 +91,7 @@ export class AdminRoutesPageComponent implements OnInit{
     this.modalService.adminShowEditRouteModal();
   }
 
-  onPageChange(event) {
+  protected onPageChange(event) {
     this.paginationModel.page = event;
   }
 }

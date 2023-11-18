@@ -1,42 +1,40 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserRoleDto } from 'src/app/models/Admin/User/UserRoleDto';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { Observable, tap } from 'rxjs';
-import { UserGetDto } from 'src/app/models/Admin/User/UserGetDto';
-import { UserCreateModel } from 'src/app/models/Admin/User/UserCreateModel';
+import { UserRoleDto } from 'src/app/models/admin/user/userRoleDto';
+import { DataResponse } from 'src/app/models/dataResponse';
+import { Observable } from 'rxjs';
+import { UserGetDto } from 'src/app/models/admin/user/userGetDto';
+import { UserCreateModel } from 'src/app/models/admin/user/userCreateModel';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminUserService {
-  constructor(protected httpClient: HttpClient) {}
-
   private apiUrl: string = environment.apiUrl;
 
-  getAllRoles(): Observable<DataResponse<UserRoleDto[]>> {
+  constructor(protected httpClient: HttpClient) {}
+
+  public getAllRoles(): Observable<DataResponse<UserRoleDto[]>> {
     return this.httpClient.get<DataResponse<UserRoleDto[]>>(
-      this.apiUrl + 'Roles'
+      this.apiUrl + 'Admin/User/Roles/All'
     );
   }
 
-  createUser(
-    user: UserCreateModel
-  ): Observable<DataResponse<UserCreateModel[]>> {
+  public createUser(user: UserCreateModel): Observable<DataResponse<UserCreateModel[]>> {
     return this.httpClient.post<DataResponse<UserCreateModel[]>>(
-      this.apiUrl + 'CreateUser',
+      this.apiUrl + 'Admin/User/Create',
       user
     );
   }
 
-  getAllUsers(): Observable<DataResponse<UserGetDto[]>> {
+  public getAllUsers(): Observable<DataResponse<UserGetDto[]>> {
     return this.httpClient.get<DataResponse<UserGetDto[]>>(
-      this.apiUrl + 'Users'
+      this.apiUrl + 'Admin/User/All'
     );
   }
 
-  getUserById(id: string) {
-    return this.httpClient.get(`${this.apiUrl}UserById?id=${id}`);
+  public getUserById(id: string) {
+    return this.httpClient.get(`${this.apiUrl}Admin/User/Get/${id}`);
   }
 }

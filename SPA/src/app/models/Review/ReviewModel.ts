@@ -1,6 +1,6 @@
 export interface ReviewModel {
-  title?: string;
-  description?: string;
-  score?: number;
-  userId?: string;
+  title: string;
+  description: string;
+  score: number;
+  userId: string;
 }

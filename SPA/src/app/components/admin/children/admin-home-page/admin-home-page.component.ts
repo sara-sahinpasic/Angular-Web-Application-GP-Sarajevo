@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartType, Row } from 'angular-google-charts';
+import { Row, ChartType } from 'angular-google-charts';
 import { tap } from 'rxjs';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
-import { TicketReportModel } from 'src/app/models/report/TicketReportModel';
-import { TicketReportRowModel } from 'src/app/models/report/TicketReportRowModel';
+import { TicketReportModel } from 'src/app/models/report/ticketReportModel';
+import { TicketReportRowModel } from 'src/app/models/report/ticketReportRowModel';
+import { UserProfileModel } from 'src/app/models/user/userProfileModel';
 import { ReportService } from 'src/app/services/report/report.service';
 import { UserService } from 'src/app/services/user/user.service';
+
 
 @Component({
   selector: 'app-admin-home-page',
@@ -13,16 +14,16 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./admin-home-page.component.scss'],
 })
 export class AdminHomePageComponent implements OnInit {
-  protected user!: UserProfileModel;
+  protected user: UserProfileModel = {} as UserProfileModel;
   protected totalSum: number = 0;
   protected dailyChartData: Row[] = [];
-  protected columns: any = ["Tip karte", "Prodana količina", { role: "style" }];
+  protected columns: any = ['Tip karte', 'Prodana količina', { role: 'style' }];
   protected chartType: ChartType = ChartType.ColumnChart;
   protected ticketTypes: string[] = [];
   protected chartOptions: any = {
-    backgroundColor: "transparent",
-    role: "style",
-    legend: "none",
+    backgroundColor: 'transparent',
+    role: 'style',
+    legend: 'none',
     hAxis: {
       title: this.columns[0],
       textStyle: {
@@ -37,11 +38,11 @@ export class AdminHomePageComponent implements OnInit {
     },
     animation: {
       duration: 500,
-      easing: "inAndOut",
+      easing: 'inAndOut',
       startup: true
     }
   };
-  private chartColors: string[] = ["blue", "gold", "purple", "red"];
+  private chartColors: string[] = ['blue', 'gold', 'purple', 'red'];
 
   constructor(private userService: UserService, private reportService: ReportService) {}
 
@@ -51,16 +52,20 @@ export class AdminHomePageComponent implements OnInit {
     )
     .subscribe();
 
+    this.getDashboardStatistics();
+  }
+
+  private getDashboardStatistics() {
     this.reportService.getDashboardStatistics()
-    .pipe(
-      tap(this.fillDailyChartData.bind(this))
-    )
-    .subscribe();
+      .pipe(
+        tap(this.fillDailyChartData.bind(this))
+      )
+      .subscribe();
   }
 
   private fillDailyChartData(reportModel: TicketReportModel) {
     reportModel.data.forEach((reportRow: TicketReportRowModel, i: number) => {
-      const color: string = i < this.chartColors.length ? this.chartColors[i] : "";
+      const color: string = i < this.chartColors.length ? this.chartColors[i] : '';
       this.dailyChartData.push([reportRow.cardType, reportRow.quantitySold, color]);
     });
 

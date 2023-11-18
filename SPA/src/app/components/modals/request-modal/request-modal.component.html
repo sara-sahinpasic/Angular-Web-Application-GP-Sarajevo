@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="input-group-prepend col">
+    <select class="form-select" [(ngModel)]="requestData.userStatusId">
+      <option *ngFor="let userStatus of userStatuses; let i=index" [value]="userStatus.id">
+        {{ localizationService.localize("request_modal_monthly_card_text") }} - {{userStatus.name}}
+      </option>
+    </select>
+  </div>
+</div>
+
+<div class="row mt-4 mb-3">
+  <div class="col">
+    <div class="d-flex flex-column">
+      <label>{{ localizationService.localize("request_modal_upload_file_label") }}</label>
+      <input class="form-control" type="file" accept="image/jpeg,image/jpg,image/png,application/pdf"
+        (change)="handleFileInput($any($event.target).files)" [disabled]="working">
+    </div>
+  </div>
+</div>
+<div class="row mt-3 mb-3" *ngIf="working">
+  <div class="col">
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploadProgress + '%' }"
+        [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100">{{ uploadProgress }}%</div>
+    </div>
+  </div>
+</div>
+
+<button class="primary" (click)="sendRequestButton()">
+  {{ localizationService.localize("request_modal_send_request_btn_text") }}
+</button>

@@ -1,14 +1,14 @@
 <div class="container">
   <div class="form-container">
     <h1 class="text-center mb-1">{{ localizationService.localize("registration_title") }}</h1>
-    <div *ngIf="!registrationSent" class="registration-container overflow-auto">
+    <div *ngIf="!isRegistrationSent" class="registration-container overflow-auto">
       <div class="row m-0">
         <div class="col">
           <form [formGroup]="registrationForm">
             <div class="form-group">
               <label for="firstName">{{ localizationService.localize("registration_name_field_label") }}</label>
               <div class="input-group">
-                <input id="firstName" type="text" placeholder="" required name="firstName"
+                <input id="firstName" type="text" required name="firstName"
                   [(ngModel)]="userRequest.firstName" class="form-control" formControlName="firstName" [class.is-valid]="
                   registrationForm.get('firstName')?.valid && (registrationForm.get('firstName')?.dirty
                   || registrationForm.get('firstName')?.touched)" [class.is-invalid]="
@@ -23,7 +23,7 @@
             <div class="form-group">
               <label for="lastName">{{ localizationService.localize("registration_surname_field_label") }}</label>
               <div class="input-group">
-                <input id="lastName" type="text" placeholder="" required name="lastName"
+                <input id="lastName" type="text" required name="lastName"
                   [(ngModel)]="userRequest.lastName" class="form-control" formControlName="lastName" [class.is-valid]="
                   registrationForm.get('lastName')?.valid && (registrationForm.get('lastName')?.dirty
                   || registrationForm.get('lastName')?.touched)" [class.is-invalid]="
@@ -38,7 +38,7 @@
             <div class="form-group">
               <label for="dateOfBirth">{{ localizationService.localize("registration_date_of_birth_label") }}</label>
               <div class="input-group">
-                <input id="dateOfBirth" type="date" placeholder="" required name="dateOfBirth"
+                <input id="dateOfBirth" type="date" required name="dateOfBirth"
                   [(ngModel)]="userRequest.dateOfBirth" class="form-control" formControlName="dateOfBirth"
                   [class.is-valid]="
                   registrationForm.get('dateOfBirth')?.valid && (registrationForm.get('dateOfBirth')?.dirty
@@ -54,7 +54,7 @@
             <div class="form-group">
               <label for="phoneNumber">{{ localizationService.localize("registration_phone_number_label") }}</label>
               <div class="input-group">
-                <input id="phoneNumber" type="string" placeholder="" required name="phoneNumber"
+                <input id="phoneNumber" type="string" required name="phoneNumber"
                   [(ngModel)]="userRequest.phoneNumber" class="form-control" formControlName="phoneNumber"
                   [class.is-valid]="
                   registrationForm.get('phoneNumber')?.valid && (registrationForm.get('phoneNumber')?.dirty
@@ -70,7 +70,7 @@
             <div class="form-group">
               <label for="email">{{ localizationService.localize("registration_email_label") }}</label>
               <div class="input-group">
-                <input id="email" type="email" placeholder="" required name="email" [(ngModel)]="userRequest.email"
+                <input id="email" type="email" required name="email" [(ngModel)]="userRequest.email"
                   class="form-control" formControlName="email" [class.is-valid]="
                   registrationForm.get('email')?.valid && (registrationForm.get('email')?.dirty
                   || registrationForm.get('email')?.touched)" [class.is-invalid]="
@@ -85,7 +85,7 @@
             <div class="form-group">
               <label for="password">{{ localizationService.localize("registration_password_label") }}</label>
               <div class="input-group">
-                <input id="password" type="password" placeholder="" required name="password"
+                <input id="password" type="password" required name="password"
                   [(ngModel)]="userRequest.password" class="form-control" formControlName="password" [class.is-valid]="
                   registrationForm.get('password')?.valid && (registrationForm.get('password')?.dirty
                   || registrationForm.get('password')?.touched)" [class.is-invalid]="
@@ -97,11 +97,15 @@
               </div>
             </div>
           </form>
-          <button class="primary mt-2" (click)="registration()">{{ localizationService.localize("registration_register_btn_text") }}</button>
-          <button class="secondary mt-3" (click)="login()">{{ localizationService.localize("registration_login_btn_text") }}</button>
+          <button class="primary mt-2" (click)="register()">
+            {{ localizationService.localize("registration_register_btn_text") }}
+          </button>
+          <button class="secondary mt-3" (click)="login()">
+            {{ localizationService.localize("registration_login_btn_text") }}
+          </button>
         </div>
       </div>
     </div>
-    <h3 *ngIf="registrationSent">{{ localizationService.localize("registration_activation_email_text") }}</h3>
+    <h3 *ngIf="isRegistrationSent">{{ localizationService.localize("registration_activation_email_text") }}</h3>
   </div>
 </div>

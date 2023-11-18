@@ -1,0 +1,85 @@
+<form [formGroup]="vehicleForm">
+  <div class="form-group mb-3">
+    <label for="vehicleNumber">Broj vozila: </label>
+    <input id="vehicleNumber" class="form-control-admin mt-1" type="text" required name="vehicleNumber"
+      [(ngModel)]="vehicleModel.number" formControlName="vehicleNumber" [class.is-invalid]="
+      vehicleForm.get('vehicleNumber')?.invalid && (vehicleForm.get('vehicleNumber')?.dirty
+      || vehicleForm.get('vehicleNumber')?.touched)" />
+    <div class="invalid-feedback">
+      {{ "Obavezan unos!" }}
+    </div>
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="registrationNumber">Registracijska oznaka: </label>
+    <input id="registrationNumber" class="form-control-admin mt-1" type="text" required name="registrationNumber"
+      [(ngModel)]="vehicleModel.registrationNumber" formControlName="registrationNumber" [class.is-invalid]="
+      vehicleForm.get('registrationNumber')?.invalid && (vehicleForm.get('registrationNumber')?.dirty
+      || vehicleForm.get('registrationNumber')?.touched)" />
+    <div class="invalid-feedback">
+      {{ "Registracijske oznake moraju biti u formatu sxx-s-xxx. Npr. A32-K-323" }}
+    </div>
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="buildYear">Godina proizvodnje: </label>
+    <input id="buildYear" type="number" min="1980" max="2099" step="1" value="2016" class="form-control-admin mt-1"
+      placeholder="" required name="buildYear" [(ngModel)]="vehicleModel.buildYear" formControlName="buildYear"
+      [class.is-invalid]="vehicleForm.get('buildYear')?.invalid && (vehicleForm.get('buildYear')?.dirty
+      || vehicleForm.get('buildYear')?.touched)" />
+    <div class="invalid-feedback">
+      {{ "Obavezan unos!" }}
+    </div>
+  </div>
+
+  <div class="form-group mb-3">
+    <label for="color">Boja:</label>
+    <select class="form-control-admin mt-1" [(ngModel)]="vehicleModel.color" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let color of colors; let i=index">
+        {{color}}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group mb-3">
+    <label>Proizvođač: </label>
+    <select class="form-control-admin mt-1" [(ngModel)]="vehicleModel.manufacturerId" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let manufacturer of manufacturers; let i=index" [value]="manufacturer.id">
+        {{ manufacturer.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group mb-3">
+    <label>Tip vozila: </label>
+    <select class="form-control-admin mt-1" [(ngModel)]="vehicleModel.vehicleTypeId" [ngModelOptions]="{standalone: true}">
+      <option *ngFor="let vehicleType of vehicleTypes; let i=index" [value]="vehicleType.id">
+        {{ vehicleType.name }}
+      </option>
+    </select>
+  </div>
+
+  <button *ngIf="!vehicle" type="button" class="btn btn-dark admin-button" (click)="addVehicle()">
+    Kreiraj vozilo
+  </button>
+  <button *ngIf="vehicle" type="button" class="btn btn-dark admin-button" (click)="editVehicle()">
+    Edituj vozilo
+  </button>
+  <hr />
+
+  <div class="row">
+    <div class="col-6 text-left">
+      <div class="first">
+        <button type="button" class="btn btn-light" (click)="showVehicleTypeModal()" style="border: 1px solid black;">
+          Evidentiraj tip vozila</button>
+      </div>
+    </div>
+
+    <div class="col-6 text-right">
+      <div class="second">
+        <button type="button" class="btn btn-light" (click)="showManufacturerModal()" style="border: 1px solid black;">
+          Evidentiraj proizvođača</button>
+      </div>
+    </div>
+  </div>
+</form>

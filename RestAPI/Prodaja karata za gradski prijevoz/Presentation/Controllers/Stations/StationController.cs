@@ -23,7 +23,7 @@ public sealed class StationController : ControllerBase
         _unitOfWork = unitOfWork;
     }
 
-    [HttpGet("GetAll")]
+    [HttpGet("All")]
     public async Task<IActionResult> GetAllAction(CancellationToken cancellationToken)
     {
         IEnumerable<StationResponseDto> stations = await _stationRepository.GetAll()
@@ -44,7 +44,7 @@ public sealed class StationController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("GetRouted")]
+    [HttpGet("Get/Routed/{startStationId}")]
     public async Task<IActionResult> GetRoutedAction(Guid startStationId, CancellationToken cancellationToken)
     {
         IReadOnlyCollection<Station> stations = await _stationRepository.GetRoutedStationsAsync(startStationId, cancellationToken);

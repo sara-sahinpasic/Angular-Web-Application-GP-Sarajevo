@@ -12,7 +12,7 @@ namespace Presentation.Controllers.Error;
 [Route("/error")]
 public sealed class ErrorHandlingController : ControllerBase
 {
-    public ILogger<ErrorHandlingController> _logger { get; }
+    private ILogger<ErrorHandlingController> _logger { get; }
     private readonly ILogService _logService;
 
     public ErrorHandlingController(ILogger<ErrorHandlingController> logger, ILogService logService)

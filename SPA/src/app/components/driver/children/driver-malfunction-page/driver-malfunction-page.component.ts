@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { MalfunctionCreateModel } from 'src/app/models/Driver/Malfunction/MalfunctionCreateModel';
-import { VehicleMalfunctionModel } from 'src/app/models/Driver/Malfunction/VehicleMalfunctionModel';
-import { DriverDelayService } from 'src/app/services/driver/driver.service';
+import { VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
+import { MalfunctionCreateModel } from 'src/app/models/driver/malfunction/malfunctionCreateModel';
+import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { DriverService } from 'src/app/services/driver/driver.service';
 
 @Component({
   selector: 'app-driver-malfunction-page',
@@ -12,22 +12,25 @@ import { DriverDelayService } from 'src/app/services/driver/driver.service';
   styleUrls: ['./driver-malfunction-page.component.scss'],
 })
 export class DriverMalfunctionPageComponent implements OnInit {
-  constructor(
-    private formBuilder: FormBuilder,
-    protected driverService: DriverDelayService
-  ) {}
-  ngOnInit(): void {
-    this.initForm();
-    this.getAllVehicles();
-  }
-  registrationForm!: FormGroup;
+  protected malfunctionForm: FormGroup = {} as FormGroup;
   protected malfunctionModel: MalfunctionCreateModel = {
     dateOfMalufunction: new Date(),
   };
+  protected vehicles: VehicleListDto[] = [];
 
-  protected vehicles: Array<VehicleMalfunctionModel> = [];
-  initForm() {
-    this.registrationForm = this.formBuilder.group(
+  constructor(
+    private formBuilder: FormBuilder,
+    private driverService: DriverService,
+    private vehicleService: AdminVehicleService
+  ) {}
+
+  ngOnInit() {
+    this.initializeForm();
+    this.getAllVehicles();
+  }
+
+  private initializeForm() {
+    this.malfunctionForm = this.formBuilder.group(
       {
         description: ['', Validators.required],
       },
@@ -35,23 +38,27 @@ export class DriverMalfunctionPageComponent implements OnInit {
     );
   }
 
-  addMalfunction() {
-    this.registrationForm.markAllAsTouched();
-    if (this.registrationForm.valid) {
-      this.driverService.addMalfunction(this.malfunctionModel).subscribe(() => {
-        setTimeout(function () {
-          window.location.reload();
-        }, 3000);
-      });
+  protected addMalfunction() {
+    this.malfunctionForm.markAllAsTouched();
+    if (this.malfunctionForm.valid) {
+      this.driverService.addMalfunction(this.malfunctionModel)
+        .subscribe(this.reloadPage);
     }
   }
-  getAllVehicles() {
-    this.driverService
-      .getAllVehicles()
+
+  private reloadPage() {
+    setTimeout(function () {
+      window.location.reload();
+    }, 1500);
+  }
+
+  protected getAllVehicles() {
+    this.vehicleService
+      .getVehicleList()
       .pipe(
-        tap((response: DataResponse<VehicleMalfunctionModel[]>) => {
-          this.vehicles = response.data;
-          this.malfunctionModel.vehicleId = response.data[0].id;
+        tap((response: VehicleListDto[]) => {
+          this.vehicles = response;
+          this.malfunctionModel.vehicleId = response[0].id;
         })
       )
       .subscribe();

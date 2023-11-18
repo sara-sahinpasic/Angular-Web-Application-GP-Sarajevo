@@ -10,10 +10,10 @@ import {
 } from '@angular/common/http';
 import { Observable, finalize, tap } from 'rxjs';
 import { ToastMessageService } from '../services/toast/toast-message.service';
-import { ToastMessage } from '../models/ToastMessage';
-import { ToastType } from '../enums/ToastType';
-import { DataResponse } from '../models/DataResponse';
+import { ToastType } from '../enums/toastType';
+import { DataResponse } from '../models/dataResponse';
 import { LocalizationService } from '../services/localization/localization.service';
+import { ToastMessage } from '../models/toastMessage';
 
 @Injectable()
 export class HttpInterceptorInterceptor implements HttpInterceptor {

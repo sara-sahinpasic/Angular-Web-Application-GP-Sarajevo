@@ -9,7 +9,7 @@ using Presentation.DTO;
 namespace Presentation.Controllers.Report;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("[controller]")]
 public sealed class ReportController : ControllerBase
 {
 	private readonly IReportService _reportService;
@@ -20,7 +20,7 @@ public sealed class ReportController : ControllerBase
     }
 
     [Authorize(Policy = AuthorizationPolicies.AdminUserPolicyName)]
-    [HttpGet]
+    [HttpGet("PurchaseHistory/{userId}")]
     public async Task<IActionResult> DownloadPurchaseHistoryReport(Guid userId, CancellationToken cancellationToken)
     {
         byte[] pdfContents = await _reportService.GetPurchaseHistoryReportAsync(userId, cancellationToken: cancellationToken);

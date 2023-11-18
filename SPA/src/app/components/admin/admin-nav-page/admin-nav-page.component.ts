@@ -9,22 +9,22 @@ import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router'
 export class AdminNavPageComponent implements OnInit {
 
   protected routeHighlights: Map<string, boolean> = new Map<string, boolean>([
-    ["users", false],
-    ["company", false],
-    ["report", false],
-    ["home", false],
-    ["tickets", false],
-    ["news", false],
-    ["routes", false],
-    ["vehicles", false],
-    ["holidays", false]
+    ['users', false],
+    ['company', false],
+    ['report', false],
+    ['home', false],
+    ['tickets', false],
+    ['news', false],
+    ['routes', false],
+    ['vehicles', false],
+    ['holidays', false]
   ]);
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   public async ngOnInit() {
     if (this.shouldRedirectToAdminHome()) {
-      await this.navigate("home");
+      await this.navigate('home');
       return;
     }
 

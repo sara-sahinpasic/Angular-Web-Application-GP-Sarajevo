@@ -3,9 +3,9 @@
     <h1>{{ localizationService.localize("impressions_title") }}</h1>
     <hr />
     <div class="reviews-container mb-3">
-      <div class="row m-0 mb-4" *ngFor="let r of this.reviewTable">
+      <div class="row m-0 mb-4" *ngFor="let r of this.reviews">
         <div class="row title mb-2">
-          {{r.title}}
+          {{ r.title }}
           <div class="ps-0">
             <div class="score-container d-flex">
               <div *ngFor="let i of [1, 2, 3, 4, 5]"
@@ -14,18 +14,18 @@
             </div>
           </div>
         </div>
-        <div class="row content ms-md-2 mb-2">{{r.description}}</div>
+        <div class="row content ms-md-2 mb-2">{{ r.description }}</div>
       </div>
     </div>
 
-    <div class="row pagination">
+    <div class="row">
       <div class="col">
-        <button class="review-modal" data-bs-toggle="modal" data-bs-target="#base-modal" *ngIf="shouldShowReviewButton"
+        <button class="secondary" data-bs-toggle="modal" data-bs-target="#base-modal" *ngIf="shouldShowReviewButton"
           (click)="showReviewModalButton()">{{ localizationService.localize("impressions_leave_review") }}</button>
       </div>
 
       <div class="col">
-        <nav aria-label="Page navigation example">
+        <nav aria-label="review navigation">
           <ul class="pagination justify-content-end">
             <li class="page-item">
               <a (click)="prevPage()" class="page-link" aria-label="Previous">
@@ -33,9 +33,9 @@
               </a>
             </li>
 
-            <li class="page-item" *ngFor="let page of this.pagesArray">
+            <li class="page-item" *ngFor="let page of this.pageNumbers">
               <a class="page-link" (click)="changePage(page)">
-                {{page}}
+                {{ page }}
               </a>
             </li>
 

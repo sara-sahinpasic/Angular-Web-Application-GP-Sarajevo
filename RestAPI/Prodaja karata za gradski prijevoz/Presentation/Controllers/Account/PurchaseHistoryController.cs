@@ -12,7 +12,7 @@ namespace Presentation.Controllers.Account;
 
 [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("User/[controller]")]
 public sealed class PurchaseHistoryController : ControllerBase
 {
     private readonly IIssuedTicketRepository _issuedTicketRepository;
@@ -22,7 +22,7 @@ public sealed class PurchaseHistoryController : ControllerBase
         _issuedTicketRepository = issuedTicketRepository;
     }
 
-    [HttpGet]
+    [HttpGet("Get/{userId}")]
     public async Task<IActionResult> GetAllUserPurchases(Guid userId, CancellationToken cancellationToken)
     {
         Expression<Func<IssuedTicket, IssuedTicketHistoryDto>> selector = issuedTicket => new IssuedTicketHistoryDto

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
+import { DataResponse } from 'src/app/models/dataResponse';
 import { HolidayCreateModel, HolidayEditModel } from 'src/app/models/holiday/holidayModel';
 import { environment } from 'src/environments/environment';
 

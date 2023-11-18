@@ -1,12 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { InvalidArgumentException } from 'src/app/exceptions/InvalidArgumentException';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { NewsResponseDto } from 'src/app/models/News/NewsDto';
-import { Pagination } from 'src/app/models/Pagination/Pagination';
+import { tap } from 'rxjs';
+import { NewsResponseDto } from 'src/app/models/news/newsDto';
+import { Pagination } from 'src/app/models/pagination/pagination';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
-import { environment } from 'src/environments/environment';
+import { NewsService } from 'src/app/services/news/news.service';
 
 @Component({
   selector: 'app-news',
@@ -14,80 +12,71 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./news.component.scss'],
 })
 export class NewsComponent implements OnInit {
-
-  constructor(
-    private modalService: ModalService,
-    private httpClient: HttpClient,
-    protected localizationService: LocalizationService
-  ) {}
-
-  newsTable: Array<NewsResponseDto> = [];
-
-  public paginationModel: Pagination = {
+  protected newsTable: NewsResponseDto[] = [];
+  protected paginationModel: Pagination = {
     pageSize: 7,
     page: 1,
   };
+  protected pageNumber: number = 0;
+  protected pageNumbers: number[] = [];
 
-  pages: number = 0;
-  pagesArray: Array<number> = [];
+  constructor(
+    private modalService: ModalService,
+    private newsService: NewsService,
+    protected localizationService: LocalizationService
+  ) {}
 
-  private apiUrl: string = environment.apiUrl;
 
-  ngOnInit(): void {
-    this.getPageSize();
-    this.getPage();
+  ngOnInit() {
+    this.getPageCount();
+    this.loadNewsPage();
   }
 
-  showNewsModalButton(id?: string) {
-    if (!id) {
-      throw new InvalidArgumentException(['id']);
-    }
-
+  protected showNewsModalButton(id: string) {
     this.modalService.data = id;
     this.modalService.showNewsModal();
   }
 
-  getPage() {
-    this.httpClient
-      .get(
-        `${this.apiUrl}News/Pagination?page=${this.paginationModel.page}&pageSize=${this.paginationModel.pageSize}`
+  protected loadNewsPage() {
+    this.newsService.getAllNews(this.paginationModel.page, this.paginationModel.pageSize)
+      .pipe(
+        tap((response: NewsResponseDto[]) => this.newsTable = response)
       )
-      .subscribe((x: any) => {
-        this.newsTable = x.data;
-      });
+      .subscribe();
   }
 
-  nextPage() {
-    if ((this.paginationModel.page as number) >= this.pages) {
+  protected nextPage() {
+    if (this.paginationModel.page >= this.pageNumber) {
       return;
     }
 
-    (this.paginationModel.page as number)++;
-    this.getPage();
+    this.paginationModel.page++;
+    this.loadNewsPage();
   }
 
-  prevPage() {
-    if ((this.paginationModel.page as number) <= 1) {
+  protected prevPage() {
+    if (this.paginationModel.page <= 1) {
       return;
     }
-    (this.paginationModel.page as number)--;
-    this.getPage();
+
+    this.paginationModel.page--;
+    this.loadNewsPage();
   }
 
-  getPageSize() {
-    this.httpClient
-      .get<DataResponse<number>>(
-        `${this.apiUrl}News/NewsPagesCount?pageSize=${this.paginationModel.pageSize}`
-      )
-      .subscribe((response: DataResponse<number>) => {
-        this.pages = response.data;
-        this.pagesArray = Array(this.pages)
-          .fill(0)
-          .map((x, i) => i + 1);
-      });
+  protected getPageCount() {
+    this.newsService.getNewsPageCount(this.paginationModel.pageSize)
+    .pipe(
+      tap((response: number) => {
+        this.pageNumber = response;
+        this.pageNumbers = Array(this.pageNumber).fill(1)
+          .map((x, i) => x + i);
+      })
+    )
+    .subscribe();
   }
-  changePage(page: number) {
+
+  protected changePage(page: number) {
     this.paginationModel.page = page;
-    this.getPage();
+    this.loadNewsPage();
   }
 }

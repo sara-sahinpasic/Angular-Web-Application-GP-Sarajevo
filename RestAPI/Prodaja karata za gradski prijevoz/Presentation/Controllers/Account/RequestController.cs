@@ -4,7 +4,6 @@ using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Requests;
 using Domain.Entities.Requests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DTO;
@@ -14,7 +13,7 @@ namespace Presentation.Controllers.Account
 {
     [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
     [ApiController]
-    [Route("[controller]")]
+    [Route("User/[controller]")]
     public sealed class RequestController : ControllerBase
     {
         private const int RequestSizeLimit = 10 * 1024 * 1024;
@@ -30,7 +29,7 @@ namespace Presentation.Controllers.Account
             _requestRepository = requestRepository;
         }
 
-        [HttpPost("SendRequest")]
+        [HttpPost("Send")]
         [RequestSizeLimit(RequestSizeLimit)]
         public async Task<IActionResult> SendRequestAction([FromForm] SpecialRequestRequestDto specialRequestRequestDto, CancellationToken cancellationToken)
         {

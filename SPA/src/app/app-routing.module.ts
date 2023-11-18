@@ -5,13 +5,11 @@ import { HomeComponent } from './components/home/home.component';
 import { LogInComponent } from './components/logIn/logIn.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { UpdateProfileComponent } from './components/profile-update-page/update-profile.component';
-import { ProfileDeletedPageComponent } from './components/profile-deleted-page/profile-deleted-page.component';
+import { EditProfilePage } from './components/profile/edit-page/edit-page.component';
+import { ProfileDeletedPageComponent } from './components/profile/deleted-page/deleted-page.component';
 import { LoggedInGuard } from './guards/logged-in.guard';
 import { NotLoggedInGuard } from './guards/not-logged-in.guard';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { PurchaseHistoryComponent } from './modals/purchase-history/purchase-history.component';
-import { RequestComponent } from './modals/request/request.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { CheckoutConfirmationComponent } from './components/checkout-confirmation/checkout-confirmation.component';
 import { CheckoutConfirmGuard } from './guards/checkout/checkout-confirm.guard';
@@ -33,40 +31,36 @@ import { DriverMalfunctionPageComponent } from './components/driver/children/dri
 import { AdminRoutesPageComponent } from './components/admin/children/admin-routes-page/admin-routes-page.component';
 import { AdminHolidaysPageComponent } from './components/admin/children/admin-holidays-page/admin-holidays-page.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { AdminReportPageComponent } from './components/admin/children/admin-report-page/admin-report-page.component';
 import { AdminStatisticsPageComponent } from './components/admin/children/admin-statistics-page/admin-statistics-page.component';
+import { PurchaseHistoryComponent } from './components/purchase-history/purchase-history.component';
+import { DriverGuard } from './guards/admin/driver.guard';
 
 const routes: Routes = [
   { path: 'routes', component: RoutesComponent, canActivate: [RouteNotSetGuard] },
-  // this is commented out with task #192 because it's easier to debug the admin part of the page this way
-  // { path: 'admin/company', component: AdminCompanyPageComponent, canActivate: [AdminGuard]},
-  // { path: 'admin/users', component: AdminUsersPageComponent, canActivate: [AdminGuard]},
-  // { path: 'admin', component: AdminHomePageComponent, canActivate: [AdminGuard]},
-  { path: 'driver', component: DriverComponent, children: [
-    { path: 'delay', component: DriverDelayPageComponent, outlet: "driver"},
-    { path: 'malfunction', component: DriverMalfunctionPageComponent, outlet: "driver"},
+  { path: 'driver', component: DriverComponent, canActivate: [DriverGuard, LoggedInGuard], children: [
+    { path: 'delay', component: DriverDelayPageComponent, outlet: 'driver'},
+    { path: 'malfunction', component: DriverMalfunctionPageComponent, outlet: 'driver'},
   ]},
-  { path: 'admin', component: AdminComponent, children: [
-    { path: 'home', component: AdminHomePageComponent, outlet: "admin"},
-    { path: 'users', component: AdminUsersPageComponent, outlet: "admin"},
-    { path: 'tickets', component: AdminTicketsPageComponent, outlet: "admin"},
-    { path: 'company', component: AdminCompanyPageComponent, outlet: "admin" },
-    { path: 'news', component: AdminNewsPageComponent, outlet: "admin" },
-    { path: 'vehicles', component: AdminVehiclePageComponent, outlet: "admin" },
-    { path: 'routes', component: AdminRoutesPageComponent, outlet: "admin" },
-    { path: 'holidays', component: AdminHolidaysPageComponent, outlet: "admin" },
-    { path: 'report', component: AdminStatisticsPageComponent, outlet: "admin" }
+  { path: 'admin', component: AdminComponent, canActivate: [LoggedInGuard, AdminGuard], children: [
+    { path: 'home', component: AdminHomePageComponent, outlet: 'admin'},
+    { path: 'users', component: AdminUsersPageComponent, outlet: 'admin'},
+    { path: 'tickets', component: AdminTicketsPageComponent, outlet: 'admin'},
+    { path: 'company', component: AdminCompanyPageComponent, outlet: 'admin' },
+    { path: 'news', component: AdminNewsPageComponent, outlet: 'admin' },
+    { path: 'vehicles', component: AdminVehiclePageComponent, outlet: 'admin' },
+    { path: 'routes', component: AdminRoutesPageComponent, outlet: 'admin' },
+    { path: 'holidays', component: AdminHolidaysPageComponent, outlet: 'admin' },
+    { path: 'report', component: AdminStatisticsPageComponent, outlet: 'admin' }
   ]},
   { path: 'checkout/confirmation', component: CheckoutConfirmationComponent, canActivate: [RouteNotSetGuard, LoggedInGuard, CheckoutConfirmGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [RouteNotSetGuard] },
   { path: 'news', component: NewsComponent },
   { path: 'review', component: ReviewComponent },
-  { path: 'request', component: RequestComponent, canActivate:[LoggedInGuard] },
   { path: 'purchaseHistory', component: PurchaseHistoryComponent, canActivate:[LoggedInGuard] },
   { path: 'delete', component: ProfileDeletedPageComponent, canActivate:[LoggedInGuard] },
-  { path: 'update', component: UpdateProfileComponent, canActivate:[LoggedInGuard] },
+  { path: 'update', component: EditProfilePage, canActivate: [LoggedInGuard] },
   { path: 'profile', component: ProfileComponent, canActivate:[LoggedInGuard] },
-  { path: 'registracija', component: RegistrationComponent, canActivate:[NotLoggedInGuard] },
+  { path: 'register', component: RegistrationComponent, canActivate:[NotLoggedInGuard] },
   { path: 'activate/:token', component: ActivateAccountComponent,canActivate:[NotLoggedInGuard] },
   { path: 'login', component: LogInComponent, canActivate:[NotLoggedInGuard] },
   { path: 'resetPassword', component: ResetPasswordComponent, canActivate: [NotLoggedInGuard] },

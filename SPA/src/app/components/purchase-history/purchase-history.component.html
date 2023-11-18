@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="form-container">
+    <div class="row">
+      <div class="col">
+        <h1 class="text-center mb-2">{{ localizationService.localize("purchase_history_title") }}</h1>
+      </div>
+    </div>
+    <div class="justify-content-center" #content>
+      <div class="overflow-auto w-100 table-container ps-3 pe-3">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ localizationService.localize("purchase_history_card_type_column_title") }}</th>
+              <th>{{ localizationService.localize("purchase_history_route_column_title") }}</th>
+              <th>{{ localizationService.localize("purchase_history_price_column_title") }}</th>
+              <th>{{ localizationService.localize("purchase_history_date_column_title") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ph of this.purchaseHistory | paginate: {
+              itemsPerPage: paginationModel.pageSize,
+              currentPage: paginationModel.page,
+              totalItems: paginationModel.totalCount
+            }; let i=index">
+              <td>{{ ph.ticketName }}</td>
+              <td>{{ ph.startStationName }} - {{ ph.endStationName }}</td>
+              <td>{{ ph.price }}</td>
+              <td>{{ ph.issuedDate | date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-2 row">
+      <div class="paging d-flex justify-content-center col">
+        <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+        </pagination-controls>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button class="primary" (click)="purchaseHistoryPrintButton()">
+          {{ localizationService.localize("purchase_history_download_report_btn_text") }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,17 +2,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserLoginRequest } from '../../models/User/UserLoginRequest';
-import { UserVerifyLoginRequest } from '../../models/User/UserVerifyLoginRequest';
-import { UserRegisterRequest } from '../../models/User/UserRegisterRequest';
-import { DataResponse } from '../../models/DataResponse';
-import { UserProfileModel } from '../../models/User/UserProfileModel';
+import { UserLoginRequest } from '../../models/user/userLoginRequest';
+import { UserVerifyLoginRequest } from '../../models/user/userVerifyLoginRequest';
+import { UserRegisterRequest } from '../../models/user/userRegisterRequest';
+import { DataResponse } from '../../models/dataResponse';
+import { UserProfileModel } from '../../models/user/userProfileModel';
 import { JwtService } from '../jwt/jwt.service';
 import { Router } from '@angular/router';
-import { UserLoginResponse } from '../../models/User/UserLoginResponse';
-import { UserRegisterResponse } from '../../models/User/UserRegisterResponse';
-import { UserEditProfileModel } from 'src/app/models/User/UserEditProfileModel';
-import { UserTokenData } from 'src/app/models/User/UserToken';
+import { UserLoginResponse } from '../../models/user/userLoginResponse';
+import { UserRegisterResponse } from '../../models/user/userRegisterResponse';
+import { UserEditProfileModel } from 'src/app/models/user/userEditProfileModel';
+import { UserTokenData } from 'src/app/models/user/userToken';
 import { Role } from 'src/app/models/roles/role';
 
 @Injectable({
@@ -46,10 +46,11 @@ export class UserService {
     this.isDeleteRequestSent$ = this.isDeleteRequestSent.asObservable();
   }
 
+  // ===================== Authentication =================================
   public register(registerRequest: UserRegisterRequest, redirectionRoute: string | null = null): Observable<DataResponse<UserRegisterResponse>> {
     return this.httpClient
       .post<DataResponse<UserRegisterResponse>>(
-        this.url + 'register',
+        this.url + 'Authentication/Register',
         registerRequest
       )
       .pipe(
@@ -70,7 +71,7 @@ export class UserService {
 
   public activateAccount(token: string): Observable<any> {
     return this.httpClient
-      .put(this.url + `account/activate/${token}`, null)
+      .put(this.url + `Authentication/Account/Activate/${token}`, null)
       .pipe(
         tap(() => {
           this.isUserActivated.next(true);
@@ -78,12 +79,9 @@ export class UserService {
       );
   }
 
-  public login(
-    loginData: UserLoginRequest,
-    redirectionRoute: string | null = ''
-  ): Observable<DataResponse<UserLoginResponse>> {
+  public login(loginData: UserLoginRequest, redirectionRoute: string | null = ''): Observable<DataResponse<UserLoginResponse>> {
     return this.httpClient
-      .post<DataResponse<UserLoginResponse>>(this.url + 'login', loginData)
+      .post<DataResponse<UserLoginResponse>>(this.url + 'Authentication/Login', loginData)
       .pipe(
         tap((response: DataResponse<UserLoginResponse>) => {
           if (response.data.isTwoWayAuth) {
@@ -99,8 +97,8 @@ export class UserService {
 
           this.user.next(user);
 
-          if (user.role.toLowerCase() === "admin") {
-            this.router.navigateByUrl("/admin");
+          if (user.role.toLowerCase() === 'admin') {
+            this.router.navigateByUrl('/admin');
             return;
           }
 
@@ -117,22 +115,22 @@ export class UserService {
       code: code,
     };
 
-    if (this.userId == undefined) {
+    if (!this.userId) {
       throw new Error('User Id not present');
     }
 
-    return this.httpClient
-      .post<DataResponse<UserLoginResponse>>(this.url + 'verifyLogin', userVerifyLoginRequest)
+    return this.httpClient.post<DataResponse<UserLoginResponse>>(this.url + 'Authentication/VerifyLogin', userVerifyLoginRequest)
       .pipe(
         tap((response: DataResponse<UserLoginResponse>) => {
           localStorage.setItem('token', (response.data.loginData as UserTokenData).access_token);
 
           this.user.next(this.getUser());
+          this.hasUserSentVerifyRequest.next(false);
 
           const user: UserProfileModel = this.getUser() as UserProfileModel;
 
-          if (user.role.toLowerCase() === "admin") {
-            this.router.navigateByUrl("/admin");
+          if (user.role.toLowerCase() === 'admin') {
+            this.router.navigateByUrl('/admin');
             return;
           }
 
@@ -142,6 +140,45 @@ export class UserService {
         })
       );
   }
+
+  public resetPassword(email: string): Observable<any> {
+    return this.httpClient
+      .post(this.url + `Authentication/ResetPassword`, `\"${email}\"`, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      })
+      .pipe(tap(() => this.isResetPasswordRequestSent.next(true)));
+  }
+
+  public logout() {
+    localStorage.removeItem('token');
+    this.user.next(this.getUser());
+    this.router.navigateByUrl('');
+  }
+
+  public getUserJwtToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  public getUserRole(): string | null {
+    const user: UserProfileModel | undefined = this.getUser();
+
+    if (!user) {
+      return null;
+    }
+
+    return user.role;
+  }
+
+  public isLoggedIn(): boolean {
+    return !!this.getUser();
+  }
+
+  public isUserInRole(role: Role): boolean {
+    return !!this.getUserRole() && role.name.toLocaleLowerCase() === this.getUserRole()?.toLocaleLowerCase();
+  }
+  // ===================== End =================================
 
   private getUser(): UserProfileModel | undefined {
     return this.getUserDataFromToken();
@@ -164,21 +201,15 @@ export class UserService {
     }
   }
 
-  private getFormDataFromObject(object: any): FormData {
-    const formData = new FormData();
-    Object.keys(object).forEach((key) => formData.append(key, object[key]));
-
-    return formData;
-  }
-
   public updateUser(userToUpdate: UserEditProfileModel, redirectionRoute: string | null = null): Observable<DataResponse<UserTokenData>> {
     const formData: FormData = this.getFormDataFromObject(userToUpdate);
+
     return this.httpClient
-      .put<DataResponse<UserTokenData>>(`${this.url}Profile`, formData)
+      .put<DataResponse<UserTokenData>>(`${this.url}User/Update`, formData)
       .pipe(
         tap((response: DataResponse<UserTokenData>) => {
           if (response.data) {
-            localStorage.setItem("token", response.data.access_token);
+            localStorage.setItem('token', response.data.access_token);
             this.user.next(this.getUser());
           }
 
@@ -191,24 +222,18 @@ export class UserService {
       );
   }
 
-  public resetPassword(email: string): Observable<any> {
-    return this.httpClient
-      .post(this.url + `resetPassword`, `\"${email}\"`, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
-      })
-      .pipe(tap(() => this.isResetPasswordRequestSent.next(true)));
+  private getFormDataFromObject(object: any): FormData {
+    const formData = new FormData();
+    Object.keys(object).forEach((key) => formData.append(key, object[key]));
+
+    return formData;
   }
 
-  public deleteUser(
-    id: string,
-    redirectRoute: string | null = '/delete'
-  ): Observable<DataResponse<string>> {
+  public deleteUser(id: string, redirectRoute: string | null = '/delete'): Observable<DataResponse<string>> {
     return this.httpClient
-      .delete<DataResponse<string>>(`${this.url}Profile?id=${id}`)
+      .delete<DataResponse<string>>(`${this.url}User/Delete?id=${id}`)
       .pipe(
-        tap((response: DataResponse<string>) => {
+        tap(() => {
           if (!redirectRoute) {
             return;
           }
@@ -225,46 +250,18 @@ export class UserService {
   public getUserDiscount(): Observable<number> {
     const userId: string | undefined = this.getUser()?.id;
 
-    return this.httpClient.get<DataResponse<number>>(`${this.url}AdminUser/Discount/Get/${userId}`)
+    return this.httpClient.get<DataResponse<number>>(`${this.url}User/Discount/Get/${userId}`)
       .pipe(
         map((response: DataResponse<number>) => response.data)
       );
   }
 
-  public logout() {
-    localStorage.removeItem('token');
-    this.user.next(this.getUser());
-    this.router.navigateByUrl('');
-  }
-
-  public getUserJwtToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
-  public getProfileImage() {
+  public getProfileImage(): Observable<DataResponse<string>> {
     let user: UserProfileModel;
     user = this.getUser() as UserProfileModel;
 
     return this.httpClient.get<DataResponse<string>>(
-      `${this.url}Profile/UserImage/${user.id}`
+      `${this.url}User/Image/${user.id}`
     );
-  }
-
-  public getUserRole(): string | null {
-    const user: UserProfileModel | undefined = this.getUser();
-
-    if (!user) {
-      return null;
-    }
-
-    return user.role;
-  }
-
-  public isLoggedIn(): boolean {
-    return !!this.getUser();
-  }
-
-  public isUserInRole(role: Role): boolean {
-    return !!this.getUserRole() && role.name.toLocaleLowerCase() === this.getUserRole()?.toLocaleLowerCase();
   }
 }

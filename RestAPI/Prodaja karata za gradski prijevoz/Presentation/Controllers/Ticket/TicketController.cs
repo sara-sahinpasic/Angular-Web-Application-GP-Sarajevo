@@ -6,9 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using TicketEntity = Domain.Entities.Tickets.Ticket;
 using Presentation.DTO;
 using Presentation.DTO.Admin.Ticket;
+using Microsoft.AspNetCore.Authorization;
+using Application.Config;
 
 namespace Presentation.Controllers.Ticket;
 
+[Authorize(Policy = AuthorizationPolicies.AdminPolicyName)]
 [ApiController]
 [Route("[controller]")]
 public sealed class TicketController : ControllerBase
@@ -22,6 +25,7 @@ public sealed class TicketController : ControllerBase
         _unitOfWork = unitOfWork;
     }
 
+    [AllowAnonymous]
     [HttpGet("All")]
     public async Task<IActionResult> GetAllCardTypes(bool includeInactive, CancellationToken cancellationToken)
     {

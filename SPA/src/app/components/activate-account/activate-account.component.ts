@@ -20,7 +20,7 @@ export class ActivateAccountComponent implements OnInit {
     }
 
     this.userService.activateAccount(token)
-      .subscribe();
+      .subscribe(() => this.router.navigateByUrl('login'));
   }
 }
 

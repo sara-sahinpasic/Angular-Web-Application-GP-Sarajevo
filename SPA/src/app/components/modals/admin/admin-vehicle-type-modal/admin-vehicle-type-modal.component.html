@@ -1,0 +1,45 @@
+<div class="d-flex flex-column w-100 admin-container">
+  <div class="vehicle-type-form-container mb-3">
+    <form [formGroup]="vehicleTypeForm">
+      <div class="form-group">
+        <label for="name">Naziv novog tipa vozila:</label>
+        <input type="text" class="form-control-admin mt-1" id="name" formControlName="name" required name="name"
+        [(ngModel)]="vehicleTypeModel.name" formControlName="name"
+        [class.is-invalid]="vehicleTypeForm.get('name')?.invalid && (vehicleTypeForm.get('name')?.dirty
+          || vehicleTypeForm.get('name')?.touched)" />
+        <div class="invalid-feedback">
+          {{ "Obavezan unos!" }}
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="table-container mb-3">
+    <table class="table table-striped" >
+      <tr>
+        <th>Postojeći tipovi vozila:</th>
+      </tr>
+      <tbody>
+        <tr *ngFor="let v of this.vehicleTypes | paginate:{
+          itemsPerPage: paginationModel.pageSize,
+          currentPage: paginationModel.page,
+          totalItems: paginationModel.totalCount
+        }; let i=index">
+        <td>{{v.name}}</td>
+        <td>
+          <button type="button" class="btn btn-link btn-operation" (click)="deleteVehicleType(v)">
+            <fa-icon [icon]="deleteIcon"></fa-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
+  <div class="paging d-flex justify-content-center">
+    <pagination-controls previousLabel="" nextLabel="" (pageChange)="onPageChange($event)">
+    </pagination-controls>
+  </div>
+  <hr />
+  <button type="button" class="btn btn-dark btn-sm" (click)="addNewVehicleType()"
+    style="font-weight: bolder;">Evidentiraj novi tip
+    vozila</button>
+</div>

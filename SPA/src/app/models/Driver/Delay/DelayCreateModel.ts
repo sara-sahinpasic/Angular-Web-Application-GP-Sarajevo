@@ -1,5 +1,5 @@
 export interface DelayCreateModel {
-  reason?: string;
-  routeId?: string;
-  delayAmount?: number;
+  reason: string;
+  routeId: string;
+  delayAmount: number;
 }

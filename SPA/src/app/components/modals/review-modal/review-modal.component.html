@@ -1,0 +1,33 @@
+<form [formGroup]="formGroup">
+  <div class="form-group">
+    <label>{{ localizationService.localize("review_modal_title_label") }}</label>
+    <input type="text" class="form-control" formControlName="title"
+      [class.is-invalid]="formGroup.get('title')?.invalid && formGroup.get('title')?.touched">
+    <div class="invalid-feedback">
+      {{ localizationService.localize("required_field_error_message") }}
+    </div>
+  </div>
+
+  <div class="form-group mt-2">
+    <label>{{ localizationService.localize("review_modal_content_label") }}</label>
+    <textarea type="text" class="form-control" rows="3" formControlName="content"
+      [class.is-invalid]="formGroup.get('content')?.invalid && formGroup.get('content')?.touched">
+    </textarea>
+    <div class="invalid-feedback">
+      {{ localizationService.localize("required_field_error_message") }}
+    </div>
+  </div>
+</form>
+
+<div class="form-group mt-2 mb-4">
+  <label>{{ localizationService.localize("review_modal_score_label") }}</label>
+  <select class="form-select" [(ngModel)]="reviewModel.score">
+    <option *ngFor="let score of scores;" [value]="score">
+      {{ score }}
+    </option>
+  </select>
+</div>
+
+<button class="primary" (click)="sendReviewButton()">
+  {{ localizationService.localize("review_modal_send_btn_text") }}
+</button>

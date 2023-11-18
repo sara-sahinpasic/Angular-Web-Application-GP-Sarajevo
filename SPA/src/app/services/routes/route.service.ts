@@ -2,12 +2,12 @@ import { HttpClient, HttpErrorResponse, HttpEvent, HttpResponse, HttpStatusCode 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { EditRouteResponse, RouteListResponse, SelectedRouteResponse } from 'src/app/models/routes/RouteResponse';
-import { RouteInfoModel } from 'src/app/models/routes/RouteInfo';
+import { DataResponse } from 'src/app/models/dataResponse';
+import { EditRouteResponse, RouteListResponse, SelectedRouteResponse } from 'src/app/models/routes/routeResponse';
+import { RouteInfoModel } from 'src/app/models/routes/routeInfo';
 import { environment } from 'src/environments/environment';
-import { SelectedRoute } from 'src/app/models/routes/SelectedRoute';
-import { CreateRouteModel, EditRouteModel } from 'src/app/models/routes/RouteRequest';
+import { SelectedRoute } from 'src/app/models/routes/selectedRoute';
+import { CreateRouteModel, EditRouteModel } from 'src/app/models/routes/routeRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class RouteService {
   constructor(private httpClient: HttpClient, private router: Router) { }
 
   public getRoute(routeId: string): Observable<EditRouteResponse> {
-    return this.httpClient.get<DataResponse<EditRouteResponse>>(`${this.url}Get/${routeId}`)
+    return this.httpClient.get<DataResponse<EditRouteResponse>>(`${this.url}Admin/Routes/Get/${routeId}`)
       .pipe(
         map((response: DataResponse<EditRouteResponse>) => response.data)
       );
@@ -34,16 +34,16 @@ export class RouteService {
       )
   }
 
-  public deactivateRoute(route: RouteListResponse): Observable<unknown> {
-    return this.httpClient.put<unknown>(`${this.url}Routes/Deactivate/${route.id}`, null);
+  public deleteRoute(route: RouteListResponse): Observable<unknown> {
+    return this.httpClient.put<unknown>(`${this.url}Admin/Routes/Delete/${route.id}`, null);
   }
 
   public editRoute(route: EditRouteModel): Observable<unknown> {
-    return this.httpClient.put<unknown>(`${this.url}Routes/Edit/${route.id}`, route);
+    return this.httpClient.put<unknown>(`${this.url}Admin/Routes/Edit/${route.id}`, route);
   }
 
   public createRoutes(routeList: CreateRouteModel[]): Observable<unknown> {
-    return this.httpClient.post<unknown>(`${this.url}Routes/Create`, routeList);
+    return this.httpClient.post<unknown>(`${this.url}Admin/Routes/Create`, routeList);
   }
 
   public getSelectedRouteList(): Observable<SelectedRouteResponse[]> {
@@ -58,7 +58,7 @@ export class RouteService {
             const error = err as HttpResponse<any>;
 
             if (error.status == HttpStatusCode.NotFound) {
-              this.router.navigateByUrl("");
+              this.router.navigateByUrl('');
             }
           }
 

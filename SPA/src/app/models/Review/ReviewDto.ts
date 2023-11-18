@@ -1,5 +1,5 @@
 export interface ReviewDto {
-  title?: string;
-  description?: string;
-  score?: number;
+  title: string;
+  description: string;
+  score: number;
 }

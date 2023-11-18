@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="form-container">
+    <h1>{{ localizationService.localize("edit_profile_title") }}</h1>
+    <form [formGroup]="formGroup" class="row fields-container">
+      <div class="col d-flex flex-column">
+        <label class="mt-2">{{ localizationService.localize("edit_profile_photo_label") }}</label>
+        <img #profileImage [src]="profileModel.profileImageBase64" class="img-thumbnail">
+        <input type="file" class="form-control mt-2" accept="image/*" (change)="uploadImage($event, profileImage)">
+      </div>
+      <div class="col">
+        <div class="form-controls-container">
+          <label class="mt-2">{{ localizationService.localize("edit_profile_name_label") }}</label>
+          <input class="form-control" type="text" placeholder="" formControlName="firstName"
+              [class.is-invalid]="formGroup.get('firstName')?.invalid && formGroup.get('firstName')?.touched" />
+          <div class="invalid-feedback">
+            {{ localizationService.localize("required_field_error_message") }}
+          </div>
+        </div>
+
+        <div class="form-controls-container">
+          <label class="mt-2">{{ localizationService.localize("edit_profile_surname_label") }}</label>
+          <input class="form-control" type="text" placeholder="" formControlName="lastName"
+            [class.is-invalid]="formGroup.get('lastName')?.invalid && formGroup.get('lastName')?.touched"/>
+          <div class="invalid-feedback">
+            {{ localizationService.localize("required_field_error_message") }}
+          </div>
+        </div>
+
+        <div class="form-controls-container">
+          <label class="mt-2">{{ localizationService.localize("edit_profile_phone_number_label") }}</label>
+          <input class="form-control" type="text" placeholder="" formControlName="phoneNumber"
+            [class.is-invalid]="formGroup.get('phoneNumber')?.invalid && formGroup.get('phoneNumber')?.touched"/>
+          <div class="invalid-feedback">
+            {{ localizationService.localize("required_field_error_message") }}
+          </div>
+        </div>
+
+        <label class="mt-2">{{ localizationService.localize("edit_profile_address_label") }}</label>
+        <input class="form-control" type="text" placeholder="" formControlName="address" />
+
+        <div class="form-controls-container">
+          <label class="mt-2">{{ localizationService.localize("edit_profile_password_label") }}</label>
+          <input formControlName="password" class="form-control" type="password" placeholder=""
+            [class.is-invalid]="formGroup.get('password')?.invalid && formGroup.get('password')?.touched"/>
+          <div class="invalid-feedback">
+            {{ localizationService.localize("edit_profile_password_length_error") }}
+          </div>
+        </div>
+      </div>
+    </form>
+    <button class="primary mt-2" (click)="save()">
+      {{ localizationService.localize("edit_profile_save_btn_text") }}
+    </button>
+  </div>

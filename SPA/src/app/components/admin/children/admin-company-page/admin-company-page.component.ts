@@ -9,27 +9,27 @@ import { ModalService } from 'src/app/services/modal/modal.service';
 export class AdminCompanyPageComponent {
   constructor(private modalService: ModalService) {}
 
-  adminShowNewsModal() {
+  protected adminShowNewsModal() {
     this.modalService.adminShowNewsModal();
   }
 
-  adminShowUsersModal() {
+  protected adminShowUsersModal() {
     this.modalService.adminShowUsersModal();
   }
 
-  adminShowTicketsModal() {
+  protected adminShowTicketsModal() {
     this.modalService.adminShowTicketsModal();
   }
 
-  adminShowVehiclesModal() {
+  protected adminShowVehiclesModal() {
     this.modalService.adminShowVehiclesModal();
   }
 
-  adminShowStationsModal() {
+  protected adminShowStationsModal() {
     this.modalService.adminShowStationsModal();
   }
 
-  showRouteCreationModal() {
+  protected showRouteCreationModal() {
     this.modalService.adminShowCreateRouteModal();
   }
 

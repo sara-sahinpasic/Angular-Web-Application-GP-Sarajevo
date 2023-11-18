@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { tap } from 'rxjs';
-import { VehicleListDto } from 'src/app/models/Admin/Vehicle/VehicleDto';
+import { VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
 import { StationModel } from 'src/app/models/stations/stationModel';
 import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { CacheService } from 'src/app/services/cache/cache.service';
@@ -27,7 +27,7 @@ export class RoutesFormComponent implements OnInit {
 
   ngOnInit() {
     if (!this.route) {
-      throw new Error("Route cannot be undefiend");
+      throw new Error('Route cannot be undefiend');
     }
 
     this.loadVehicleList();
@@ -35,8 +35,8 @@ export class RoutesFormComponent implements OnInit {
   }
 
   private loadVehicleList() {
-    if (this.cacheService.getDataFromCache("routes.vehicleList")) {
-      this.vehicleList = this.cacheService.getDataFromCache("routes.vehicleList") as VehicleListDto[];
+    if (this.cacheService.getDataFromCache('routes.vehicleList')) {
+      this.vehicleList = this.cacheService.getDataFromCache('routes.vehicleList') as VehicleListDto[];
       return;
     }
 
@@ -44,15 +44,15 @@ export class RoutesFormComponent implements OnInit {
       .pipe(
         tap((response: VehicleListDto[]) => {
           this.vehicleList = response;
-          this.cacheService.setCacheData("routes.vehicleList", response);
+          this.cacheService.setCacheData('routes.vehicleList', response);
         })
       )
       .subscribe();
   }
 
   private loadStations() {
-    if (this.cacheService.getDataFromCache("routes.routeStations")) {
-      this.stations = this.cacheService.getDataFromCache("routes.routeStations") as StationModel[];
+    if (this.cacheService.getDataFromCache('routes.routeStations')) {
+      this.stations = this.cacheService.getDataFromCache('routes.routeStations') as StationModel[];
       return;
     }
 
@@ -60,7 +60,7 @@ export class RoutesFormComponent implements OnInit {
       .pipe(
         tap((stations: StationModel[]) => {
           this.stations = stations;
-          this.cacheService.setCacheData("routes.routeStations", stations);
+          this.cacheService.setCacheData('routes.routeStations', stations);
         })
       )
       .subscribe();

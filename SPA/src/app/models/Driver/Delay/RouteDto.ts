@@ -1,5 +1,5 @@
 export interface RouteDto {
-  id?: string;
-  startingLocation?: string;
-  endingLocation?: string;
+  id: string;
+  startingLocation: string;
+  endingLocation: string;
 }

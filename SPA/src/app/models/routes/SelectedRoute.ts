@@ -1,5 +1,5 @@
 import { StationModel } from "../stations/stationModel";
-import { RouteDateModel } from "./RouteDateModel";
+import { RouteDateModel } from "./routeDateModel";
 
 export interface SelectedRoute {
   id: string,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
+import { UserProfileModel } from 'src/app/models/user/userProfileModel';
 import { Roles } from 'src/app/models/roles/roles';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';

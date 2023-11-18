@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-import { UserRegisterRequest } from 'src/app/models/User/UserRegisterRequest';
+import { UserRegisterRequest } from 'src/app/models/user/userRegisterRequest';
 import { LocalizationService } from 'src/app/services/localization/localization.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -12,48 +12,38 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
-
-  public userRequest: UserRegisterRequest = {
-    firstName: '',
-    lastName: '',
-    password: '',
-    dateOfBirth: '',
-    email: '',
-    phoneNumber: '',
-  };
-
-  registrationSent: boolean = false;
-  registrationForm!: FormGroup;
-  submitted: boolean = false;
+  protected userRequest: UserRegisterRequest = {} as UserRegisterRequest;
+  protected isRegistrationSent: boolean = false;
+  protected registrationForm: FormGroup = {} as FormGroup;
 
   constructor(
     private userService: UserService,
-    private _router: Router,
+    private router: Router,
     private formBuilder: FormBuilder,
     protected localizationService: LocalizationService
   ) { }
 
   ngOnInit() {
-    this.initForm();
+    this.initializeForm();
 
     this.userService.isRegistrationSent$
-      .pipe(tap((val: boolean) => (this.registrationSent = val)))
+      .pipe(tap((val: boolean) => (this.isRegistrationSent = val)))
       .subscribe();
   }
 
-  registration() {
+  protected register() {
     this.registrationForm.markAllAsTouched();
 
     if (this.registrationForm.valid) {
-      this.userService.register(this.userRequest, "/login").subscribe();
+      this.userService.register(this.userRequest, '/login').subscribe();
     }
   }
 
-  login() {
-    this._router.navigateByUrl('prijava');
+  protected login() {
+    this.router.navigateByUrl('login');
   }
 
-  initForm() {
+  private initializeForm() {
     this.registrationForm = this.formBuilder.group(
       {
         firstName: ['', Validators.required],
@@ -61,7 +51,7 @@ export class RegistrationComponent implements OnInit {
         dateOfBirth: ['', Validators.required],
         phoneNumber: ['', Validators.pattern('[- +()0-9]+')],
         email: ['', Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)],
-        password: ['', Validators.required],
+        password: ['', Validators.minLength(8)],
       },
       { updateOn: 'change' }
     );

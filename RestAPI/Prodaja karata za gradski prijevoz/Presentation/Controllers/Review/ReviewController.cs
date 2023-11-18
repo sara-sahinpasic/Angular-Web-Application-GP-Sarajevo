@@ -1,13 +1,13 @@
-﻿using Application.Services.Abstractions.Interfaces.Mapper;
+﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Reviews;
+using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Presentation.DTO;
 using Presentation.DTO.Review;
-using Application.Services.Abstractions.Interfaces.Repositories.Tickets;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using Application.Config;
 
 namespace Presentation.Controllers.Review;
 
@@ -28,7 +28,7 @@ public sealed class ReviewController : ControllerBase
     }
 
     [Authorize(Policy = AuthorizationPolicies.UserPolicyName)]
-    [HttpPost("AddReview")]
+    [HttpPost("Add")]
     public async Task<IActionResult> AddReview([FromServices] IObjectMapperService objectMapperService,
          ReviewDto reviewDto, CancellationToken cancellationToken)
     {
@@ -79,7 +79,7 @@ public sealed class ReviewController : ControllerBase
             || reviewDto.Score <= 0 || reviewDto.Score > 5;
     }
 
-    [HttpGet("Pagination")]
+    [HttpGet("Get")]
     public async Task<IActionResult> GetPage(int page, int pageSize, CancellationToken cancellationToken)
     {
         var productsPerPage = await _reviewRepository
@@ -95,10 +95,15 @@ public sealed class ReviewController : ControllerBase
             .Take(pageSize)
             .ToArrayAsync(cancellationToken);
 
-        return Ok(productsPerPage);
+        Response response = new()
+        {
+            Data = productsPerPage
+        };
+
+        return Ok(response);
     }
 
-    [HttpGet("ReviewPagesCount")]
+    [HttpGet("PagesCount")]
     public async Task<IActionResult> GetReviewCount(double pageSize, CancellationToken cancellationToken)
     {
         var total = await _reviewRepository

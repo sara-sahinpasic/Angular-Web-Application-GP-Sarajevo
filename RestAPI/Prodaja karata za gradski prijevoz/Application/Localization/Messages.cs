@@ -5,10 +5,12 @@ public sealed class Messages
     public Dictionary<string, string> Bs { get; } = new() {
         // auth controller
         { "auth_controller_register_action_user_registered_error", "Korisnik je već registrovan." },
-        { "auth_controller_register_action_success", "Uspješna registrovan korisnik." },
+        { "auth_controller_register_action_success", "Uspješno registrovan korisnik." },
+        { "auth_controller_register_action_activation_token_sent", "Poslan Vam je token na email. Provjerite i spam." },
 
         { "auth_controller_activate_action_invalid_token", "Aktivacijski token nije validan." },
         { "auth_controller_activate_action_expired_token_error", "Token je istekao. Novi token Vam je poslan na e-mail." },
+        { "auth_controller_activate_action_success", "Uspješno aktiviran račun. Molimo Vas, ulogujte se." },
 
         { "auth_controller_login_action_user_not_found", "Korisnik nije pronađen." },
         { "auth_controller_login_action_account_not_active", "Račun nije aktivan. Provjerite e-mail za aktivacijski kod." },
@@ -61,9 +63,11 @@ public sealed class Messages
         // auth controller
         { "auth_controller_register_action_user_registered_error", "User is already registered." },
         { "auth_controller_register_action_success", "User successfully created." },
+        { "auth_controller_register_action_activation_token_sent", "An activation token has been sent to your email. Please, check your spam also." },
 
         { "auth_controller_activate_action_invalid_token", "Activation token not valid." },
         { "auth_controller_activate_action_expired_token_error", "Token has expired. A new one has been sent." },
+        { "auth_controller_activate_action_success", "Successfully activated account. Please, proceed to login." },
 
         { "auth_controller_login_action_user_not_found", "User with those credentials not found." },
         { "auth_controller_login_action_account_not_active", "Account not activated. Check your email for the activation code." },

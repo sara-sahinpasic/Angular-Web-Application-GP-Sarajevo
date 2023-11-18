@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { InvalidArgumentException } from 'src/app/exceptions/InvalidArgumentException';
+import { InvalidArgumentException } from 'src/app/exceptions/invalidArgumentException';
 import { Messages } from 'src/localization/messages';
 import { CacheService } from '../cache/cache.service';
 
@@ -8,7 +8,7 @@ import { CacheService } from '../cache/cache.service';
 })
 export class LocalizationService {
 
-  private localizationIdentifiers: string[] = ["en", "bs"]
+  private localizationIdentifiers: string[] = ['en', 'bs']
   private locale!: string | null;
 
   constructor(private cacheService: CacheService) {
@@ -16,14 +16,14 @@ export class LocalizationService {
   }
 
   public localize(message: string): string {
-    let localeLower = "bs";
+    let localeLower = 'bs';
 
     if (this.locale != null) {
       localeLower = this.locale.toLowerCase();
     }
 
     if (this.localizationIdentifiers.indexOf(localeLower) == -1) {
-      localeLower = "bs";
+      localeLower = 'bs';
     }
 
     let localizedMessage = Messages.locale[localeLower][message];
@@ -39,13 +39,13 @@ export class LocalizationService {
     const localeLower = locale.toLowerCase();
 
     if (this.localizationIdentifiers.indexOf(localeLower) == -1) {
-      throw new InvalidArgumentException(["locale must be either en or bs"]);
+      throw new InvalidArgumentException(['locale must be either en or bs']);
     }
 
-    this.cacheService.setCacheData("locale", locale);
+    this.cacheService.setCacheData('locale', locale);
   }
 
   public getLocale(): string | null {
-    return this.cacheService.getDataFromCache("locale");
+    return this.cacheService.getDataFromCache('locale');
   }
 }

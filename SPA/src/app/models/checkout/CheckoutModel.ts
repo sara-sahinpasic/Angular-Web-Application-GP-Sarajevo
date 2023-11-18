@@ -1,6 +1,6 @@
-import { TicketModel } from "../Admin/Ticket/TicketModel";
-import { PaymentMethodModel } from "../payment-method/PaymentMethodModel";
-import { SelectedRoute } from "../routes/SelectedRoute";
+import { TicketModel } from "../admin/ticket/ticketModel";
+import { PaymentMethodModel } from "../payment-method/paymentMethodModel";
+import { SelectedRoute } from "../routes/selectedRoute";
 
 export interface CheckoutModel {
   cardType?: TicketModel,

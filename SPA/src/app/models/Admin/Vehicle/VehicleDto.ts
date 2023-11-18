@@ -1,5 +1,5 @@
-import { ManufacturerDto } from "./ManufacturerDto";
-import { VehicleTypeDto } from "./VehicleTypeDto";
+import { ManufacturerDto } from "./manufacturerDto";
+import { VehicleTypeDto } from "./vehicleTypeDto";
 
 interface VehicleDtoBase {
   id?: string,

@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-import { DataResponse } from 'src/app/models/DataResponse';
-import { CheckoutModel } from 'src/app/models/checkout/CheckoutModel';
+import { tap, Observable } from 'rxjs';
+import { CheckoutModel } from 'src/app/models/checkout/checkoutModel';
+import { FinishCheckoutModel } from 'src/app/models/checkout/finishCheckoutModel';
+import { DataResponse } from 'src/app/models/dataResponse';
+import { UserProfileModel } from 'src/app/models/user/userProfileModel';
 import { environment } from 'src/environments/environment';
-import { FinishCheckoutModel } from 'src/app/models/checkout/FinishCheckoutModel';
 import { UserService } from '../user/user.service';
-import { UserProfileModel } from 'src/app/models/User/UserProfileModel';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +15,11 @@ export class CheckoutService {
 
   private url: string = environment.apiUrl;
   private checkoutFinishModel: FinishCheckoutModel = {
-    userId: "",
-    paymentMethodId: "",
+    userId: '',
+    paymentMethodId: '',
     quantity: 0,
-    ticketId: "",
-    routeId: ""
+    ticketId: '',
+    routeId: ''
   };
   private checkoutPlaceholderModel: CheckoutModel | null = null;
 
@@ -40,11 +40,11 @@ export class CheckoutService {
 
   private clearCheckoutModel() {
     this.checkoutFinishModel = {
-      userId: "",
-      paymentMethodId: "",
+      userId: '',
+      paymentMethodId: '',
       quantity: 0,
-      ticketId: "",
-      routeId: ""
+      ticketId: '',
+      routeId: ''
     };
   }
 
