@@ -139,6 +139,11 @@ export class UserService {
             return;
           }
 
+          if (user.role.toLowerCase() === "driver") {
+            this.router.navigateByUrl("/driver");
+            return;
+          }
+
           if (redirectionRoute != null) {
             this.router.navigateByUrl(redirectionRoute);
           }
