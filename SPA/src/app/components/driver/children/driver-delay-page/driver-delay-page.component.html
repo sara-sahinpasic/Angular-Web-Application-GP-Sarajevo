@@ -6,7 +6,7 @@
         <label>Ruta: </label>
         <select class="form-control-admin" [(ngModel)]="delayModel.routeId" [ngModelOptions]="{standalone: true}">
           <option *ngFor="let route of routes;" [value]="route.id">
-            {{route.startingLocation}} - {{route.endingLocation}}
+            {{ route.startingLocation }} - {{ route.endingLocation }} | {{ route.timeOfDeparture }} - {{ route.timeOfArrival }}
           </option>
         </select>
       </div>

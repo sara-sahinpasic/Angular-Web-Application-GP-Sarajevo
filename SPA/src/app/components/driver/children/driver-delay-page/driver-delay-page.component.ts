@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
 import { DelayCreateModel } from 'src/app/models/driver/delay/delayCreateModel';
-import { RouteDto } from 'src/app/models/driver/delay/routeDto';
+import { RouteListResponse } from 'src/app/models/routes/routeResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { RouteService } from 'src/app/services/routes/route.service';
 
@@ -14,7 +14,7 @@ import { RouteService } from 'src/app/services/routes/route.service';
 export class DriverDelayPageComponent implements OnInit {
   protected delayForm: FormGroup = {} as FormGroup;
   protected delayModel: DelayCreateModel = {} as DelayCreateModel;
-  protected routes: RouteDto[] = [];
+  protected routes: RouteListResponse[] = [];
 
   constructor(
     private driverService: DriverService,
@@ -46,7 +46,7 @@ export class DriverDelayPageComponent implements OnInit {
     this.routeService
       .getAllRoutes()
       .pipe(
-        tap((response: RouteDto[]) => {
+        tap((response: RouteListResponse[]) => {
           this.routes = response;
           this.delayModel.routeId = response[0].id;
         })
