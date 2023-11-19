@@ -25,7 +25,7 @@ public sealed class LogService : ILogService
         _configuration = configuration;
     }
 
-    public async Task LogAsync(string message, LogLevel logLevel)
+    public async Task LogAsync(Exception exception, LogLevel logLevel)
     {
         if (!IsValidLogLevel(logLevel))
         {
@@ -35,7 +35,8 @@ public sealed class LogService : ILogService
         Log log = new()
         {
             Level = logLevel.ToString(),
-            Message = message,
+            Message = exception.Message,
+            InnerMessage = exception.InnerException?.Message,
             Date = DateTime.UtcNow
         };
 

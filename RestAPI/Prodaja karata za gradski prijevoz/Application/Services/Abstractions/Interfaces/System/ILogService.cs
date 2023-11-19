@@ -4,5 +4,5 @@ namespace Application.Services.Abstractions.Interfaces.System;
 
 public interface ILogService
 {
-    public Task LogAsync(string message, LogLevel logLevel);
+    public Task LogAsync(Exception exception, LogLevel logLevel);
 }

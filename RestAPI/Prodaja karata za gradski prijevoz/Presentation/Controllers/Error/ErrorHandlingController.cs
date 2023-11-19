@@ -40,7 +40,7 @@ public sealed class ErrorHandlingController : ControllerBase
         var exceptionMessage = exception.InnerException?.Message ?? exception.Message;
 
         _logger.LogError(exceptionMessage);
-        await _logService.LogAsync(exceptionMessage, LogLevel.Error);
+        await _logService.LogAsync(exception, LogLevel.Error);
 
         return StatusCode((int)HttpStatusCode.InternalServerError, response);
     }
