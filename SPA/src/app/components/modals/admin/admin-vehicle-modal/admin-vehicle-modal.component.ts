@@ -5,7 +5,7 @@ import { ManufacturerDto } from 'src/app/models/admin/vehicle/manufacturerDto';
 import { VehicleListDto, VehicleDto } from 'src/app/models/admin/vehicle/vehicleDto';
 import { VehicleTypeDto } from 'src/app/models/admin/vehicle/vehicleTypeDto';
 import { DataResponse } from 'src/app/models/dataResponse';
-import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { VehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
@@ -172,7 +172,7 @@ export class AdminVehicleModalComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private vehicleService: AdminVehicleService,
+    private vehicleService: VehicleService,
     private modalService: ModalService
   ) {}
 

@@ -32,6 +32,10 @@
             <button type="button" class="btn btn-link btn-operation" (click)="deleteVehicle(vehicle)">
               <fa-icon [icon]="deleteIcon"></fa-icon>
             </button>
+            <button *ngIf="vehicle.hasMalfunction" type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
+              data-bs-target="#base-modal" (click)="showMalfunctionModal(vehicle.id!)">
+              <fa-icon [icon]="reportIcon"></fa-icon>
+            </button>
           </td>
           <td>{{ vehicle.registrationNumber }}</td>
           <td>{{ vehicle.type.name }}</td>

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
 import { VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
 import { MalfunctionCreateModel } from 'src/app/models/driver/malfunction/malfunctionCreateModel';
-import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { VehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { DriverService } from 'src/app/services/driver/driver.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class DriverMalfunctionPageComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private driverService: DriverService,
-    private vehicleService: AdminVehicleService
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit() {

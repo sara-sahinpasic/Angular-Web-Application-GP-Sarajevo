@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { tap } from 'rxjs';
 import { VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
 import { StationModel } from 'src/app/models/stations/stationModel';
-import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { VehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { CacheService } from 'src/app/services/cache/cache.service';
 import { StationService } from 'src/app/services/stations/station.service';
 
@@ -22,7 +22,7 @@ export class RoutesFormComponent implements OnInit {
   constructor(
     private cacheService: CacheService,
     private stationService: StationService,
-    private vehicleService: AdminVehicleService
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit() {

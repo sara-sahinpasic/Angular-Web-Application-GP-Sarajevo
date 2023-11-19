@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
 import { InvalidArgumentException } from 'src/app/exceptions/invalidArgumentException';
 import { VehicleListDto } from 'src/app/models/admin/vehicle/vehicleDto';
 import { Pagination } from 'src/app/models/pagination/pagination';
-import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { VehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
@@ -22,8 +22,9 @@ export class AdminVehiclePageComponent {
   protected filteredVehicleList: VehicleListDto[] = [];
   protected editIcon = faEdit;
   protected deleteIcon = faTrash;
+  protected reportIcon = faFile;
 
-  constructor(private vehicleService: AdminVehicleService, private modalService: ModalService) {}
+  constructor(private vehicleService: VehicleService, private modalService: ModalService) {}
 
   ngOnInit() {
     this.vehicleService.getVehicleList()
@@ -45,6 +46,11 @@ export class AdminVehiclePageComponent {
   protected showVehicleEditModal(vehicle: VehicleListDto) {
     this.modalService.data = vehicle;
     this.modalService.adminShowVehiclesModal(vehicle.registrationNumber);
+  }
+
+  protected showMalfunctionModal(vehicleId: string) {
+    this.modalService.data = vehicleId;
+    this.modalService.adminShowVehicleMalfunctionDetailsModal();
   }
 
   protected deleteVehicle(vehicle: VehicleListDto) {

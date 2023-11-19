@@ -5,7 +5,7 @@ import { tap } from 'rxjs';
 import { ManufacturerDto } from 'src/app/models/admin/vehicle/manufacturerDto';
 import { DataResponse } from 'src/app/models/dataResponse';
 import { Pagination } from 'src/app/models/pagination/pagination';
-import { AdminVehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
+import { VehicleService } from 'src/app/services/admin/vehicle/admin-vehicle.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class AdminManufacturerModalComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private vehicleService: AdminVehicleService,
+    private vehicleService: VehicleService,
     private modalService: ModalService
   ) {}
 

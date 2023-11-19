@@ -23,6 +23,27 @@ public class MalfunctionService : IMalfunctionService
         _vehicleRepository = vehicleRepository;
     }
 
+    public async Task SendFixedMalfunctionNotification(Vehicle vehicle, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        IReadOnlyCollection<User> users = await _issuedTicketRepository.GetAll()
+            .Where(issuedTicket => issuedTicket.Route.VehicleId == vehicle.Id)
+            .Where(issuedTicket => DateTime.Now.Date <= issuedTicket.ValidFrom.Date)
+            .Select(issuedTicket => issuedTicket.User)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        string subject = string.Format("Kvar vozila broj {0} otklonjen/Malfunction for vehicle number {0} is fixed", vehicle.Number);
+        string content = "Vozilo koje prevozi Vašu rutu je popravljeno." +
+            "<br /> <br /> The vehicle that is driving your route has been fixed.";
+
+        foreach (var user in users)
+        {
+            await _emailService.SendNoReplyMailAsync(user, subject, content, cancellationToken);
+        }
+    }
+
     public async Task SendMalfunctionNotification(Malfunction malfunction, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();

@@ -66,6 +66,7 @@ import { AuthInterceptorInterceptor } from './http-interceptors/auth/auth-interc
 import { HttpInterceptorInterceptor } from './http-interceptors/http-interceptor.interceptor';
 
 import { SafePipe } from './pipes/safeUrl/safe.pipe';
+import { AdminVehicleMalfunctionDetailsComponent } from './components/modals/admin/admin-vehicle-malfunction-details/admin-vehicle-malfunction-details.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { SafePipe } from './pipes/safeUrl/safe.pipe';
     AdminHolidayModalComponent,
     PageNotFoundComponent,
     AdminStatisticsPageComponent,
-    VerifyLoginComponent
+    VerifyLoginComponent,
+    AdminVehicleMalfunctionDetailsComponent
   ],
   imports: [
     BrowserModule,

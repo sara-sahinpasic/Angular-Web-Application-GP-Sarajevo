@@ -1,7 +1,10 @@
 ﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Driver;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
+using Application.Services.Abstractions.Interfaces.Repositories.Driver;
 using Application.Services.Abstractions.Interfaces.Repositories.Vehicles;
+using Domain.Entities.Driver;
 using Domain.Entities.Vehicles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -82,7 +85,8 @@ namespace Presentation.Controllers.Admin.Vehicles
                     {
                         Id = vehicle.VehicleType.Id,
                         Name = vehicle.VehicleType.Name,
-                    }
+                    },
+                    HasMalfunction = vehicle.HasMalfunction
                 })
                 .ToListAsync(cancellationToken);
 
@@ -135,6 +139,46 @@ namespace Presentation.Controllers.Admin.Vehicles
             return Ok(response);
         }
 
+        [HttpGet("Malfunctions/Get/{vehicleId}")]
+        public async Task<IActionResult> GetVehicleMalfunction([FromServices] IMalfunctionRepository malfunctionRepository, Guid vehicleId, 
+            CancellationToken cancellationToken)
+        {
+            Malfunction malfunction = await malfunctionRepository.GetByVehicleIdAsync(vehicleId, cancellationToken);
+
+            Response response = new()
+            {
+                Data = malfunction.Description
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPut("Malfunctions/MarkAsFixed/{vehicleId}")]
+        public async Task<IActionResult> MarkVehicleAsFixed([FromServices] IMalfunctionRepository malfunctionRepository, 
+            [FromServices] IMalfunctionService malfunctionService,
+            Guid vehicleId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Malfunction malfunction = await malfunctionRepository.GetByVehicleIdAsync(vehicleId, cancellationToken);
+            Vehicle vehicle = await _vehicleRepository.GetByIdEnsuredAsync(vehicleId, cancellationToken: cancellationToken);
+
+            vehicle.HasMalfunction = false;
+            malfunction.Fixed = true;
+
+            await malfunctionRepository.UpdateAsync(malfunction, cancellationToken);
+            await _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
+
+            await malfunctionService.SendFixedMalfunctionNotification(vehicle, cancellationToken);
+
+            Response response = new()
+            {
+                Message = "Uspješno markirano vozilo kao popravljeno."
+            };
+
+            return Ok(response);
+        }
         #endregion
 
         #region Manufacturers

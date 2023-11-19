@@ -6,7 +6,7 @@
       vehicleForm.get('vehicleNumber')?.invalid && (vehicleForm.get('vehicleNumber')?.dirty
       || vehicleForm.get('vehicleNumber')?.touched)" />
     <div class="invalid-feedback">
-      {{ "Obavezan unos!" }}
+      Obavezan unos!
     </div>
   </div>
 
@@ -17,7 +17,7 @@
       vehicleForm.get('registrationNumber')?.invalid && (vehicleForm.get('registrationNumber')?.dirty
       || vehicleForm.get('registrationNumber')?.touched)" />
     <div class="invalid-feedback">
-      {{ "Registracijske oznake moraju biti u formatu sxx-s-xxx. Npr. A32-K-323" }}
+      Registracijske oznake moraju biti u formatu sxx-s-xxx. Npr. A32-K-323
     </div>
   </div>
 
@@ -28,7 +28,7 @@
       [class.is-invalid]="vehicleForm.get('buildYear')?.invalid && (vehicleForm.get('buildYear')?.dirty
       || vehicleForm.get('buildYear')?.touched)" />
     <div class="invalid-feedback">
-      {{ "Obavezan unos!" }}
+      Obavezan unos!
     </div>
   </div>
 
@@ -36,7 +36,7 @@
     <label for="color">Boja:</label>
     <select class="form-control-admin mt-1" [(ngModel)]="vehicleModel.color" [ngModelOptions]="{standalone: true}">
       <option *ngFor="let color of colors; let i=index">
-        {{color}}
+        {{ color }}
       </option>
     </select>
   </div>

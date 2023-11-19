@@ -15,6 +15,7 @@ export interface VehicleDto extends VehicleDtoBase {
 }
 
 export interface VehicleListDto extends VehicleDtoBase {
-  manufacturer: ManufacturerDto,
-  type: VehicleTypeDto
+  manufacturer: ManufacturerDto;
+  type: VehicleTypeDto;
+  hasMalfunction: boolean;
 }

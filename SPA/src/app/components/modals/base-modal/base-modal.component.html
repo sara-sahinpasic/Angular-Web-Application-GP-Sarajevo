@@ -24,6 +24,7 @@
         <app-admin-user-modal *ngIf="modalService.showAdminUsersModalState"></app-admin-user-modal>
         <app-admin-manufacturer-modal *ngIf="modalService.showAdminManufacturerModalState"></app-admin-manufacturer-modal>
         <app-admin-vehicle-type-modal *ngIf="modalService.showAdminVehicleTypeModalState"></app-admin-vehicle-type-modal>
+        <app-admin-vehicle-malfunction-details *ngIf="modalService.showVehicleMalfunctionDetailsModal" [vehicleId]="modalService.data"></app-admin-vehicle-malfunction-details>
       </div>
     </div>
   </div>

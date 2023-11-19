@@ -1,0 +1,11 @@
+<div class="w-100 d-flex flex-column">
+  <div class="form-group d-flex flex-column mb-3">
+    <label class="mb-2">Opis:</label>
+    <textarea readonly cols="30" rows="10" [(ngModel)]="description" style="resize: none;"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="me-2">Otklonjen kvar?</label>
+    <input type="checkbox" [(ngModel)]="isFixed"/>
+  </div>
+  <button class="primary admin-button" (click)="markAsFixed()">Sačuvaj</button>
+</div>

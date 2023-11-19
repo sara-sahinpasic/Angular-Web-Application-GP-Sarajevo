@@ -9,4 +9,5 @@ internal sealed class VehicleListDto
     public VehicleTypeDto Type { get; set; }
     public ManufacturerDto Manufacturer { get; set; }
     public int BuildYear { get; set; }
+    public bool HasMalfunction { get; set; }
 }
