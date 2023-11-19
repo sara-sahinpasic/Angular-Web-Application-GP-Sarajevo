@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories.Driver.Malfunction
             cancellationToken.ThrowIfCancellationRequested();
 
             return GetAll()
-                .Where(malfunction => malfunction.VehicleId == vehicleId)
+                .Where(malfunction => malfunction.VehicleId == vehicleId && !malfunction.Fixed)
                 .FirstAsync(cancellationToken);
         }
     }

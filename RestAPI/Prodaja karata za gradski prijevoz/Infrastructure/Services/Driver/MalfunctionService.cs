@@ -30,6 +30,7 @@ public class MalfunctionService : IMalfunctionService
         IReadOnlyCollection<User> users = await _issuedTicketRepository.GetAll()
             .Where(issuedTicket => issuedTicket.Route.VehicleId == vehicle.Id)
             .Where(issuedTicket => DateTime.Now.Date <= issuedTicket.ValidFrom.Date)
+            .Where(issuedTicket => DateTime.Now.TimeOfDay < issuedTicket.Route.TimeOfDeparture)
             .Select(issuedTicket => issuedTicket.User)
             .Distinct()
             .ToListAsync(cancellationToken);
@@ -51,6 +52,7 @@ public class MalfunctionService : IMalfunctionService
         IReadOnlyCollection<User> users = await _issuedTicketRepository.GetAll()
             .Where(issuedTicket => issuedTicket.Route.VehicleId == malfunction.VehicleId)
             .Where(issuedTicket => DateTime.Now.Date <= issuedTicket.IssuedDate.Date)
+            .Where(issuedTicket => DateTime.Now.TimeOfDay < issuedTicket.Route.TimeOfDeparture)
             .Select(issuedTicket => issuedTicket.User)
             .Distinct()
             .ToListAsync(cancellationToken);
