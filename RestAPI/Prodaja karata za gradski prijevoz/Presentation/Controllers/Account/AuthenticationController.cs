@@ -44,6 +44,8 @@ public sealed class AuthenticationController : ControllerBase
         User user = new();
         objectMapperService.Map(userRequest, user);
 
+        user.RegistrationDate = DateTime.Now;
+
         RegisterResult registerResult = await _authService.RegisterAsync(user, userRequest.Password!, cancellationToken);
 
         Response response = new()

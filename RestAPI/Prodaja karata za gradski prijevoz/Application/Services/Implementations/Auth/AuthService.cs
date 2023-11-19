@@ -180,7 +180,6 @@ public sealed class AuthService : IAuthService
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        // done this way because we want to send the email after successfully commiting all changes to the database
         if (_authConfirmationConfig.ShoudUseRegisteredAccountConfirmation)
         {
             await _emailService.SendRegistrationMailAsync(user, token!.Token!, cancellationToken);
