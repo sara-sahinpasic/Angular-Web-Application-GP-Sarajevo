@@ -399,9 +399,8 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
             
             ++counter;
 
-            if (counter >= 14)
+            if (pdfGraphicsData.RowPositionY >= 600)
             {
-                counter = 0;
                 AddNewPage(pdfDocument, out page, out gfx, out pageSize, out pdfGraphicsData);
             }
         }
@@ -439,12 +438,7 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
             font = new("Times New Roman", 15, XFontStyleEx.Bold);
         }
 
-        gfx.DrawRectangle(XPens.Black,
-            pdfGraphicsData.CanvasContentStartingPointX,
-            pdfGraphicsData.CanvasContentStartingPointY + pdfGraphicsData.RowPositionY,
-            rectangleWidth,
-            rectangleHeight);
-
+        double splitStringHeight = 0;
         for (int i = 0; i < contents.Length; i++)
         {
             int xOffset = i > 0 ? -10 : 10;
@@ -458,10 +452,46 @@ public sealed class PDFGeneratorService : IPDFGeneratorService
                 break;
             }
 
+            if (contents[i].Length > 20)
+            {
+                splitStringHeight = DrawSplitString(gfx, contents, contentRowY, font, splitStringHeight, i, contentX);
+
+                continue;
+            }
+
             gfx.DrawString(contents[i], font, XBrushes.Black, contentX, contentRowY);
         }
 
-        pdfGraphicsData.RowPositionY += 50;
+        double incrementY = splitStringHeight == 0 ? 0 : splitStringHeight - 20;
+
+        gfx.DrawRectangle(XPens.Black,
+         pdfGraphicsData.CanvasContentStartingPointX,
+         pdfGraphicsData.CanvasContentStartingPointY + pdfGraphicsData.RowPositionY,
+         rectangleWidth,
+         rectangleHeight + incrementY);
+
+        pdfGraphicsData.RowPositionY += 50 + incrementY;
+    }
+
+    private static double DrawSplitString(XGraphics gfx, string[] contents, double contentRowY, XFont font, double splitStringHeight, int i, double contentX)
+    {
+        List<string> stringParts = new() { contents[i] };
+
+        while (stringParts[^1].Length > 20)
+        {
+            string part1 = stringParts[^1].Substring(0, 20);
+            string part2 = stringParts[^1].Substring(20);
+            stringParts[^1] = part1;
+            stringParts.Add(part2);
+        }
+
+        foreach (string part in stringParts)
+        {
+            gfx.DrawString(part, font, XBrushes.Black, contentX, contentRowY + splitStringHeight);
+            splitStringHeight += 20;
+        }
+
+        return splitStringHeight;
     }
 
     private void DrawPurchaseHistoryHeader(XGraphics gfx, PdfGraphicsData pdfGraphicsData)
