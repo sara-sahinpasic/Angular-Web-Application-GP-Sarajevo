@@ -58,6 +58,7 @@ export class AdminUserModalComponent implements OnInit {
           Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/),
         ],
         password: ['', Validators.required],
+        phoneNumber: ['', Validators.pattern('[- +()0-9]+')]
       },
       { updateOn: 'change' }
     );

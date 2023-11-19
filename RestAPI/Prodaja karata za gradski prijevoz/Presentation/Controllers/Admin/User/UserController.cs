@@ -68,7 +68,9 @@ public sealed class UserController : ControllerBase
             PasswordSalt = passwordHashAndSalt.Item1,
             DateOfBirth = createDto.DateOfBirth,
             RoleId = createDto.RoleId,
-            RegistrationDate = DateTime.UtcNow
+            RegistrationDate = DateTime.Now,
+            PhoneNumber = createDto.PhoneNumber,
+            ModifiedDate = DateTime.Now
         };
 
         await _userRepository.CreateAsync(newUser, cancellationToken);

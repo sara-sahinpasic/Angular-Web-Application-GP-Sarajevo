@@ -21,7 +21,7 @@ public sealed class ObjectMapperServiceTests
         {
             FirstName = "amor",
             LastName = "osmic",
-            Status = null
+            UserStatus = null
         };
 
         User userToMapTo = new();

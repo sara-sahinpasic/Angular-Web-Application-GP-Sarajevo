@@ -1,10 +1,15 @@
-﻿namespace Presentation.DTO.Driver
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Presentation.DTO.Driver
 {
     public class MalfunctionDto
     {
-        public string Description { get; set; }
+        [Required]
+        public string Description { get; set; } = null!;
+        [Required]
         public DateTime DateOfMalufunction { get; set; }
         public bool Fixed { get; set; }
+        [Required]
         public Guid VehicleId { get; set; }
     }
 }

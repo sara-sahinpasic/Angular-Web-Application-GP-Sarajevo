@@ -4,10 +4,10 @@ internal sealed class VehicleListDto
 {
     public Guid Id { get; set; }
     public int Number { get; set; }
-    public string RegistrationNumber { get; set; }
-    public string Color { get; set; }
-    public VehicleTypeDto Type { get; set; }
-    public ManufacturerDto Manufacturer { get; set; }
+    public string RegistrationNumber { get; set; } = null!;
+    public string Color { get; set; } = null!;
+    public VehicleTypeDto Type { get; set; } = null!;
+    public ManufacturerDto Manufacturer { get; set; } = null!;
     public int BuildYear { get; set; }
     public bool HasMalfunction { get; set; }
 }

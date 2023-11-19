@@ -4,10 +4,14 @@ namespace Presentation.DTO.Review
 {
     public sealed class ReviewDto
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
+        [Required]
+        public string Title { get; set; } = null!;
+        [Required]
+        public string Description { get; set; } = null!;
+        [Required]
         [Range(1, 5)]
         public int Score { get; set; }
+        [Required]
         public Guid UserId { get; set; }
     }
 }

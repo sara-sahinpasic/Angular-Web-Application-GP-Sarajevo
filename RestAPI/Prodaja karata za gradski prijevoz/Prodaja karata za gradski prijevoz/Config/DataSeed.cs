@@ -174,7 +174,7 @@ public static class DataSeed
                 ValidFrom = DateTime.Now,
                 ValidTo = DateTime.Now.AddMinutes(60),
                 IssuedDate = DateTime.Now,
-                RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count())),
+                RouteId = routeIds.ElementAt(Random.Shared.Next(0, routeIds.Count() - 1)),
             };
 
             await issuedTicketRepository.CreateAsync(issuedTicket);
@@ -243,7 +243,7 @@ public static class DataSeed
         for (int i = 0; i < UserCount; ++i)
         {
             string email = Faker.Internet.Email();
-            Roles role = Roles.User;
+            string role = Roles.User;
 
             if (i == 0)
             {
@@ -265,9 +265,10 @@ public static class DataSeed
                 DateOfBirth = Faker.Identification.DateOfBirth(),
                 PhoneNumber = Faker.Phone.Number(),
                 Address = Faker.Address.StreetAddress(),
-                RegistrationDate = DateTime.UtcNow,
-                Roles = role,
-                ProfileImagePath = ""
+                RegistrationDate = DateTime.Now,
+                RoleId = new Guid(role),
+                ProfileImagePath = "",
+                ModifiedDate = DateTime.Now
             };
 
             Tuple<byte[], string> passwordHashAndSalt = passwordService.GeneratePasswordHashAndSalt(DefaultUserPassword);

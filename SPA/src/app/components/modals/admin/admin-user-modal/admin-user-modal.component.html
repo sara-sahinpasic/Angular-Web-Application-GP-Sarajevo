@@ -44,6 +44,17 @@
   </div>
 
   <div class="form-group mb-3">
+    <label for="phoneNumber">Broj telefona: </label>
+    <input id="phoneNumber" class="form-control-admin mt-1" placeholder="" required name="phoneNumber"
+      [(ngModel)]="userCreateModel.phoneNumber" formControlName="phoneNumber" [class.is-invalid]="
+        userCreationForm.get('phoneNumber')?.invalid && (userCreationForm.get('phoneNumber')?.dirty
+        || userCreationForm.get('phoneNumber')?.touched)" />
+    <div class="invalid-feedback">
+      Obavezan unos!
+    </div>
+  </div>
+
+  <div class="form-group mb-3">
   <label for="password">Lozinka: </label>
     <input id="password" class="form-control-admin mt-1" type="password" required name="password"
       [(ngModel)]="userCreateModel.password" formControlName="password" [class.is-invalid]="

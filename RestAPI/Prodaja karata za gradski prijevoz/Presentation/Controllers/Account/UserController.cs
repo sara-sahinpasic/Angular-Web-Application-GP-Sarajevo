@@ -88,6 +88,8 @@ public sealed class UserController : ControllerBase
             data.PasswordSalt = password.Item1;
         }
 
+        data.ModifiedDate = DateTime.Now;
+
         await _userRepository.UpdateAsync(data, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 

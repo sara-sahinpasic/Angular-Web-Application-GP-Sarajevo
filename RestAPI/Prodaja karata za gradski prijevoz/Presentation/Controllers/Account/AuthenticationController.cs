@@ -40,11 +40,12 @@ public sealed class AuthenticationController : ControllerBase
 
             return BadRequest(errorResponse);
         }
-        
+
         User user = new();
         objectMapperService.Map(userRequest, user);
 
         user.RegistrationDate = DateTime.Now;
+        user.ModifiedDate = DateTime.Now;
 
         RegisterResult registerResult = await _authService.RegisterAsync(user, userRequest.Password!, cancellationToken);
 
@@ -101,7 +102,7 @@ public sealed class AuthenticationController : ControllerBase
     public async Task<IActionResult> LoginAction(UserLoginRequestDto loginData, CancellationToken cancellationToken)
     {
         Response errorResponse = new();
-        
+
         if (string.IsNullOrEmpty(loginData.Password))
         {
             errorResponse.Message = "auth_controller_login_action_email_cannot_be_empty";

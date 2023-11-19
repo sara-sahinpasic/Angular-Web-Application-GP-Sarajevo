@@ -1,31 +1,21 @@
 ﻿using Domain.Abstractions.Classes;
 using Domain.Entities.Users;
-using Domain.Enums.User;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.Requests
 {
     public sealed class Request : Entity
     {
+        [Required]
         public Guid UserStatusId { get; set; }
         public Status UserStatus { get; set; } = null!;
-
-        [NotMapped]
-        public Statuses RequestType
-        {
-            get
-            {
-                return Statuses.From(UserStatusId.ToString());
-            }
-            set
-            {
-                UserStatusId = Guid.Parse(value.ToString());
-            }
-        }
+        [Required]
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
+        [Required]
         public DateTime DateCreated { get; set; }
         public bool Approved { get; set; }
+        [Required]
         public string DocumentLink { get; set; } = null!;
         public string? RejectionReason { get; set; }
         public bool Active { get; set; }

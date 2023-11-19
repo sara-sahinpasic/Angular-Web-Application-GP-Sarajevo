@@ -2,5 +2,5 @@
 
 public abstract class ReportData<T>
 {
-    public List<T> Data { get; set; }
+    public List<T> Data { get; set; } = new List<T>();
 }

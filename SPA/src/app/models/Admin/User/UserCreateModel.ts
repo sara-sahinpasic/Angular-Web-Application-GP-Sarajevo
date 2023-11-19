@@ -5,4 +5,5 @@ export interface UserCreateModel {
   password?: string;
   dateOfBirth?: Date;
   roleId?: string;
+  phoneNumber?:string;
 }

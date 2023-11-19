@@ -1,13 +1,17 @@
 ﻿using Domain.Abstractions.Classes;
 using Domain.Entities.Routes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.Driver
 {
     public class Delay : Entity
     {
-        public string Reason { get; set; }
+        [Required]
+        public string Reason { get; set; } = null!;
+        [Required]
         public Guid RouteId { get; set; }
         public Route Route { get; set; } = null!;
+        [Required]
         public int DelayAmount { get; set; }
     }
 }

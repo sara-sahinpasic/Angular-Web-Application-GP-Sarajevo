@@ -50,7 +50,7 @@ public sealed class AuthService : IAuthService
     {
         ArgumentNullException.ThrowIfNull(verificationCode, nameof(verificationCode));
 
-        return DateTime.Now.Millisecond - verificationCode?.DateExpiring.Millisecond > 1000 * 60 * 5 || verificationCode.Activated;
+        return DateTime.Now.Millisecond - verificationCode!.DateExpiring.Millisecond > 1000 * 60 * 5 || verificationCode.Activated;
     }
 
     public async Task<LoginResult?> AuthenticateLoginAsync(VerificationCode verificationCode, CancellationToken cancellationToken)
