@@ -2,6 +2,7 @@
 using Application.Localization;
 using Application.Services.Abstractions.Interfaces.Authentication;
 using Application.Services.Abstractions.Interfaces.Checkout;
+using Application.Services.Abstractions.Interfaces.Driver;
 using Application.Services.Abstractions.Interfaces.Email;
 using Application.Services.Abstractions.Interfaces.File;
 using Application.Services.Abstractions.Interfaces.Hashing;
@@ -44,6 +45,7 @@ using Infrastructure.Repositories.System;
 using Infrastructure.Repositories.Tickets;
 using Infrastructure.Repositories.Users;
 using Infrastructure.Repositories.Vehicles;
+using Infrastructure.Services.Driver;
 using Infrastructure.Services.Email;
 using Infrastructure.Services.File;
 using Infrastructure.Services.Report;
@@ -118,5 +120,6 @@ public static partial class Services
         builder.Services.TryAddScoped<ILocalizationService, LocalizationService>();
         builder.Services.TryAddScoped<ILogService, LogService>();
         builder.Services.TryAddScoped<IRequestService, RequestService>();
+        builder.Services.TryAddScoped<IDelayService, DelayService>();
     }
 }

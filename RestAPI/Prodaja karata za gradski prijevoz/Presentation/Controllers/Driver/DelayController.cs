@@ -1,4 +1,5 @@
 ﻿using Application.Config;
+using Application.Services.Abstractions.Interfaces.Driver;
 using Application.Services.Abstractions.Interfaces.Mapper;
 using Application.Services.Abstractions.Interfaces.Repositories;
 using Application.Services.Abstractions.Interfaces.Repositories.Driver;
@@ -19,14 +20,16 @@ public class DelayController : ControllerBase
     private readonly IUnitOfWork _unitOfWork;
     private readonly IObjectMapperService _mapperService;
     private readonly IDelayRepository _delayRepository;
+    private readonly IDelayService _delayService;
 
     public DelayController(IRouteRepository routeRepository, IUnitOfWork unitOfWork,
-        IObjectMapperService mapperService, IDelayRepository delayRepository)
+        IObjectMapperService mapperService, IDelayRepository delayRepository, IDelayService delayService)
     {
         _routeRepository = routeRepository;
         _unitOfWork = unitOfWork;
         _mapperService = mapperService;
         _delayRepository = delayRepository;
+        _delayService = delayService;
     }
 
     [HttpPost("Notify")]
@@ -37,6 +40,7 @@ public class DelayController : ControllerBase
 
         await _delayRepository.CreateAsync(newDelay, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+        await _delayService.SendDelayNotification(newDelay, cancellationToken);
 
         Response response = new()
         {
