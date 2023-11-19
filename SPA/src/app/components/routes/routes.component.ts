@@ -35,7 +35,7 @@ export class RoutesComponent implements OnInit{
       id: route.id,
       dateStamp: {
         date: route.date,
-        time: route.time
+        time: route.timeOfDeparture
       },
       endStation: routeInfo.endingStation,
       startStation: routeInfo.startingStation

@@ -44,7 +44,10 @@ public sealed class RoutesController : ControllerBase
             Id = route.Id,
             StartingLocation = route.StartStation.Name,
             EndingLocation = route.EndStation.Name,
-            Time = route.TimeOfDeparture.ToString("c"),
+            TimeOfDeparture = route.TimeOfDeparture.ToString("c"),
+            TimeOfArrival = route.TimeOfArrival.ToString("c"),
+            VehicleNumber = route.Vehicle.Number,
+            VehicleType = route.Vehicle.VehicleType.Name,
             Date = date
         };
 
