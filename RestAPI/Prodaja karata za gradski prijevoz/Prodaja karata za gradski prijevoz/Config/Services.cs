@@ -121,5 +121,6 @@ public static partial class Services
         builder.Services.TryAddScoped<ILogService, LogService>();
         builder.Services.TryAddScoped<IRequestService, RequestService>();
         builder.Services.TryAddScoped<IDelayService, DelayService>();
+        builder.Services.TryAddScoped<IMalfunctionService, MalfunctionService>();
     }
 }

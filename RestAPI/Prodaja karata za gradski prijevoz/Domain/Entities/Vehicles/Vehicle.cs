@@ -1,4 +1,5 @@
 ﻿using Domain.Abstractions.Classes;
+using Domain.Entities.Driver;
 
 namespace Domain.Entities.Vehicles;
 
@@ -12,4 +13,5 @@ public sealed class Vehicle : Entity
     public Guid VehicleTypeId { get; set; }
     public VehicleType VehicleType { get; set; } = null!;
     public int BuildYear { get; set; }
+    public bool HasMalfunction { get; set; }
 }

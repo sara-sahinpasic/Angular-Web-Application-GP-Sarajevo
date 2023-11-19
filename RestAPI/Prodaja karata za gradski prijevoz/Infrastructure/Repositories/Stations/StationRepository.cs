@@ -19,7 +19,7 @@ public sealed class StationRepository : GenericRepository<Station>, IStationRepo
     {
         return _routeRepository.GetAll()
             .AsNoTracking()
-            .Where(route => route.StartStationId == startStationId)
+            .Where(route => route.StartStationId == startStationId && !route.Vehicle.HasMalfunction && route.Active)
             .Select(route => new Station
             {
                 Id = route.EndStationId,

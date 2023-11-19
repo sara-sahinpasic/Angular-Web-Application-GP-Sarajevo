@@ -67,12 +67,23 @@ public sealed class RoutesController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("/[controller]/All")]
-    public async Task<IActionResult> GetAllRoutes(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllRoutes(bool includeRoutesWithMalfunctions, bool includeInactive, CancellationToken cancellationToken)
     {
-        IReadOnlyList<RoutesListResponseDto> routesList = await _routeRepository.GetAll()
+        IQueryable<Route> query = _routeRepository.GetAll()            
             .OrderBy(route => route.StartStation.Name)
-            .ThenBy(route => route.TimeOfDeparture)
-            .Select(route => new RoutesListResponseDto
+            .ThenBy(route => route.TimeOfDeparture);
+
+        if (!includeRoutesWithMalfunctions)
+        {
+            query = query.Where(route => !route.Vehicle.HasMalfunction);
+        }
+
+        if (!includeInactive)
+        {
+            query = query.Where(route => route.Active);
+        }
+
+        IReadOnlyList<RoutesListResponseDto> routesList = await query.Select(route => new RoutesListResponseDto
             {
                 Id = route.Id,
                 Active = route.Active,

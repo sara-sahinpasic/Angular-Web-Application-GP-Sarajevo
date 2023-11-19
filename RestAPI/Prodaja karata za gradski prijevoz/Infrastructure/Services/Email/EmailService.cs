@@ -66,6 +66,8 @@ public sealed class EmailService : IEmailService
 
     public async Task SendNoReplyMailAsync(User user, string subject, string content, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         MailboxAddress from = new("No-reply", _emailConfiguration.From);
         MailboxAddress to = new($"{user.FirstName} {user.LastName}", user.Email);
 

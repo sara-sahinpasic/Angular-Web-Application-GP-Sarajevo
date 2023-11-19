@@ -30,7 +30,10 @@ export class AdminRoutesPageComponent implements OnInit {
   }
 
   private getRouteData() {
-    this.routeService.getAllRoutes()
+    const includeRoutesWithMalfunctions: boolean = true;
+    const includeInactiveRoutes: boolean = true;
+
+    this.routeService.getAllRoutes(includeRoutesWithMalfunctions, includeInactiveRoutes)
       .pipe(
         tap((response: RouteListResponse[]) => {
           this.routesList = response;

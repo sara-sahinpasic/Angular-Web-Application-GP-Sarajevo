@@ -22,7 +22,8 @@ public sealed class RouteRepository : GenericRepository<Route>, IRouteRepository
             .Include(route => route.EndStation)
             .Where(route => route.StartStationId == startStationId && route.EndStationId == endStationId)
             .Where(route => route.TimeOfDeparture > date.TimeOfDay)
-            .Where(route => route.Active);
+            .Where(route => route.Active)
+            .Where(route => !route.Vehicle.HasMalfunction);
 
         bool isHoliday = await _holidayRepository.IsHolidayAsync(date, cancellationToken);
 

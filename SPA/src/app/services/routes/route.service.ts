@@ -27,8 +27,9 @@ export class RouteService {
       );
   }
 
-  public getAllRoutes(): Observable<RouteListResponse[]> {
-    return this.httpClient.get<DataResponse<RouteListResponse[]>>(`${this.url}Routes/All`)
+  public getAllRoutes(includeRoutesWithMalfunctions: boolean = false, includeInactive: boolean = false): Observable<RouteListResponse[]> {
+    return this.httpClient.get<DataResponse<RouteListResponse[]>>(
+      `${this.url}Routes/All?includeRoutesWithMalfunctions=${includeRoutesWithMalfunctions}&includeInactive=${includeInactive}`)
       .pipe(
         map((response: DataResponse<RouteListResponse[]>) => response.data)
       )
