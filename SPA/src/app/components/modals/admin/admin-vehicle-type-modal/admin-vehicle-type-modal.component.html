@@ -8,7 +8,7 @@
         [class.is-invalid]="vehicleTypeForm.get('name')?.invalid && (vehicleTypeForm.get('name')?.dirty
           || vehicleTypeForm.get('name')?.touched)" />
         <div class="invalid-feedback">
-          {{ "Obavezan unos!" }}
+          Obavezan unos!
         </div>
       </div>
     </form>
@@ -27,7 +27,7 @@
         <td>{{v.name}}</td>
         <td>
           <button type="button" class="btn btn-link btn-operation" (click)="deleteVehicleType(v)">
-            <fa-icon [icon]="deleteIcon"></fa-icon>
+            <fa-icon [icon]="deleteIcon" title="Brisanje"></fa-icon>
           </button>
         </td>
       </tr>

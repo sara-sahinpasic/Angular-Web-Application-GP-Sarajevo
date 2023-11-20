@@ -24,10 +24,10 @@
           <td class="controls">
             <button type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
               data-bs-target="#base-modal" (click)="showHolidayEditModal(holiday)">
-              <fa-icon [icon]="editIcon"></fa-icon>
+              <fa-icon [icon]="editIcon" title="Ažuriranje"></fa-icon>
             </button>
             <button type="button" class="btn btn-link btn-operation" (click)="deleteHoliday(holiday)">
-              <fa-icon [icon]="deleteIcon"></fa-icon>
+              <fa-icon [icon]="deleteIcon" title="Brisanje"></fa-icon>
             </button>
           </td>
           <td>{{ holiday.name }}</td>

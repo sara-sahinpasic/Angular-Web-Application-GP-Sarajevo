@@ -25,17 +25,17 @@
           <td class="controls">
             <button type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
               data-bs-target="#base-modal" (click)="showUpdateUserModal(u)">
-              <fa-icon [icon]="editIcon"></fa-icon>
+              <fa-icon [icon]="editIcon" title="Ažuriranje"></fa-icon>
             </button>
             <button *ngIf="userId !== u.id" type="button" class="btn btn-link btn-operation" (click)="deleteUser(u.id)">
-              <fa-icon [icon]="deleteIcon"></fa-icon>
+              <fa-icon [icon]="deleteIcon" title="Brisanje"></fa-icon>
             </button>
             <button *ngIf="u.hasPendingRequest" type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
               data-bs-target="#base-modal" (click)="showRequestModal(u.id!)">
-              <fa-icon [icon]="requestIcon"></fa-icon>
+              <fa-icon [icon]="requestIcon" title="Pregled zahtjeva"></fa-icon>
             </button>
             <button *ngIf="userId !== u.id" type="button" class="btn btn-link btn-operation" (click)="getUserPurchaseHistory(u.id!)">
-              <fa-icon [icon]="purchaseHistoryIcon"></fa-icon>
+              <fa-icon [icon]="purchaseHistoryIcon" title="Historija kupovine"></fa-icon>
             </button>
           </td>
           <td>{{u.email}}</td>

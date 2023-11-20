@@ -36,10 +36,10 @@
           <td class="controls">
             <button type="button" class="btn btn-link btn-operation" data-bs-toggle="modal"
               data-bs-target="#base-modal" (click)="showRouteEditModal(route)">
-              <fa-icon [icon]="editIcon"></fa-icon>
+              <fa-icon [icon]="editIcon" title="Ažuriranje"></fa-icon>
             </button>
             <button type="button" class="btn btn-link btn-operation" (click)="deactivateRoute(route)">
-              <fa-icon [icon]="deleteIcon"></fa-icon>
+              <fa-icon [icon]="deleteIcon" title="Brisanje"></fa-icon>
             </button>
           </td>
           <td>{{ route.startingLocation }}</td>

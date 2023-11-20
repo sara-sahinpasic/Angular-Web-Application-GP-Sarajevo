@@ -31,16 +31,16 @@
         <td>
           <div class="controls-container d-flex justify-content-end">
             <button *ngIf="!station.isEditing" type="button" class="btn btn-link btn-operation" (click)="startEditing(station)">
-              <fa-icon [icon]="editIcon"></fa-icon>
+              <fa-icon [icon]="editIcon" title="Ažuriranje"></fa-icon>
             </button>
             <button *ngIf="station.isEditing" type="button" class="btn btn-link btn-operation" (click)="cancelEditing(station)">
-              <fa-icon [icon]="closeIcon"></fa-icon>
+              <fa-icon [icon]="closeIcon" title="Zatvori"></fa-icon>
             </button>
             <button *ngIf="station.isEditing" type="button" class="btn btn-link btn-operation" (click)="finishEditing(station)">
-              <fa-icon [icon]="checkmarkIcon"></fa-icon>
+              <fa-icon [icon]="checkmarkIcon" title="Pohrani"></fa-icon>
             </button>
             <button type="button" class="btn btn-link btn-operation" (click)="deleteStation(station)">
-              <fa-icon [icon]="deleteIcon"></fa-icon>
+              <fa-icon [icon]="deleteIcon" title="Brisanje"></fa-icon>
             </button>
           </div>
         </td>
