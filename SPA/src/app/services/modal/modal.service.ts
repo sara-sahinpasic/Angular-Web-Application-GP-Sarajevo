@@ -69,14 +69,17 @@ export class ModalService {
   }
 
   adminShowCreateManufacturerModal() {
+    this.modalTitle = 'Novi proizvođač vozila';
     this.showAdminManufacturerModalState = true;
   }
 
   adminShowCreateVehicleTypeModal() {
+    this.modalTitle = 'Novi tip vozila';
     this.showAdminVehicleTypeModalState = true;
   }
 
   adminShowCreateRouteModal() {
+    this.modalTitle = 'Nova ruta';
     this.showRouteCreationModalState = true;
   }
 
@@ -89,6 +92,7 @@ export class ModalService {
   }
 
   adminShowHolidayModal() {
+    this.modalTitle = 'Dodaj prazik';
     this.showHolidayModalState = true;
   }
 
