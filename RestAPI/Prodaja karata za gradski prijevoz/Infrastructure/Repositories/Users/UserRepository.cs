@@ -20,7 +20,7 @@ public sealed class UserRepository : GenericRepository<User>, IUserRepository
             query = includes.Aggregate(query, (current, item) => current.Include(item));
         }
 
-        return query.FirstOrDefaultAsync(user => user.Email!.ToLower() == email.ToLower(), cancellationToken);
+        return query.FirstOrDefaultAsync(user => user.Email.ToLower() == email.ToLower(), cancellationToken);
     }
 
     public Task<User> GetByEmailEnsuredAsync(string email, CancellationToken cancellationToken, string[]? includes = null)

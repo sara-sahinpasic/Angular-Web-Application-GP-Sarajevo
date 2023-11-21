@@ -13,7 +13,7 @@ public static class IdentityServerConfiguration
                 ClientId = "api",
                 AllowedScopes = { "api.all" },
                 ClientClaimsPrefix = "",
-                AccessTokenLifetime = 120,
+                AccessTokenLifetime = 1800,
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AlwaysSendClientClaims = true,
                 ClientSecrets = { new Secret(clientSecret.Sha256()) },
