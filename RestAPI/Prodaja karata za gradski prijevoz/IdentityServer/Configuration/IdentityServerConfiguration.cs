@@ -13,10 +13,12 @@ public static class IdentityServerConfiguration
                 ClientId = "api",
                 AllowedScopes = { "api.all" },
                 ClientClaimsPrefix = "",
-                AccessTokenLifetime = 1800,
+                AccessTokenLifetime = 120,
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AlwaysSendClientClaims = true,
-                ClientSecrets = { new Secret(clientSecret.Sha256()) }
+                ClientSecrets = { new Secret(clientSecret.Sha256()) },
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                UpdateAccessTokenClaimsOnRefresh = true
             }
         };
     }
