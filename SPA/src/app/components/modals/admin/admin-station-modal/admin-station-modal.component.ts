@@ -63,6 +63,7 @@ export class AdminStationModalComponent implements OnInit {
 
   protected startEditing(station: StationListModel) {
     station.isEditing = true;
+    station.oldNameValue = station.name;
   }
 
   protected cancelEditing(station: StationListModel) {

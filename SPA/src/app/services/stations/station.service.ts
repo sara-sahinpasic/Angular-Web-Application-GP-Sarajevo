@@ -49,7 +49,7 @@ export class StationService {
 
     if (stationsCache && !stationsCache[startingStationId]) {
       stationsCache[startingStationId] = response.data;
-      localStorage.setItem('endingStations', JSON.stringify(stationsCache));
+      this.cacheService.setCacheData('endingStations', stationsCache);
 
       return;
     }

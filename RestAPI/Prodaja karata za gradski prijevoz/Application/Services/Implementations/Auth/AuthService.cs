@@ -73,7 +73,7 @@ public sealed class AuthService : IAuthService
     {
         User? user = await _userRepository.GetByEmailAsync(email, cancellationToken, new[] { "Role" });
         
-        if (user is null || !_passwordService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!)) 
+        if (user is null || !_passwordService.VerifyPasswordHash(password, user.PasswordHash!, user.PasswordSalt!) || !user.Active) 
         {
             return null;
         }
@@ -229,7 +229,7 @@ public sealed class AuthService : IAuthService
     {
         VerificationCode newVerificationCode = new()
         {
-            UserId = user!.Id,
+            UserId = user.Id,
             Code = GenerateVerificationCode(),
             DateCreated = DateTime.UtcNow,
             DateExpiring = DateTime.UtcNow.AddMinutes(5)
