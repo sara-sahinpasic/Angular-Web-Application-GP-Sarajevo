@@ -66,3 +66,39 @@ To log in as a user on the web application:
 ### 
 	E-mail: (Use one of the emails from dbo.Users)
 	Password: 0000
+
+
+## 📸 Application Overview (Screenshots)
+
+_These are just a few selected screenshots to help you quickly understand the core features and look of the application._
+
+## 🛠️ Admin
+<p float="left">
+  <img src="Screenshots/Admin/1. login.png" width="850" />
+  <img src="Screenshots/Admin/2. section_start.png" width="850" />
+  <img src="Screenshots/Admin/3. section_users.png" width="850" />
+  <img src="Screenshots/Admin/5. section_edit_users_data.png" width="850" />
+  <img src="Screenshots/Admin/6. section_company.png" width="850" />
+  <img src="Screenshots/Admin/7. section_add_company_new_info_1.png" width="850" />
+  <img src="Screenshots/Admin/8. section_add_company_new_info_2.png" width="850" />
+  <img src="Screenshots/Admin/9. section_statistic.png" width="850" />
+</p>
+
+## 👤 User
+<p float="left">
+<img src="Screenshots/User/1. search_routes.png" width="850" />
+<img src="Screenshots/User/2. user_info.png" width="850" />
+<img src="Screenshots/User/3. user_request.png" width="850" />
+<img src="Screenshots/User/4. user_purchase_history.png" width="850" />
+<img src="Screenshots/User/5. review_section_1.png" width="850" />
+<img src="Screenshots/User/6. review_sction_2.png" width="850" />
+<img src="Screenshots/User/7. news_section_1.png" width="850" />
+<img src="Screenshots/User/8. news_section_2.png" width="850" />
+</p>
+
+## 🚌 Driver
+<p float="left">
+  <img src="Screenshots/Driver/1. section_delay.png" width="850" />
+  <img src="Screenshots/Driver/2. section_manufacturer.png" width="850" />
+</p>
+
