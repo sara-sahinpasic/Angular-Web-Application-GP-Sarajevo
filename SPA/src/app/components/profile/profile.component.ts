@@ -53,6 +53,7 @@ export class ProfileComponent implements OnInit {
 
   private mapUser(user: UserProfileModel | undefined) {
     this.profileModel = user!;
+    this.profileModel.address = this.profileModel.address ?? '';
 
     const userStatusModelFromCache: UserProfileStatusModel | null = this.cacheService.getDataFromCache('profile_userStatus');
     if (userStatusModelFromCache) {
